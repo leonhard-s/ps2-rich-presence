@@ -6,44 +6,23 @@ to launch the underlying Qt application.
 
 import sys
 import asyncio
-from typing import Optional
 
-from PyQt6.QtWidgets import QApplication, QWidget, QPushButton
+from PyQt6.QtWidgets import QApplication
 
-import auraxium
-
-from ._typing_utils import asyncSlot, connect, QEventLoop
-
-
-class Listener(QWidget):
-
-    loop: Optional[asyncio.AbstractEventLoop]
-    client: Optional[auraxium.Client]
-
-    def __init__(self, loop: Optional[asyncio.AbstractEventLoop] = None):
-        super().__init__()
-        self.initUi()
-        self.loop = loop or asyncio.get_event_loop()
-        self.client = None
-
-    def initUi(self):
-        self.setWindowTitle('Push Test')
-        self.send_btn = QPushButton('Send', self)
-        connect(self.send_btn.clicked, self.send)
-
-    @asyncSlot()
-    async def send(self):
-        if self.client is None:
-            self.client = auraxium.Client()
-        print(await self.client.request(auraxium.census.Query()))
-
+from ._listener import Listener
+from ._typing_utils import QEventLoop
 
 if __name__ == '__main__':
+    # Create application
     app = QApplication(sys.argv)
+
+    # Configure event loop
     loop = QEventLoop(app)
     asyncio.set_event_loop(loop)
 
-    ex = Listener(loop)
-    ex.show()
+    # Create listener object wrapping the ESS client
+    listener = Listener(loop)
+
+    # Run event loop
     with loop:
         loop.run_forever()
