@@ -6,7 +6,7 @@ comments everywhere.
 """
 
 import asyncio
-from typing import Any, Callable, TypeVar
+from typing import Any, Callable, Type, TypeVar
 
 from qasync import asyncSlot as _asyncSlot, QEventLoop as _QEventLoop
 from PyQt6.QtWidgets import QApplication
@@ -39,7 +39,7 @@ class _EventLoopLike(asyncio.AbstractEventLoop):
         raise NotImplementedError()
 
 
-QEventLoop: _EventLoopLike = _QEventLoop
+QEventLoop: Type[_EventLoopLike] = _QEventLoop
 
 
 def asyncSlot(*args: Any) -> Callable[[_T], _T]:
