@@ -6,28 +6,30 @@ to launch the underlying Qt application.
 
 import sys
 import asyncio
-from typing import List
+from typing import Optional
 
 from PyQt6.QtWidgets import QApplication, QWidget, QPushButton
 
 import auraxium
-from qasync import QEventLoop, asyncSlot
+
+from ._typing_utils import asyncSlot, connect, QEventLoop
 
 
 class Listener(QWidget):
 
-    loop = None
-    client = None
+    loop: Optional[asyncio.AbstractEventLoop]
+    client: Optional[auraxium.Client]
 
-    def __init__(self, loop=None):
+    def __init__(self, loop: Optional[asyncio.AbstractEventLoop] = None):
         super().__init__()
         self.initUi()
         self.loop = loop or asyncio.get_event_loop()
+        self.client = None
 
     def initUi(self):
         self.setWindowTitle('Push Test')
         self.send_btn = QPushButton('Send', self)
-        self.send_btn.clicked.connect(self.send)
+        connect(self.send_btn.clicked, self.send)
 
     @asyncSlot()
     async def send(self):
