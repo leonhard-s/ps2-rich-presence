@@ -10,7 +10,7 @@ import asyncio
 from PyQt6.QtWidgets import QApplication
 
 from ._listener import Listener
-from ._typing_utils import QEventLoop
+from ._qasync import QEventLoop
 
 if __name__ == '__main__':
     # Create application

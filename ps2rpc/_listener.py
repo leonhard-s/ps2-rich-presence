@@ -10,12 +10,12 @@ from typing import Optional, Union
 import auraxium
 from auraxium import event, ps2
 
-from ._async_helper import AsyncHelper
+from ._qasync import QAsync
 
 _SERVICE_ID = 's:example'
 
 
-class Listener(AsyncHelper):
+class Listener(QAsync):
     """Main listener component for the Auraxium event client."""
 
     _client: auraxium.EventClient
