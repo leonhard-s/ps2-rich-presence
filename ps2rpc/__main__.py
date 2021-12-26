@@ -7,21 +7,18 @@ to launch the underlying Qt application.
 import sys
 import asyncio
 
-from PyQt6.QtWidgets import QApplication
-
-from ._listener import Listener
+from ._app import Application
 from ._qasync import QEventLoop
 
 if __name__ == '__main__':
     # Create application
-    app = QApplication(sys.argv)
-
-    # Configure event loop
+    app = Application(sys.argv)
+    # Create event loop
     loop = QEventLoop(app)
     asyncio.set_event_loop(loop)
 
-    # Create listener object wrapping the ESS client
-    listener = Listener(loop)
+    # Start tracker
+    app.start_tracker(loop)
 
     # Run event loop
     with loop:
