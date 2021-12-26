@@ -1,17 +1,20 @@
 """Utilities and types for working with asyncio in Qt."""
 
 import asyncio
+import sys
 from typing import Any, Callable, Optional, ParamSpec, Type, TypeVar
 
-from qasync import (asyncSlot as _asyncSlot,
-                    QEventLoop as _QEventLoop)
+from qasync import (asyncSlot as _asyncSlot, QEventLoop as _QEventLoop,
+                    DefaultQEventLoopPolicy as QEventLoopPolicy)
 from PyQt6.QtCore import (QCoreApplication, QObject, pyqtSignal as _pyqtSignal,
                           pyqtSlot as _pyqtSlot)
 from PyQt6.QtWidgets import QApplication, QWidget
+from pypresence import utils as pypresence_utils  # type: ignore
 
 __all__ = [
     'QAsync',
     'QEventLoop',
+    'QEventLoopPolicy',
     'async_slot',
     'connect',
     'get_qasync_event_loop',
@@ -46,8 +49,8 @@ class _EventLoopLike(asyncio.AbstractEventLoop):
 QEventLoop: Type[_EventLoopLike] = _QEventLoop
 
 
-def signal(*types: Any) -> Callable[..., Any]:
-    """Decorator for Qt signals."""
+def signal(*types: Any) -> Any:
+    """Factory for Qt signals."""
     return _pyqtSignal(*types)  # type: ignore
 
 
@@ -67,7 +70,7 @@ def connect(signal: Callable[_P, Any], slot: Callable[_P, Any]) -> None:
     signal.connect(slot)  # type: ignore
 
 
-def get_qasync_event_loop() -> Callable[[], asyncio.AbstractEventLoop]:
+def _get_qasync_event_loop() -> Callable[[], asyncio.AbstractEventLoop]:
     """Retrieve the global QEventLoop for asyncio.
 
     Will definitely break for Python-level multithreading - but so will
@@ -93,6 +96,9 @@ def get_qasync_event_loop() -> Callable[[], asyncio.AbstractEventLoop]:
         return _loop
 
     return _inner
+
+
+get_qasync_event_loop = _get_qasync_event_loop()
 
 
 class QAsync(QObject):
@@ -141,3 +147,23 @@ class QAsync(QObject):
 
         The default implementation does nothing.
         """
+
+
+_get_event_loop_old = pypresence_utils.get_event_loop  # type: ignore
+
+
+def _get_event_loop(force_fresh: bool = False) -> asyncio.AbstractEventLoop:
+    """Monkey-patched version of pypresence.utils.get_event_loop.
+
+    pypresence insists that the win32 event loop must of a particular
+    subclass, which is not compatible with the QEventLoop helper
+    requried for Qt support.
+    """
+    if sys.platform == 'win32':
+        loop = get_qasync_event_loop()
+        if not loop.is_closed():
+            return loop
+    return _get_event_loop_old(force_fresh)
+
+
+pypresence_utils.get_event_loop = _get_event_loop

@@ -5,14 +5,16 @@ the signals and slots needed to communicate with the Qt world.
 """
 
 import asyncio
-from typing import Optional, Union
+from typing import Optional
 
 import auraxium
-from auraxium import event, ps2
+from auraxium import event
 
-from ._qasync import QAsync
+from ._qasync import QAsync, signal
+from ._status import generate_character_status
+from ._ps2 import Ps2Class, Ps2Faction, Ps2Zone, Ps2Server
 
-_SERVICE_ID = 's:example'
+_DEBUG_CHAR_ID = 5428072203494645969
 
 
 class Listener(QAsync):
@@ -21,31 +23,12 @@ class Listener(QAsync):
     _client: auraxium.EventClient
 
     async def async_setup(self) -> None:
-        self._client = auraxium.EventClient(service_id=_SERVICE_ID)
-
-        @self._client.trigger(event.PlayerLogin, event.PlayerLogout)
-        async def print_logins(
-                evt: Union[event.PlayerLogin, event.PlayerLogout]) -> None:
-            # Get character
-            char = await self._client.get_by_id(ps2.Character, evt.character_id)
-            if char is None:
-                return
-            # Get server
-            world = await char.world()
-            if world is None:
-                return
-            server = world.name.en if world.name else None
-            if server is None:
-                return
-            # Print name
-            name = await char.name_long()
-            if isinstance(evt, event.PlayerLogin):
-                print('Login: ', name, f'({server})')
-            else:
-                print('Logout:', name, f'({server})')
-
-        # Silence complaints about unused variables
-        _ = print_logins
+        self._client = auraxium.EventClient()
+        # Define event trigger
+        self._trigger = event.Trigger(
+            event.Death, characters=[_DEBUG_CHAR_ID])
+        self._trigger.action = self._on_event
+        self._client.add_trigger(self._trigger)
 
         # Start the client
         loop: Optional[asyncio.AbstractEventLoop] = (
@@ -55,5 +38,33 @@ class Listener(QAsync):
         loop.create_task(self._client.connect())
 
     async def async_cleanup(self) -> None:
-        print('Closing client...')
         await self._client.close()
+
+    status_changed = signal(dict)
+
+    def _on_event(self, evt: event.Death) -> None:
+        # Ignore events that aren't for our character
+        if (evt.character_id != _DEBUG_CHAR_ID
+                and evt.attacker_character_id != _DEBUG_CHAR_ID):
+            return
+        # Get character
+        char_name = 'Auroram'
+        # Get faction
+        faction = Ps2Faction.VS
+        # Get outfit
+        outfit_tag = 'URGE'
+        # Get class
+        loadout_id = 1
+        if evt.attacker_character_id == _DEBUG_CHAR_ID:
+            loadout_id = evt.attacker_loadout_id
+        else:
+            loadout_id = evt.character_loadout_id
+        class_ = Ps2Class.from_loadout_id(loadout_id)
+        # Get zone
+        zone = Ps2Zone.from_zone_id(evt.zone_id)
+        # Get server
+        server = Ps2Server.from_world_id(13)
+        # Emit status
+        status = generate_character_status(
+            char_name, faction, outfit_tag, class_, zone, server)
+        self.status_changed.emit(status)
