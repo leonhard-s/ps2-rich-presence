@@ -32,14 +32,15 @@ def generate_character_status(
     small_image: Optional[str] = None
     small_text: Optional[str] = None
     if not _hide('class', kwargs):
-        small_image = f'class_{class_.name.lower()}'
-        small_text = class_.name.title()
+        class_name = class_.name.title().replace('_', ' ')
+        small_image = f'class_{class_name.split()[0].lower()}'
+        small_text = class_name
     # State
     state = 'Playing'
     if not _hide('faction', kwargs):
         state += f' {faction.name.upper()}'
     if not _hide('server', kwargs):
-        state += f' on {server}'
+        state += f' on {server.name.title()}'
     # Details
     details = ''
     if not _hide('character', kwargs):
