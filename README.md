@@ -1,6 +1,6 @@
-# PS2 Rich Presence
+# <img src="https://raw.githubusercontent.com/leonhard-s/ps2-rich-presence/main/assets/icon.png" align="left" height="140"/>PS2 Rich Presence
 
-An open source provider of [Discord Rich Presence](#) for [PlanetSide 2](#).
+An open source provider of [Discord Rich Presence](https://discord.com/rich-presence) for [PlanetSide 2](https://www.planetside2.com/home).
 
 <!-- TODO: Add repository shields -->
 
