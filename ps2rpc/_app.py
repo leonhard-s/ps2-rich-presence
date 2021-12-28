@@ -8,6 +8,7 @@ from PyQt6.QtWidgets import QApplication
 from ._listener import Listener
 from ._qasync import connect, slot
 from ._presence import Status, PresenceStatus
+from .ui import MainWindow
 
 __all__ = [
     'Application',
@@ -21,6 +22,8 @@ class Application(QApplication):
 
     def __init__(self, argv: List[str]) -> None:
         super().__init__(argv)
+        self._main_window = MainWindow()
+        self._main_window.show()
 
     def start_tracker(self, loop: asyncio.AbstractEventLoop) -> None:
         """Start the event tracker."""
