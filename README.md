@@ -14,7 +14,7 @@ An open source utility providing [Discord Rich Presence](https://discord.com/ric
 
 This application aims to provide a richer Discord experience for PlanetSide 2 players by integrating with Discord's Rich Presence API.
 
-It does so hooking into the game's [Streaming API](https://census.daybreakgames.com/#what-is-websocket) to monitor your in-game activity, and then sets your Discord presence accordingly.
+It does this by listening to the game's [Streaming API](https://census.daybreakgames.com/#what-is-websocket) to monitor your in-game activity, and then updating your Discord presence accordingly.
 
 ## Features
 
