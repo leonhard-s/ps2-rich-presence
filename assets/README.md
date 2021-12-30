@@ -6,6 +6,8 @@ This file documents the source for any image assets used in the application. In 
 
 Processing notes:
 
+**0:** No modification required; image is unaltered.
+
 **1:** Asset was centred and upscaled to 512 x 512 px as required for Discord assets.
 
 **2:** Asset was created from scratch using the API asset as a reference.
@@ -15,7 +17,7 @@ Processing notes:
 
 | Asset                         | Image ID | Download                                                                   |  Processing  |
 |-------------------------------|----------|----------------------------------------------------------------------------|--------------|
-| icon.png                      |    94420 | [Link](https://census.daybreakgames.com/files/ps2/images/static/94420.png) |       1      |
+| icon.png                      |    94420 | [Link](https://census.daybreakgames.com/files/ps2/images/static/94420.png) |       0      |
 | small_image/ant.png           |    84728 | [Link](https://census.daybreakgames.com/files/ps2/images/static/84728.png) |       1      |
 | small_image/bastion.png       |    92392 | [Link](https://census.daybreakgames.com/files/ps2/images/static/92392.png) |       2      |
 | small_image/chimera.png       |    93604 | [Link](https://census.daybreakgames.com/files/ps2/images/static/93604.png) |       1      |
