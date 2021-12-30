@@ -26,7 +26,20 @@ It does so hooking into the game's [Streaming API](https://census.daybreakgames.
 
 ## License
 
-TBD
+### Source Code
+
+This application uses [PyQt6](https://pypi.org/project/PyQt6/) and inherits its GPL-3.0 license. See [LICENSE](https://github.com/leonhard-s/ps2-rich-presence/blob/main/LICENSE) for details.
+
+> **Note:**  
+> For a more permissible license, considering basing your work the [Auraxium](https://github.com/leonhard-s/auraxium) Python package instead.
+>
+> Most of this project's complexity lies in getting the [asyncio](https://docs.python.org/3/library/asyncio.html)-based Auraxium client working in a [Qt](https://www.qt.io/product/qt6)-based application. Without GUI or Qt-related utilities, this entire application would only require a few dozen lines of code.
+
+### Assets
+
+Most artworks used in this application are based on assets available through the Daybreak Game Company [Census API](http://census.daybreakgames.com/), which were then modified for our requirements (upscaling, tracing, cropping, etc.).
+
+Use of our modifications is permitted without restriction. Note that your use still has to comply with the [Census API Policy](http://census.daybreakgames.com/#services-api-policy) and the Daybreak Game Company [Terms of Service](https://www.daybreakgames.com/terms-of-service#section13).
 
 ## Installation
 
