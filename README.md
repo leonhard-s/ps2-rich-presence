@@ -20,9 +20,11 @@ It does so hooking into the game's [Streaming API](https://census.daybreakgames.
 
 - Low-bandwidth requirements
 - GUI interface for configuration
-- Operates completely independentylyfrom the PS2 installation
+- Operates completely independenty from the PS2 installation\*
 - Automatically enable Rich Presence when logging into the game
 - Activity detection (class, vehicle, etc.)
+
+*\*Since PS2RPC uses the API stream rather than the game's actual traffic, you do not even have to run this on the same device you're playing on. As long as there is a local Discord client and an internet connection, it will work.*
 
 ## License
 
