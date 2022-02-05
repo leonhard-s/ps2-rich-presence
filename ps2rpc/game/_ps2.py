@@ -1,7 +1,7 @@
 """Game-specific enums and converter functions.
 
 This module contains everything that could break with major game
-updates, with a bonus sprinkle of hard-coded ID values.
+updates, with a bonus sprinkle of hard-coded IDs.
 """
 
 import enum
@@ -9,8 +9,9 @@ import enum
 __all__ = [
     'Ps2Class',
     'Ps2Faction',
-    'Ps2Zone',
+    'Ps2Vehicle',
     'Ps2Server',
+    'Ps2Zone',
 ]
 
 _CLASS_LOADOUTS = {
