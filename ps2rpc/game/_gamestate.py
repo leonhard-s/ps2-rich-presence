@@ -16,6 +16,7 @@ class GameState:
 
     character_id: int
     faction: Ps2Faction
+    team: Ps2Faction
     server: Ps2Server
     profile: Ps2Class | Ps2Vehicle
     zone: Ps2Zone
@@ -35,11 +36,13 @@ class GameStateFactory:
         self._faction = faction
         self._server = server
 
-    def build_state(self, profile: Ps2Class | Ps2Vehicle, zone: Ps2Zone) -> GameState:
+    def build_state(self, team: Ps2Faction, profile: Ps2Class | Ps2Vehicle,
+                    zone: Ps2Zone) -> GameState:
         """Build a `GameState` instance from the given data."""
         return GameState(
             character_id=self._character_id,
             faction=self._faction,
+            team=team,
             server=self._server,
             profile=profile,
             zone=zone,
