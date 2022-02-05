@@ -269,6 +269,13 @@ class Ps2Server(enum.Enum):
     JAEGER = 5  # Jaeger
     SOLTECH = 6  # SolTech
 
+    def display_name(self) -> str:
+        """Return a server's display name."""
+        if self.value == Ps2Server.SOLTECH:
+            # Special case for non-standard server name
+            return 'SolTech'
+        return self.name.title()
+
     @classmethod
     def from_world_id(cls, world_id: int) -> 'Ps2Server':
         """Convert a world ID to a :class:`Ps2Server`."""
