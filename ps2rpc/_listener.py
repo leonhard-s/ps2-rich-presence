@@ -12,7 +12,7 @@ from auraxium import event
 
 from ._qasync import QAsync, signal
 from ._status import generate_character_status
-from ._ps2 import Ps2Class, Ps2Faction, Ps2Zone, Ps2Server
+from ._ps2 import Ps2Class, Ps2Faction, Ps2Vehicle, Ps2Server, Ps2Zone
 
 _DEBUG_CHAR_ID = 5428072203494645969
 
@@ -59,12 +59,21 @@ class Listener(QAsync):
             loadout_id = evt.attacker_loadout_id
         else:
             loadout_id = evt.character_loadout_id
-        class_ = Ps2Class.from_loadout_id(loadout_id)
+        profile: Ps2Class | Ps2Vehicle = Ps2Class.from_loadout_id(loadout_id)
+        if evt.vehicle_id is not None:
+            profile = Ps2Class.from_loadout_id(loadout_id)
+        # If the vehicle is known, show that instead
+        if (evt.attacker_character_id == _DEBUG_CHAR_ID
+                and evt.attacker_vehicle_id is not None):
+            try:
+                profile = Ps2Vehicle(evt.attacker_vehicle_id)
+            except ValueError:
+                pass  # keep using class
         # Get zone
         zone = Ps2Zone.from_zone_id(evt.zone_id)
         # Get server
         server = Ps2Server.from_world_id(13)
         # Emit status
         status = generate_character_status(
-            char_name, faction, outfit_tag, class_, zone, server)
+            char_name, faction, outfit_tag, profile, zone, server)
         self.status_changed.emit(status)

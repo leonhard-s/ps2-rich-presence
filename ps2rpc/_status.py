@@ -1,6 +1,6 @@
 from typing import Any, Dict, Optional
 from ._presence import PresenceData
-from ._ps2 import Ps2Class, Ps2Faction, Ps2Zone, Ps2Server
+from ._ps2 import Ps2Class, Ps2Faction, Ps2Vehicle, Ps2Server, Ps2Zone
 
 
 def _hide(key: str, kwargs: Dict[str, Any]) -> bool:
@@ -11,7 +11,7 @@ def generate_character_status(
         character: str,
         faction: Ps2Faction,
         outfit_tag: str,
-        class_: Ps2Class,
+        profile: Ps2Class | Ps2Vehicle,
         zone: Ps2Zone,
         server: Ps2Server,
         **kwargs: Any) -> PresenceData:
@@ -31,10 +31,9 @@ def generate_character_status(
     # Small image
     small_image: Optional[str] = None
     small_text: Optional[str] = None
-    if not _hide('class', kwargs):
-        class_name = class_.name.title().replace('_', ' ')
-        small_image = f'class_{class_name.split()[0].lower()}'
-        small_text = class_name
+    if not _hide('profile', kwargs):
+        small_image = profile.name.lower()
+        small_text = profile.display_name()
     # State
     state = 'Playing'
     if not _hide('faction', kwargs):
