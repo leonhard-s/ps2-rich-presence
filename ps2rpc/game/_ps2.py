@@ -118,6 +118,7 @@ _STATIC_ZONES = {
     4: 2,  # Hossin
     6: 3,  # Amerish
     8: 4,  # Esamir
+    344: 5,  # Oshur
 }
 
 _GAME_SERVERS = {
@@ -227,7 +228,7 @@ class Ps2Zone(enum.Enum):
     HOSSIN = 2
     AMERISH = 3
     ESAMIR = 4
-    # OSHUR = 5
+    OSHUR = 5
 
     # Outfit Wars
     DESOLATION = 6
