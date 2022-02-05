@@ -1,5 +1,5 @@
 from typing import Any, Dict, Optional
-from ._presence import PresenceStatus
+from ._presence import PresenceData
 from ._ps2 import Ps2Class, Ps2Faction, Ps2Zone, Ps2Server
 
 
@@ -14,7 +14,7 @@ def generate_character_status(
         class_: Ps2Class,
         zone: Ps2Zone,
         server: Ps2Server,
-        **kwargs: Any) -> PresenceStatus:
+        **kwargs: Any) -> PresenceData:
     """Generate a presence status for a character.
 
     Anonymous keyord arguments are used to control field visibility. By
@@ -48,7 +48,7 @@ def generate_character_status(
             details += f'[{outfit_tag}] '
         details += character
     # Generate payload
-    return PresenceStatus(
+    return PresenceData(
         state=state,
         details=details,
         start=None,

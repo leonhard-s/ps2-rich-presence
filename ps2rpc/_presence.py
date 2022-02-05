@@ -19,7 +19,7 @@ _UPDATE_INTERVAL = 15.0
 _log = logging.getLogger("ps2rpc.presence")
 
 
-class PresenceStatus(TypedDict):
+class PresenceData(TypedDict):
     """A dict-like representation of the data to be sent to Discord.
 
     state: current playing status, e.g. "Looking to play", "In a game"
@@ -70,11 +70,11 @@ class Status(metaclass=_SingletonHandler):
         self._rpc = pypresence.AioPresence(_CLIENT_ID)
         loop = asyncio.get_event_loop()
         loop.create_task(self._rpc.connect())  # Start handshake loop
-        self._status: PresenceStatus = {}  # type: ignore
-        self._last_status: PresenceStatus = None  # type: ignore
+        self._status: PresenceData = {}  # type: ignore
+        self._last_status: PresenceData = None  # type: ignore
         loop.create_task(self._loop())  # Start status loop
 
-    def update(self, status: PresenceStatus) -> None:
+    def update(self, status: PresenceData) -> None:
         """Update the RPC status.
 
         This method will update the internal state cache.

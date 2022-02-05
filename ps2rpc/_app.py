@@ -7,7 +7,7 @@ from PyQt6.QtWidgets import QApplication
 
 from ._listener import Listener
 from ._qasync import connect, slot
-from ._presence import Status, PresenceStatus
+from ._presence import Status, PresenceData
 from .ui import MainWindow
 
 __all__ = [
@@ -30,7 +30,7 @@ class Application(QApplication):
         self._listener = Listener(loop)
         connect(self._listener.status_changed, self.update_status)
 
-    @slot(PresenceStatus)
-    def update_status(self, status: PresenceStatus) -> None:
+    @slot(PresenceData)
+    def update_status(self, status: PresenceData) -> None:
         """Update the status of the client."""
         Status().update(status)
