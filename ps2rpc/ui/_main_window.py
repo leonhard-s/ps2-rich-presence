@@ -2,8 +2,8 @@
 
 from typing import Optional
 
-from PyQt6.QtWidgets import (QCheckBox, QGridLayout, QGroupBox, QInputDialog,
-                             QLabel, QListWidget, QHBoxLayout, QListWidgetItem,
+from PyQt6.QtWidgets import (QGridLayout, QGroupBox, QInputDialog, QLabel,
+                             QListWidget, QHBoxLayout, QListWidgetItem,
                              QMessageBox, QPushButton, QWidget, QVBoxLayout)
 from PyQt6.QtCore import Qt
 
@@ -26,18 +26,11 @@ class _MainWindowUi(QWidget):
                  flags: Qt.WindowType = Qt.WindowType.Widget) -> None:
         super().__init__(parent, flags)
         # Main column layout
-        column_layout = QHBoxLayout()
-        self.setLayout(column_layout)
-        column_layout.setSpacing(12)
-        left_column = QVBoxLayout()
-        column_layout.addLayout(left_column)
-        right_column = QVBoxLayout()
-        column_layout.addLayout(right_column)
-        column_layout.setStretch(0, 1)
-        column_layout.setStretch(1, 1)
+        layout = QVBoxLayout()
+        self.setLayout(layout)
         # Tracked characters
         tracked = QGroupBox('Tracked Characters')
-        left_column.addWidget(tracked)
+        layout.addWidget(tracked)
         tracked.setFlat(True)
         tracked_layout = QVBoxLayout()
         tracked.setLayout(tracked_layout)
@@ -53,7 +46,7 @@ class _MainWindowUi(QWidget):
         tracked_controls.addWidget(self.remove_btn)
         # Activity information
         activity = QGroupBox('Activity Information')
-        left_column.addWidget(activity)
+        layout.addWidget(activity)
         activity.setFlat(True)
         activity_layout = QGridLayout()
         activity.setLayout(activity_layout)
@@ -81,54 +74,9 @@ class _MainWindowUi(QWidget):
         self.last_status_update = QLabel('Never')
         activity_layout.addWidget(self.last_status_update, 5, 1)
         self.last_status_update.setAlignment(_ALIGN_RIGHT)
-        # Customization & Privacy
-        customization = QGroupBox('Customization & Privacy')
-        right_column.addWidget(customization)
-        customization_layout = QVBoxLayout()
-        customization.setLayout(customization_layout)
-        self.show_character = QCheckBox('Show character name')
-        customization_layout.addWidget(self.show_character)
-        self.show_outfit = QCheckBox('Show outfit tag')
-        customization_layout.addWidget(self.show_outfit)
-        self.show_faction = QCheckBox('Show faction')
-        customization_layout.addWidget(self.show_faction)
-        self.show_faction.setChecked(True)
-        self.show_class = QCheckBox('Show current class')
-        customization_layout.addWidget(self.show_class)
-        self.show_class.setChecked(True)
-        self.show_zone = QCheckBox('Show zone')
-        customization_layout.addWidget(self.show_zone)
-        self.show_zone.setChecked(True)
-        self.show_server = QCheckBox('Show server')
-        customization_layout.addWidget(self.show_server)
-        self.show_server.setChecked(True)
-        # Connection status
-        connection = QGroupBox('Connection Status')
-        right_column.addWidget(connection)
-        connection_layout = QGridLayout()
-        connection.setLayout(connection_layout)
-        connection_layout.addWidget(QLabel('Discord'), 0, 0)
-        self.status_discord = QLabel('Not connected')
-        connection_layout.addWidget(self.status_discord, 0, 1)
-        self.latency_discord = QLabel('0 ms')
-        connection_layout.addWidget(self.latency_discord, 0, 2)
-        self.latency_discord.setAlignment(_ALIGN_RIGHT)
-        connection_layout.addWidget(QLabel('PS2 Event Stream'), 1, 0)
-        self.status_ess = QLabel('Not connected')
-        connection_layout.addWidget(self.status_ess, 1, 1)
-        self.latency_ess = QLabel('0 ms')
-        connection_layout.addWidget(self.latency_ess, 1, 2)
-        self.latency_ess.setAlignment(_ALIGN_RIGHT)
-        connection_layout.addWidget(QLabel('PS2 REST API'), 2, 0)
-        self.status_rest = QLabel('Unknown')
-        connection_layout.addWidget(self.status_rest, 2, 1)
-        connection_layout.setColumnStretch(0, 3)
-        connection_layout.setColumnStretch(1, 2)
-        connection_layout.setColumnStretch(2, 1)
         # Footer
-        right_column.addStretch()
         footer = QHBoxLayout()
-        right_column.addLayout(footer)
+        layout.addLayout(footer)
         self.link_bug_report = QLabel(f'[Report a bug]({self._REPO}/issues)')
         self.link_bug_report.setOpenExternalLinks(True)
         footer.addWidget(self.link_bug_report)
@@ -155,8 +103,9 @@ class MainWindow(_MainWindowUi):
     def __init__(self, parent: Optional[QWidget] = None,
                  flags: Qt.WindowType = Qt.WindowType.Widget) -> None:
         super().__init__(parent, flags)
-        self.setWindowTitle('PlanetSide 2 Rich Presence')
-        self.resize(600, 400)
+        self.setWindowTitle('PS2 Rich Presence')
+        self.resize(320, 420)
+        self.setFixedSize(self.size())
         # Hook up signals
         connect(self.add_btn.clicked, self._add_character)
         connect(self.remove_btn.clicked, self._remove_character)
