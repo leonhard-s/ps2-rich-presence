@@ -7,8 +7,8 @@ from auraxium import event, ps2
 from PyQt6.QtWidgets import QWidget
 
 from .._qasync import QAsync, signal
-from ..game import (GameStateFactory, Ps2Class, Ps2Faction, Ps2Server,
-                    Ps2Vehicle, Ps2Zone)
+from ..game import (GameState, GameStateFactory, Ps2Class, Ps2Faction,
+                    Ps2Server, Ps2Vehicle, Ps2Zone)
 
 
 class ActivityTracker(QAsync):
@@ -53,8 +53,13 @@ class ActivityTracker(QAsync):
     async def async_cleanup(self) -> None:
         await self._client.close()
 
-    status_changed = signal()
+    state_changed = signal()
     tracking_stopped = signal()
+
+    @property
+    def current_state(self) -> GameState:
+        """The current state of the tracked character."""
+        return self._factory.build_state()
 
     async def _initialise_factory(self) -> None:
         # Get character
@@ -109,3 +114,6 @@ class ActivityTracker(QAsync):
         # team_id = evt.attacker_team_id if is_killer else evt.character_team_id
         # team = Ps2Faction.from_faction_id(team_id)
         # self._factory.set_team(team)
+
+        # Push the new state to the state factory
+        self.state_changed.emit()
