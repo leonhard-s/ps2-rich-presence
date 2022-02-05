@@ -16,25 +16,34 @@ __all__ = [
     'Application',
 ]
 
-# Hard-coded character "Auroram" for testing purposes
-_DEBUG_CHAR_ID = 5428072203494645969
-
 
 class Application(QApplication):
     """Main PS2RPC application object."""
 
     _listener: ActivityTracker
     _factory: PresenceFactory
+    _loop: asyncio.AbstractEventLoop
 
     def __init__(self, argv: List[str]) -> None:
         super().__init__(argv)
         self._main_window = MainWindow()
+        connect(self._main_window.character_tracked, self._start_tracking)
+        connect(self._main_window.character_untracked, self._stop_tracking)
+
+    def run(self, loop: asyncio.AbstractEventLoop) -> None:
+        self._loop = loop
         self._main_window.show()
 
-    def start_tracker(self, loop: asyncio.AbstractEventLoop) -> None:
-        """Start the event tracker."""
-        self._listener = ActivityTracker(_DEBUG_CHAR_ID, loop)
+    @slot(str)
+    def _start_tracking(self, character_id: str) -> None:
+        self._listener = ActivityTracker(int(character_id), self._loop)
         connect(self._listener.state_changed, self.update_status)
+        print(f'Tracker started for {character_id}')
+
+    @slot(str)
+    def _stop_tracking(self, character_id: str) -> None:
+        # TODO: Check if we need to manually disconenct the listener
+        del self._listener
 
     @slot()
     def update_status(self) -> None:

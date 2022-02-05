@@ -2,13 +2,15 @@
 
 from typing import Optional
 
+import auraxium
+from auraxium import ps2
 from PyQt6.QtWidgets import (QGridLayout, QGroupBox, QInputDialog, QLabel,
                              QListWidget, QHBoxLayout, QListWidgetItem,
                              QMessageBox, QPushButton, QWidget, QVBoxLayout)
 from PyQt6.QtCore import Qt
 
 from ._about import AboutDialog
-from .._qasync import connect, slot
+from .._qasync import async_slot, connect, signal, slot
 
 __all__ = [
     'MainWindow',
@@ -100,9 +102,13 @@ class _MainWindowUi(QWidget):
 class MainWindow(_MainWindowUi):
     """Main application window & UI implementation."""
 
+    _tracked_character: str
+
     def __init__(self, parent: Optional[QWidget] = None,
                  flags: Qt.WindowType = Qt.WindowType.Widget) -> None:
         super().__init__(parent, flags)
+        self._tracked_character = ''
+        # Set up UI
         self.setWindowTitle('PS2 Rich Presence')
         self.resize(320, 420)
         self.setFixedSize(self.size())
@@ -110,9 +116,13 @@ class MainWindow(_MainWindowUi):
         connect(self.add_btn.clicked, self._add_character)
         connect(self.remove_btn.clicked, self._remove_character)
         connect(self.about_btn.clicked, self._show_about)
+        connect(self.tracked_characters.doubleClicked, self._character_dclick)
 
-    @slot()
-    def _add_character(self) -> None:
+    character_tracked = signal(str)
+    character_untracked = signal(str)
+
+    @async_slot()
+    async def _add_character(self) -> None:
         """Input dialog for adding a character."""
         dlg = QInputDialog(self)
         dlg.setInputMode(QInputDialog.InputMode.TextInput)
@@ -141,8 +151,38 @@ class MainWindow(_MainWindowUi):
                     self, 'Error', 'Character already added')
                 return
 
-        # TODO: Validate name against the API
-        self.tracked_characters.addItem(QListWidgetItem(name))
+        # TODO: Provide a service ID
+        async with auraxium.Client() as client:
+            char = await client.get_by_name(ps2.Character, name)
+            if not char:
+                QMessageBox.warning(self, 'Error', 'Character not found')
+                return
+            character_id = str(char.id)
+
+        item = QListWidgetItem(name)
+        item.setData(Qt.ItemDataRole.UserRole, character_id)
+        self.tracked_characters.addItem(item)
+
+    @slot()
+    def _character_dclick(self) -> None:
+        """The characters list was double-clicked."""
+        item = self.tracked_characters.currentItem()
+        character_id = str(item.data(Qt.ItemDataRole.UserRole))
+        self._track_character(character_id)
+
+    @slot()
+    def _track_character(self, character_id: str) -> None:
+        """Track a character."""
+        if hasattr(self, '_tracked_character') and not self._tracked_character:
+            print('Connecting to character...')
+        else:
+            if (self._tracked_character == character_id):
+                print('Restarting connection to character...')
+            else:
+                print('Switching character...')
+            self.character_untracked.emit(self._tracked_character)
+        self._tracked_character = character_id
+        self.character_tracked.emit(character_id)
 
     @slot()
     def _remove_character(self) -> None:

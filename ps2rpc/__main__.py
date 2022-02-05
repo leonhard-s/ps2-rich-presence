@@ -17,8 +17,7 @@ if __name__ == '__main__':
     loop = QEventLoop(app)
     asyncio.set_event_loop(loop)
 
-    # Start tracker
-    app.start_tracker(loop)
+    app.run(loop)
 
     # Run event loop
     with loop:
