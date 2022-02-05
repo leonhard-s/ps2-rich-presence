@@ -39,7 +39,7 @@ This application uses [PyQt6](https://pypi.org/project/PyQt6/) and inherits its 
 
 ### Assets
 
-Most artworks used in this application are based on assets available through the Daybreak Game Company [Census API](http://census.daybreakgames.com/), which were then modified (e.g. upscaled, traced, or cropped) for our requirements.
+Most artworks used in this application are based on assets available through the Daybreak Game Company [Census API](http://census.daybreakgames.com/), which were then modified (e.g. upscaled, traced, or cropped) for our requirements. See the [Assets README](https://github.com/leonhard-s/ps2-rich-presence/tree/main/assets) for details on what assets were used and how exactly they were altered.
 
 Use of our modifications is permitted without restriction. Note that your use still has to comply with the [Census API Policy](http://census.daybreakgames.com/#services-api-policy) and the Daybreak Game Company [Terms of Service](https://www.daybreakgames.com/terms-of-service#section13).
 
