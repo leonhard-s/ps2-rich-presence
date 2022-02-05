@@ -1,7 +1,7 @@
 """Game-specific enums and converter functions.
 
 This module contains everything that could break with major game
-updates, with a bonus sprinkle of hard-coded ID values.
+updates, with a bonus sprinkle of hard-coded IDs.
 """
 
 import enum
@@ -9,8 +9,9 @@ import enum
 __all__ = [
     'Ps2Class',
     'Ps2Faction',
-    'Ps2Zone',
+    'Ps2Vehicle',
     'Ps2Server',
+    'Ps2Zone',
 ]
 
 _CLASS_LOADOUTS = {
@@ -96,6 +97,14 @@ _PLAYABLE_FACTIONS = {
     4: 4,  # NSO
 }
 
+_FACTION_NAMES = {
+    0: 'Nanite Systems',
+    1: 'Vanu Sovereignty',
+    2: 'New Conglomerate',
+    3: 'Terran Republic',
+    4: 'Nanite Systems Operators',
+}
+
 _FACTION_TAGS = {
     0: '',  # No faction
     1: 'VS',  # Vanu Sovereignty
@@ -131,6 +140,12 @@ class Ps2Class(enum.Enum):
     HEAVY_ASSAULT = 5
     MAX = 6
 
+    def display_name(self) -> str:
+        """Return the class's display name."""
+        if self.name == 'MAX':
+            return self.name
+        return self.name.replace('_', ' ').title()
+
     @classmethod
     def from_loadout_id(cls, loadout_id: int) -> 'Ps2Class':
         """Convert a loadout ID to a class."""
@@ -159,6 +174,47 @@ class Ps2Faction(enum.Enum):
         """Return the faction's tag."""
         return _FACTION_TAGS.get(self.value, '')
 
+    def display_name(self) -> str:
+        """Return a faction's display name."""
+        return _FACTION_NAMES.get(self.value, 'Nanite Systems')
+
+
+class Ps2Vehicle(enum.Enum):
+    """A vehicle in the game."""
+
+    FLASH = 1
+    SUNDERER = 2
+    LIGHTNING = 3
+    MAGRIDER = 4
+    VANGUARD = 5
+    PROWLER = 6
+    SCYTHE = 7
+    REAVER = 8
+    MOSQUITO = 9
+    LIBERATOR = 10
+    GALAXY = 11
+    HARASSER = 12
+    VALKYRIE = 14
+    ANT = 15
+    AI_TURRET = 100
+    AA_TURRET = 150
+    AV_TURRET = 151
+    COLOSSUS = 2007
+    BASTION = 2019
+    JAVELIN = 2033
+    INTERCEPTOR_TR = 2122
+    INTERCEPTOR_NC = 2023
+    INTERCEPTOR_VS = 2124
+    JAVELIN_ = 2125
+    JAVELIN__ = 2129
+    DERVISH = 2136
+
+    def display_name(self) -> str:
+        """Return a vehicle's display name."""
+        if self.name.lower().startswith('INTERCEPTOR'):
+            return f'Interceptor'
+        return self.name.replace('_', ' ').rstrip().title()
+
 
 class Ps2Zone(enum.Enum):
     """A zone in the game."""
@@ -185,6 +241,12 @@ class Ps2Zone(enum.Enum):
         """Return the default zone, used upon login and on error."""
         return cls.SANCTUARY
 
+    def display_name(self) -> str:
+        """Return a zone's display name."""
+        if self == Ps2Zone.VR_TRAINING:
+            return 'VR Training'
+        return self.name.title()
+
     @classmethod
     def from_zone_id(cls, zone_id: int) -> 'Ps2Zone':
         """Convert a zone ID to a :class:`Ps2Zone`.
@@ -206,6 +268,13 @@ class Ps2Server(enum.Enum):
     EMERALD = 4  # Emerald
     JAEGER = 5  # Jaeger
     SOLTECH = 6  # SolTech
+
+    def display_name(self) -> str:
+        """Return a server's display name."""
+        if self.value == Ps2Server.SOLTECH:
+            # Special case for non-standard server name
+            return 'SolTech'
+        return self.name.title()
 
     @classmethod
     def from_world_id(cls, world_id: int) -> 'Ps2Server':

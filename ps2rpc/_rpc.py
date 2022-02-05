@@ -7,39 +7,21 @@ update limit of one update per 15 seconds.
 
 import asyncio
 import logging
-from typing import Any, Dict, Optional, Type, TypedDict
+from typing import Any, Dict, Type
 
 import pypresence  # type: ignore
 
-# Client ID of the Discord application to use.
-_CLIENT_ID = 923122197793488997
+from .discord import APP_ID
+from .presence import PresencePayload
+
+__all__ = [
+    'RPCHandler',
+]
+
 # Update interval in seconds. This is governed by the Discord RPC guidelines
 _UPDATE_INTERVAL = 15.0
 
-_log = logging.getLogger("ps2rpc.presence")
-
-
-class PresenceStatus(TypedDict):
-    """A dict-like representation of the data to be sent to Discord.
-
-    state: current playing status, e.g. "Looking to play", "In a game"
-    details: current game details, e.g. "Competitive", "In Queue"
-    start_time: epoch seconds since start, will show time as "elapsed"
-    end_time: epoch seconds till end, will show time as "remaining"
-    large_image: name of the image asset to display
-    large_text: text to display on the large image
-    small_image: name of the image asset to display
-    small_text: text to display on the small image
-    """
-
-    state: Optional[str]
-    details: Optional[str]
-    start: Optional[int]
-    end: Optional[int]
-    large_image: Optional[str]
-    large_text: Optional[str]
-    small_image: Optional[str]
-    small_text: Optional[str]
+_log = logging.getLogger("ps2rpc.rpc")
 
 
 class _SingletonHandler(type):
@@ -53,7 +35,7 @@ class _SingletonHandler(type):
         return cls._instances[cls]
 
 
-class Status(metaclass=_SingletonHandler):
+class RPCHandler(metaclass=_SingletonHandler):
     """Singleton responsible for maintaining the RPC handshake.
 
     This class also includes a rate limit to stay within the four
@@ -65,16 +47,17 @@ class Status(metaclass=_SingletonHandler):
     update is due. If no changes are found, no update is broadcast.
     """
 
+    _status: PresencePayload
+
     def __init__(self) -> None:
         _log.info('Starting presence RPC client')
-        self._rpc = pypresence.AioPresence(_CLIENT_ID)
+        self._rpc = pypresence.AioPresence(APP_ID)
         loop = asyncio.get_event_loop()
         loop.create_task(self._rpc.connect())  # Start handshake loop
-        self._status: PresenceStatus = {}  # type: ignore
-        self._last_status: PresenceStatus = None  # type: ignore
+        self._last_status: PresencePayload = None  # type: ignore
         loop.create_task(self._loop())  # Start status loop
 
-    def update(self, status: PresenceStatus) -> None:
+    def update(self, status: PresencePayload) -> None:
         """Update the RPC status.
 
         This method will update the internal state cache.
@@ -88,7 +71,8 @@ class Status(metaclass=_SingletonHandler):
             _log.info('Status has changed, broadcasting')
             self._last_status = self._status
             # Strip None fields
-            kwargs = {k: v for k, v in self._status.items() if v is not None}
+            kwargs = {k: v for k, v in self._status.to_dict().items()
+                      if v is not None}
             await self._rpc.update(**kwargs)  # type: ignore
         else:
             _log.info('Status has not changed')
