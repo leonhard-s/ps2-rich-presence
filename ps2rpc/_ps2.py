@@ -160,6 +160,37 @@ class Ps2Faction(enum.Enum):
         return _FACTION_TAGS.get(self.value, '')
 
 
+class Ps2Vehicle(enum.Enum):
+    """A vehicle in the game."""
+
+    FLASH = 1
+    SUNDERER = 2
+    LIGHTNING = 3
+    MAGRIDER = 4
+    VANGUARD = 5
+    PROWLER = 6
+    SCYTHE = 7
+    REAVER = 8
+    MOSQUITO = 9
+    LIBERATOR = 10
+    GALAXY = 11
+    HARASSER = 12
+    VALKYRIE = 14
+    ANT = 15
+    AI_TURRET = 100
+    AA_TURRET = 150
+    AV_TURRET = 151
+    COLOSSUS = 2007
+    BASTION = 2019
+    JAVELIN = 2033
+    INTERCEPTOR_TR = 2122
+    INTERCEPTOR_NC = 2023
+    INTERCEPTOR_VS = 2124
+    JAVELIN_ = 2125
+    JAVELIN__ = 2129
+    DERVISH = 2136
+
+
 class Ps2Zone(enum.Enum):
     """A zone in the game."""
 
