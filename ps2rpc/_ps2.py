@@ -96,6 +96,14 @@ _PLAYABLE_FACTIONS = {
     4: 4,  # NSO
 }
 
+_FACTION_NAMES = {
+    0: 'Nanite Systems',
+    1: 'Vanu Sovereignty',
+    2: 'New Conglomerate',
+    3: 'Terran Republic',
+    4: 'Nanite Systems Operators',
+}
+
 _FACTION_TAGS = {
     0: '',  # No faction
     1: 'VS',  # Vanu Sovereignty
@@ -131,6 +139,12 @@ class Ps2Class(enum.Enum):
     HEAVY_ASSAULT = 5
     MAX = 6
 
+    def display_name(self) -> str:
+        """Return the class's display name."""
+        if self.name == 'MAX':
+            return self.name
+        return self.name.replace('_', ' ').title()
+
     @classmethod
     def from_loadout_id(cls, loadout_id: int) -> 'Ps2Class':
         """Convert a loadout ID to a class."""
@@ -158,6 +172,10 @@ class Ps2Faction(enum.Enum):
     def tag(self) -> str:
         """Return the faction's tag."""
         return _FACTION_TAGS.get(self.value, '')
+
+    def display_name(self) -> str:
+        """Return a faction's display name."""
+        return _FACTION_NAMES.get(self.value, 'Nanite Systems')
 
 
 class Ps2Vehicle(enum.Enum):
@@ -190,6 +208,12 @@ class Ps2Vehicle(enum.Enum):
     JAVELIN__ = 2129
     DERVISH = 2136
 
+    def display_name(self) -> str:
+        """Return a vehicle's display name."""
+        if self.name.lower().startswith('INTERCEPTOR'):
+            return f'Interceptor'
+        return self.name.replace('_', ' ').rstrip().title()
+
 
 class Ps2Zone(enum.Enum):
     """A zone in the game."""
@@ -215,6 +239,12 @@ class Ps2Zone(enum.Enum):
     def default(cls) -> 'Ps2Zone':
         """Return the default zone, used upon login and on error."""
         return cls.SANCTUARY
+
+    def display_name(self) -> str:
+        """Return a zone's display name."""
+        if self == Ps2Zone.VR_TRAINING:
+            return 'VR Training'
+        return self.name.title()
 
     @classmethod
     def from_zone_id(cls, zone_id: int) -> 'Ps2Zone':
