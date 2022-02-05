@@ -77,9 +77,13 @@ class PresenceFactory:
             text += f' {vehicle}'
         return profile.name.lower(), text
 
-    def _get_state(self) -> str:
+    def _get_state(self) -> str | None:
         """Generate the "state" string for the presence."""
-        return self._user_state.value
+        state: str | None = str(self._user_state.value)
+        # NOTE: The state string may not be empty; must be set to None instead
+        if not state:
+            state = None
+        return state
 
     def _get_details(self) -> str:
         """Generate the "details" string for the presence."""
