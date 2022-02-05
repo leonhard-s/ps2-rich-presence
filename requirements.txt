@@ -1,4 +1,0 @@
-auraxium>=0.2.0b4
-qasync>=0.22.0
-PyQt6>=6.2.2
-pypresence>=4.2.1
