@@ -40,11 +40,12 @@ ASSET_KEYS = [
     'valkyrie',
     'vanguard',
     # Zones
-    'amerish',
-    'esamir',
-    'hossin',
-    'indar',
-    'oshur',
+    # TODO: Remove "zone_" prefix or add prefixes everywhere
+    'zone_amerish',
+    'zone_esamir',
+    'zone_hossin',
+    'zone_indar',
+    'zone_oshur',
 ]
 
 
