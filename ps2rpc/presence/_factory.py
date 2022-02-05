@@ -60,7 +60,8 @@ class PresenceFactory:
     def _get_large_image(self) -> tuple[str, str]:
         """Generate the large image key and text."""
         zone = self._game_state.zone
-        return zone.name.lower(), zone.display_name()
+        # TODO: Remove zone_ prefix
+        return f'zone_{zone.name.lower()}', zone.display_name()
 
     def _get_small_image(self) -> tuple[str, str]:
         """Generate the small image key and text."""
