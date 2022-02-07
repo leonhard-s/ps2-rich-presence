@@ -1,0 +1,25 @@
+cmake_minimum_required(VERSION 3.0)
+
+project(Auraxium VERSION 0.1)
+
+set(CMAKE_AUTOMOC ON)
+
+find_package(Qt6 6.2.3 REQUIRED
+  COMPONENTS
+    Core
+)
+
+add_library(Arx STATIC
+  "include/arx/ess/subs.hpp"
+  "src/ess/subs.cpp"
+)
+target_include_directories(Arx
+  PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
+  PRIVATE
+    ${PROJECT_SOURCE_DIR}/src
+)
+target_link_libraries(Arx
+  PRIVATE
+    Qt::Core
+)
