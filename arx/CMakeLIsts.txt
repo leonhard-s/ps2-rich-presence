@@ -7,10 +7,13 @@ set(CMAKE_AUTOMOC ON)
 find_package(Qt6 6.2.3 REQUIRED
   COMPONENTS
     Core
+    WebSockets
 )
 
 add_library(Arx STATIC
+  "include/arx/ess/client.hpp"
   "include/arx/ess/subs.hpp"
+  "src/ess/client.cpp"
   "src/ess/subs.cpp"
 )
 target_include_directories(Arx
@@ -22,4 +25,5 @@ target_include_directories(Arx
 target_link_libraries(Arx
   PRIVATE
     Qt::Core
+    Qt::WebSockets
 )
