@@ -8,6 +8,27 @@ An open source utility providing [Discord Rich Presence](https://discord.com/ric
 
 [Overview](#overview) • [Features](#features) • [License / Disclaimer](#license) • [Installation](#installation) • [Contributing](#contributing)
 
+## Rewrite Notice
+
+This utility is mostly completed, but still in **proof-of-concept** stages.
+
+More importantly, we want to focus on ease-of-use and portability, so we are currently **rewriting** it in C++.
+
+If you want to play around with this version anyway, you can install and run it as follows:
+
+1. Download and install [Python 3.10](https://www.python.org/downloads/) or higher.
+2. Clone this repository using [Git](https://git-scm.com/).
+3. Install the required dependencies using the `requirements.txt` file in the repository root:
+
+    ```
+    python -m pip install --user --upgrade -r ./path/to/requirements.txt
+    ```
+4. Run the app:
+
+    ```
+    python -m ps2rpc
+    ```
+
 ## Overview
 
 <!-- TODO: Add comparison of normal Discord game detection and Rich Presence -->
