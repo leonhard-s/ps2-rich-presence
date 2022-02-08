@@ -49,14 +49,14 @@ namespace arx
         void connect();
         void disconnect();
         void reconnect();
-        void subscribe(const Subscription &subscription);
-        void unsubscribe(const Subscription &subscription);
+        void subscribe(const Subscription subscription);
+        void unsubscribe(const Subscription subscription);
         void clearSubscriptions();
 
     private Q_SLOTS:
         void onConnected();
         void onDisconnected();
-        void parseMessage(const QString &message);
+        void parseMessage(const QString message);
 
     private:
         static QUrl getEssEndpointUrl(const QString &service_id,

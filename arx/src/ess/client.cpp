@@ -56,7 +56,7 @@ namespace arx
         connect();
     }
 
-    void EssClient::subscribe(const Subscription &subscription)
+    void EssClient::subscribe(const Subscription subscription)
     {
         subscriptions_.append(subscription);
         if (isConnected())
@@ -66,7 +66,7 @@ namespace arx
         }
     }
 
-    void EssClient::unsubscribe(const Subscription &subscription)
+    void EssClient::unsubscribe(const Subscription subscription)
     {
         subscriptions_.removeAll(subscription);
         if (isConnected())
@@ -107,7 +107,7 @@ namespace arx
         emit disconnected();
     }
 
-    void EssClient::parseMessage(const QString &message)
+    void EssClient::parseMessage(const QString message)
     {
         // Forward raw payload to anyone who's asking
         qDebug() << "Received message:" << message;
