@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 
 project(DiscordSDK VERSION 0.1)
 
-add_library(Discord SHARED
+add_library(Discord STATIC
   "include/discord.h"
   "include/types.h"
   "include/core.h"
@@ -39,4 +39,10 @@ target_include_directories(Discord
   PUBLIC
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/src
+)
+
+# TODO: Be smarter about this, support non-win64, add install() etc.
+target_link_libraries(Discord
+  PUBLIC
+    ${PROJECT_SOURCE_DIR}/lib/x86_64/discord_game_sdk.dll.lib
 )
