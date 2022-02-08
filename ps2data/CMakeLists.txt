@@ -8,6 +8,7 @@ add_library(Ps2Data STATIC
   "faction.hpp"
   "faction.cpp"
   "id-types.hpp"
+  "ps2.hpp"
   "server.hpp"
   "server.cpp"
   "vehicle.hpp"
