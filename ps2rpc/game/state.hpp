@@ -13,6 +13,7 @@ namespace ps2rpc
      */
     struct GameState
     {
+        GameState();
         GameState(ps2::CharacterId character_id,
                   ps2::Faction faction,
                   ps2::Faction team,
@@ -20,6 +21,9 @@ namespace ps2rpc
                   ps2::Class class_,
                   ps2::Vehicle vehicle,
                   ps2::Zone zone);
+
+        bool operator==(const GameState &other) const;
+        bool operator!=(const GameState &other) const;
 
         ps2::CharacterId character_id;
         ps2::Faction faction;

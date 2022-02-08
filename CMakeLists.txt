@@ -15,8 +15,8 @@ add_subdirectory(ps2data)
 
 # Main executable
 add_executable(Ps2RichPresence
-    ps2rpc/game/state.hpp
-    ps2rpc/game/state.cpp
+  "ps2rpc/game/state.hpp"
+  "ps2rpc/game/state.cpp"
 )
 target_include_directories(Ps2RichPresence
   PRIVATE
