@@ -15,6 +15,9 @@ add_subdirectory(ps2data)
 
 # Main executable
 add_executable(Ps2RichPresence
+  "ps2rpc/appdata/appid.hpp"
+  "ps2rpc/appdata/assets.hpp"
+  "ps2rpc/appdata/assets.cpp"
   "ps2rpc/game/state.hpp"
   "ps2rpc/game/state.cpp"
 )
