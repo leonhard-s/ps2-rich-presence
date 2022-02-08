@@ -116,7 +116,7 @@ namespace arx
         }
         if (!character_ids.isEmpty())
         {
-            json["characterIds"] = character_ids;
+            json["characters"] = character_ids;
         }
         // Add world ids
         QJsonArray world_ids;
@@ -126,7 +126,7 @@ namespace arx
         }
         if (!world_ids.isEmpty())
         {
-            json["worldIds"] = world_ids;
+            json["worlds"] = world_ids;
         }
         // Add "logicalAndCharactersWithWorlds" flag
         if (logical_and_)
