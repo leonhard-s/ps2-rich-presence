@@ -62,7 +62,7 @@ namespace arx
         if (isConnected())
         {
             QJsonObject payload = subscription.buildSubscribePayload();
-            ws_.sendTextMessage(QJsonDocument{payload}.toJson());
+            ws_.sendTextMessage(QJsonDocument{payload}.toJson(QJsonDocument::Compact));
         }
     }
 
@@ -72,7 +72,7 @@ namespace arx
         if (isConnected())
         {
             QJsonObject payload = subscription.buildUnsubscribePayload();
-            ws_.sendTextMessage(QJsonDocument{payload}.toJson());
+            ws_.sendTextMessage(QJsonDocument{payload}.toJson(QJsonDocument::Compact));
         }
         emit subscriptionRemoved(subscription);
     }
@@ -84,7 +84,7 @@ namespace arx
         if (isConnected())
         {
             QJsonObject payload = Subscription::buildUnsubscribeAllPayload();
-            ws_.sendTextMessage(QJsonDocument{payload}.toJson());
+            ws_.sendTextMessage(QJsonDocument{payload}.toJson(QJsonDocument::Compact));
         }
         for (auto const &subscription : old_subs)
         {
