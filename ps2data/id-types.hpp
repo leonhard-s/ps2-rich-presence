@@ -7,7 +7,7 @@
 
 namespace ps2
 {
-    // The values 0 and -1 (i.e. the maximum value for uint) are reserved for
+    // The values 0 and -1 (i.e., the maximum value for uint) are reserved for
     // "none" and "null" respectively.
 
     //  8 bytes per ID, can store Ids up to 255

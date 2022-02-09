@@ -37,7 +37,7 @@ namespace ps2rpc
     /**
      * Factory class for generating a GameState.
      *
-     * This class holds the immutable parts of the game state that are boundn
+     * This class holds the immutable parts of the game state that are bound
      * to the character and cannot be inferred from event service payloads,
      * such as their ID, faction, or server.
      *
