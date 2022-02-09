@@ -110,7 +110,6 @@ namespace arx
     void EssClient::parseMessage(const QString message)
     {
         // Forward raw payload to anyone who's asking
-        qDebug() << "Received message:" << message;
         emit messageReceived(message);
         // Convert the text message to a JSON object
         QJsonParseError *error = nullptr;
