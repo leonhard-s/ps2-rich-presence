@@ -11,6 +11,7 @@ find_package(Qt6 6.2.3 REQUIRED
 
 # First-party libraries
 add_subdirectory(arx)
+add_subdirectory(discord-sdk)
 add_subdirectory(ps2data)
 
 # Main executable
@@ -18,6 +19,10 @@ add_executable(Ps2RichPresence
   "ps2rpc/appdata/appid.hpp"
   "ps2rpc/appdata/assets.hpp"
   "ps2rpc/appdata/assets.cpp"
+  "ps2rpc/presence/factory.hpp"
+  "ps2rpc/presence/factory.cpp"
+  "ps2rpc/presence/handler.hpp"
+  "ps2rpc/presence/handler.cpp"
   "ps2rpc/game/state.hpp"
   "ps2rpc/game/state.cpp"
 )
@@ -29,5 +34,6 @@ target_link_libraries(Ps2RichPresence
   PRIVATE
     Qt::Core
     Arx 
+    Discord
     Ps2Data
 )
