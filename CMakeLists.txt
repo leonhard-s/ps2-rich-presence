@@ -26,6 +26,8 @@ add_executable(Ps2RichPresence
   "ps2rpc/presence/handler.cpp"
   "ps2rpc/game/state.hpp"
   "ps2rpc/game/state.cpp"
+  "ps2rpc/tracker.hpp"
+  "ps2rpc/tracker.cpp"
 )
 target_include_directories(Ps2RichPresence
   PRIVATE
