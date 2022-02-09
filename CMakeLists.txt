@@ -19,6 +19,7 @@ add_executable(Ps2RichPresence
   "ps2rpc/appdata/appid.hpp"
   "ps2rpc/appdata/assets.hpp"
   "ps2rpc/appdata/assets.cpp"
+  "ps2rpc/appdata/serviceid.hpp"
   "ps2rpc/presence/factory.hpp"
   "ps2rpc/presence/factory.cpp"
   "ps2rpc/presence/handler.hpp"
