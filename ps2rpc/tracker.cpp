@@ -92,8 +92,7 @@ namespace ps2rpc
             // Event name(s)
             "Death",
             // Character IDs
-            {"all"},
-            // {QString::number(character_id_)},
+            {QString::number(character_id_)},
             // World IDs
             {"all"});
     }
