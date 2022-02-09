@@ -32,7 +32,7 @@ namespace ps2rpc
     {
         // Character ID
         ps2::CharacterId character_id = character_id_;
-        bool are_we_the_baddies = payload["attacker_character_id"].toInteger() == character_id;
+        bool are_we_the_baddies = payload["attacker_character_id"].toString().toLongLong() == character_id;
         // Team
         // TODO: Implement team ID once it is implemented on the API side
         ps2::FactionId team_id = faction_id_;
@@ -42,20 +42,20 @@ namespace ps2rpc
             qWarning() << "Unable to get faction from faction ID" << team_id;
         }
         // Class
-        ps2::LoadoutId loadout_id = are_we_the_baddies ? payload["attacker_loadout_id"].toInteger()
-                                                       : payload["loaodut_id"].toInteger();
+        ps2::LoadoutId loadout_id = are_we_the_baddies ? payload["attacker_loadout_id"].toString().toInt()
+                                                       : payload["loaodut_id"].toString().toInt();
         ps2::Class class_;
         if (ps2::class_from_loadout_id(loadout_id, class_))
         {
             qWarning() << "Unable to get class from loadout ID:" << loadout_id;
         }
         // Vehicle
-        ps2::VehicleId vehicle_id = are_we_the_baddies ? payload["attacker_vehicle_id"].toInteger()
-                                                       : payload["vehicle_id"].toInteger();
+        ps2::VehicleId vehicle_id = are_we_the_baddies ? payload["attacker_vehicle_id"].toString().toInt()
+                                                       : payload["vehicle_id"].toString().toInt();
         ps2::Vehicle vehicle = ps2::Vehicle::None;
         ps2::vehicle_from_vehicle_id(vehicle_id, vehicle);
         // Zone
-        ps2::ZoneId zone_id = payload["zone_id"].toInteger();
+        ps2::ZoneId zone_id = payload["zone_id"].toString().toInt();
         ps2::Zone zone;
         if (ps2::zone_from_zone_id(zone_id, zone))
         {
