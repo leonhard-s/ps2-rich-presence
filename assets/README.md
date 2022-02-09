@@ -8,12 +8,9 @@ Processing notes:
 
 **0:** No modification required; image is unaltered.
 
-**1:** Asset was centred and upscaled to 512 x 512 px as required for Discord assets.
+**1:** Centred and upscaled asset to 512 by 512 pixels as is required for Discord application assets.
 
-**2:** Asset was created from scratch using the API asset as a reference.
-
-**3:** Asset was manually traced and recreated for better image quality.
-
+**2:** Created the asset from scratch using the given API file as a reference.
 
 | Asset                         | Image ID | Download                                                                   |  Processing  |
 |-------------------------------|----------|----------------------------------------------------------------------------|--------------|
@@ -30,7 +27,7 @@ Processing notes:
 | small_image/harasser.png      |    77934 | [Link](https://census.daybreakgames.com/files/ps2/images/static/77934.png) |       1      |
 | small_image/heavy_assault.png |       59 | [Link](https://census.daybreakgames.com/files/ps2/images/static/59.png)    |       1      |
 | small_image/infiltrator.png   |      204 | [Link](https://census.daybreakgames.com/files/ps2/images/static/204.png)   |       1      |
-| small_image/javelin.png       |    93911 | [Link](https://census.daybreakgames.com/files/ps2/images/static/93911.png) |       3      |
+| small_image/javelin.png       |    93911 | [Link](https://census.daybreakgames.com/files/ps2/images/static/93911.png) |       2      |
 | small_image/liberator.png     |    77935 | [Link](https://census.daybreakgames.com/files/ps2/images/static/77935.png) |       1      |
 | small_image/light_assault.png |       62 | [Link](https://census.daybreakgames.com/files/ps2/images/static/62.png)    |       1      |
 | small_image/lightning.png     |    77936 | [Link](https://census.daybreakgames.com/files/ps2/images/static/77936.png) |       1      |
