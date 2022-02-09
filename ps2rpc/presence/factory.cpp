@@ -14,7 +14,12 @@
 namespace ps2rpc
 {
     PresenceFactory::PresenceFactory(QObject *parent)
-        : QObject{parent}, is_idle_{true} {}
+        : QObject{parent}, is_idle_{true}
+    {
+        // Emit initial idle activity
+        setActivityIdle();
+        emit activityChanged(getPresenceAsActivity());
+    }
 
     discord::Activity PresenceFactory::getPresenceAsActivity()
     {
@@ -35,6 +40,7 @@ namespace ps2rpc
         if (!is_idle_)
         {
             is_idle_ = true;
+            emit activityChanged(getPresenceAsActivity());
         }
     }
 
@@ -44,6 +50,7 @@ namespace ps2rpc
         {
             state_ = state;
             is_idle_ = false;
+            emit activityChanged(getPresenceAsActivity());
         }
     }
 
@@ -56,8 +63,8 @@ namespace ps2rpc
         std::string temp;
         assets::imageKeyFromZone(ps2::Zone::Sanctuary, temp);
         assets.SetLargeImage(temp.c_str());
+        // TODO: Tidy up asset/text pair generation
         assets.SetLargeText("Sanctuary");
-        // TODO: Add idle assets
         return activity;
     }
 
@@ -67,15 +74,20 @@ namespace ps2rpc
         std::string temp;
         // Details
         ps2::faction_to_display_name(state.faction, temp);
-        QString details = QString::fromStdString(temp);
-        if (state.faction != state.team)
+        QString details;
+        if (state.faction == state.team)
+        {
+            details = QString::fromStdString(temp);
+        }
+        else
         {
             ps2::faction_to_display_name(state.team, temp);
-            details += " on " + QString::fromStdString(temp);
+            details = "Freelancing for " + QString::fromStdString(temp);
         }
-        ps2::server_to_display_name(state.server, temp);
-        details += " (" + QString::fromStdString(temp) + ")";
         activity.SetDetails(details.toStdString().c_str());
+        // State
+        ps2::server_to_display_name(state.server, temp);
+        activity.SetState(temp.c_str());
         auto &assets = activity.GetAssets();
         // Large image
         assets::imageKeyFromZone(state.zone, temp);
