@@ -131,6 +131,9 @@ namespace assets
         case ps2::Zone::Oshur:
             image_key = "zone_oshur";
             break;
+        case ps2::Zone::Sanctuary:
+            image_key = "zone_sanctuary";
+            break;
         default:
             return -1;
         }
