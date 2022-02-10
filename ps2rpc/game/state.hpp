@@ -54,9 +54,17 @@ namespace ps2rpc
                          ps2::Class initial_class = ps2::Class::LightAssault);
 
         ps2::CharacterId getCharacterId() const noexcept;
+        ps2::Faction getFaction() const noexcept;
+        void setFaction(ps2::Faction faction) noexcept;
+        ps2::Server getServer() const noexcept;
+        void setServer(ps2::Server server) noexcept;
+        ps2::Class getProfileAsClass() const noexcept;
+        ps2::Vehicle getProfileAsVehicle() const noexcept;
         void setProfile(ps2::Class class_) noexcept;
         void setProfile(ps2::Vehicle vehicle) noexcept;
+        ps2::Faction getTeam() const noexcept;
         void setTeam(ps2::Faction team) noexcept;
+        ps2::Zone getZone() const noexcept;
         void setZone(ps2::Zone zone) noexcept;
 
         int buildState(GameState &game_state) const;

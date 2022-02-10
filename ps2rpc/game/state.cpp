@@ -37,6 +37,36 @@ namespace ps2rpc
         return character_id_;
     }
 
+    ps2::Faction GameStateFactory::getFaction() const noexcept
+    {
+        return faction_;
+    }
+
+    void GameStateFactory::setFaction(ps2::Faction faction) noexcept
+    {
+        faction_ = faction;
+    }
+
+    ps2::Server GameStateFactory::getServer() const noexcept
+    {
+        return server_;
+    }
+
+    void GameStateFactory::setServer(ps2::Server server) noexcept
+    {
+        server_ = server;
+    }
+
+    ps2::Class GameStateFactory::getProfileAsClass() const noexcept
+    {
+        return class_;
+    }
+
+    ps2::Vehicle GameStateFactory::getProfileAsVehicle() const noexcept
+    {
+        return vehicle_;
+    }
+
     void GameStateFactory::setProfile(ps2::Class class_) noexcept
     {
         this->class_ = class_;
@@ -47,9 +77,19 @@ namespace ps2rpc
         vehicle_ = vehicle;
     }
 
+    ps2::Faction GameStateFactory::getTeam() const noexcept
+    {
+        return team_;
+    }
+
     void GameStateFactory::setTeam(ps2::Faction team) noexcept
     {
         team_ = team;
+    }
+
+    ps2::Zone GameStateFactory::getZone() const noexcept
+    {
+        return zone_;
     }
 
     void GameStateFactory::setZone(ps2::Zone zone) noexcept
