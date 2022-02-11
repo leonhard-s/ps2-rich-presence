@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(Ps2RichPresence VERSION 0.1)
+project(Ps2RichPresence VERSION 0.2)
 
 set(CMAKE_AUTOMOC ON)
 
@@ -17,6 +17,12 @@ add_subdirectory(arx)
 add_subdirectory(discord-sdk)
 add_subdirectory(ps2data)
 
+# Process config header; this lets us access project name and version strings
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/ps2rpc/config.hpp.in
+  ${CMAKE_CURRENT_BINARY_DIR}/ps2rpc/config.hpp
+  @ONLY
+)
 # Main executable
 add_executable(Ps2RichPresence
   "ps2rpc/appdata/appid.hpp"
@@ -36,6 +42,7 @@ add_executable(Ps2RichPresence
 target_include_directories(Ps2RichPresence
   PRIVATE
     ${PROJECT_SOURCE_DIR}/ps2rpc
+    ${PROJECT_BINARY_DIR}/ps2rpc # Required for config.hpp.in
 )
 target_link_libraries(Ps2RichPresence
   PRIVATE
