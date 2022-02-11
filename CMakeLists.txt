@@ -7,7 +7,9 @@ set(CMAKE_AUTOMOC ON)
 find_package(Qt6 6.2.3 REQUIRED
   COMPONENTS
     Core
+    Gui
     Network
+    Widgets
 )
 
 # First-party libraries
@@ -38,7 +40,9 @@ target_include_directories(Ps2RichPresence
 target_link_libraries(Ps2RichPresence
   PRIVATE
     Qt::Core
+    Qt::Gui
     Qt::Network
+    Qt::Widgets
     Arx 
     Discord
     Ps2Data

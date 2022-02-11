@@ -1,8 +1,8 @@
 // Copyright 2022 Leonhard S.
 
-#include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QTimer>
+#include <QtWidgets/QApplication>
 
 #include "discord.h"
 #include "arx/ess.hpp"
@@ -14,7 +14,7 @@
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    QApplication a(argc, argv);
 
     // Create presence helpers
     ps2rpc::PresenceHandler presence_handler;
