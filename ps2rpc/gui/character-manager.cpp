@@ -2,7 +2,9 @@
 
 #include "gui/character-manager.hpp"
 
+#include <QtCore/QRegularExpression>
 #include <QtCore/QScopedPointer>
+#include <QtGui/QRegularExpressionValidator>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QGridLayout>
@@ -27,8 +29,59 @@ namespace ps2rpc
         setupUi();
 
         // Signals
+        QObject::connect(button_add_, &QPushButton::clicked,
+                         this, &CharacterManager::onAddButtonClicked);
         QObject::connect(button_close_, &QPushButton::clicked,
                          this, &CharacterManager::accept);
+    }
+
+    void CharacterManager::onAddButtonClicked()
+    {
+        QScopedPointer<QDialog> dialog(createCharacterNameInputDialog());
+        if (!dialog->exec())
+        {
+            return;
+        }
+        // TODO: Validate that this character exists
+        auto name = dialog->findChild<QLineEdit *>()->text();
+        list_->addItem(name);
+        emit characterAdded(list_->count() - 1, name);
+    }
+
+    QDialog *CharacterManager::createCharacterNameInputDialog()
+    {
+        auto dialog = new QDialog(this);
+        dialog->setWindowTitle(tr("Add Character"));
+        dialog->setMinimumSize(120, 80);
+        auto layout = new QVBoxLayout(dialog);
+
+        auto name_input = new QLineEdit(dialog);
+        layout->addWidget(name_input);
+        name_input->setPlaceholderText(tr("Enter character name"));
+        name_input->setInputMethodHints(Qt::ImhNoPredictiveText);
+        name_input->setValidator(
+            new QRegularExpressionValidator(
+                // Only accept between 3 and 32 alphanumerical characters
+                QRegularExpression("[a-zA-Z0-9]{3,32}"), name_input));
+
+        auto button_layout = new QHBoxLayout();
+        layout->addLayout(button_layout);
+        button_layout->addSpacerItem(new QSpacerItem(40, 20,
+                                                     QSizePolicy::Expanding,
+                                                     QSizePolicy::Minimum));
+        auto button_ok = new QPushButton(tr("OK"), dialog);
+        button_layout->addWidget(button_ok);
+        button_ok->setDefault(true);
+        auto button_cancel = new QPushButton(tr("Cancel"), dialog);
+        button_layout->addWidget(button_cancel);
+
+        QObject::connect(name_input, &QLineEdit::returnPressed,
+                         dialog, &QDialog::accept);
+        QObject::connect(button_ok, &QPushButton::clicked,
+                         dialog, &QDialog::accept);
+        QObject::connect(button_cancel, &QPushButton::clicked,
+                         dialog, &QDialog::reject);
+        return dialog;
     }
 
     void CharacterManager::setupUi()

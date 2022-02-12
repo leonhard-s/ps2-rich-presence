@@ -18,7 +18,14 @@ namespace ps2rpc
     public:
         explicit CharacterManager(QWidget *parent = nullptr);
 
+    Q_SIGNALS:
+        void characterAdded(int index, const QString &name);
+
+    private Q_SLOTS:
+        void onAddButtonClicked();
+
     private:
+        QDialog *createCharacterNameInputDialog();
         void setupUi();
 
         QListWidget *list_;
