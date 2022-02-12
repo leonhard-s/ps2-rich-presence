@@ -29,6 +29,8 @@ add_executable(Ps2RichPresence
   "ps2rpc/appdata/assets.hpp"
   "ps2rpc/appdata/assets.cpp"
   "ps2rpc/appdata/serviceid.hpp"
+  "ps2rpc/gui/character-manager.hpp"
+  "ps2rpc/gui/character-manager.cpp"
   "ps2rpc/gui/main-window.hpp"
   "ps2rpc/gui/main-window.cpp"
   "ps2rpc/gui/timeago.hpp"
