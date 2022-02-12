@@ -11,6 +11,7 @@
 #include <QtWidgets/QInputDialog>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QListWidget>
+#include <QtWidgets/QMessageBox>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QVBoxLayout>
 
@@ -28,17 +29,24 @@ namespace ps2rpc
         // Create GUI elements
         setupUi();
 
+        // Disable the remove button while no character is selected
+        button_remove_->setEnabled(false);
+
         // Signals
         QObject::connect(button_add_, &QPushButton::clicked,
                          this, &CharacterManager::onAddButtonClicked);
+        QObject::connect(button_remove_, &QPushButton::clicked,
+                         this, &CharacterManager::onRemoveButtonClicked);
         QObject::connect(button_close_, &QPushButton::clicked,
                          this, &CharacterManager::accept);
+        QObject::connect(list_, &QListWidget::itemSelectionChanged,
+                         this, &CharacterManager::onCharacterSelected);
     }
 
     void CharacterManager::onAddButtonClicked()
     {
         QScopedPointer<QDialog> dialog(createCharacterNameInputDialog());
-        if (!dialog->exec())
+        if (dialog->exec() == QDialog::DialogCode::Rejected)
         {
             return;
         }
@@ -46,6 +54,33 @@ namespace ps2rpc
         auto name = dialog->findChild<QLineEdit *>()->text();
         list_->addItem(name);
         emit characterAdded(list_->count() - 1, name);
+    }
+
+    void CharacterManager::onRemoveButtonClicked()
+    {
+        if (list_->currentRow() == -1 || list_->count() == 0)
+        {
+            // This button should already be disabled; this is just fallback
+            button_remove_->setEnabled(false);
+            return;
+        }
+        // Ask for confirmation
+        auto msg = tr("Are you sure you want to remove the character '%1'?")
+                       .arg(list_->currentItem()->text());
+        if (QMessageBox::question(
+                this, tr("Remove Character"),
+                msg, QMessageBox::Yes | QMessageBox::No) == QMessageBox::No)
+        {
+            return;
+        }
+        // User has confirmed their intentions, remove the character
+        list_->takeItem(list_->currentRow());
+    }
+
+    void CharacterManager::onCharacterSelected()
+    {
+        // Enable the remove button if a character is selected
+        button_remove_->setEnabled(list_->currentRow() != -1);
     }
 
     QDialog *CharacterManager::createCharacterNameInputDialog()

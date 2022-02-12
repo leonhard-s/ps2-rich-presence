@@ -20,9 +20,12 @@ namespace ps2rpc
 
     Q_SIGNALS:
         void characterAdded(int index, const QString &name);
+        void characterRemoved(int index, const QString &name);
 
     private Q_SLOTS:
         void onAddButtonClicked();
+        void onRemoveButtonClicked();
+        void onCharacterSelected();
 
     private:
         QDialog *createCharacterNameInputDialog();
