@@ -171,14 +171,14 @@ namespace ps2rpc
         auto button_layout = new QHBoxLayout();
         layout->addLayout(button_layout);
 
-        button_add_ = new QPushButton(tr("Add new"), this);
+        button_add_ = new QPushButton(tr("Add"), this);
         button_layout->addWidget(button_add_);
         button_add_->setDefault(true);
 
         button_remove_ = new QPushButton(tr("Remove"), this);
         button_layout->addWidget(button_remove_);
 
-        button_close_ = new QPushButton(tr("Close"), this);
+        button_close_ = new QPushButton(tr("Confirm"), this);
         button_layout->addWidget(button_close_);
     }
 

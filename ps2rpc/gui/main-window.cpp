@@ -49,7 +49,7 @@ namespace ps2rpc
         if (index < 0)
         {
             return;
-    }
+        }
         if (characters_combo_box_->count() <= 2)
         {
             resetCharacterComboBox();
@@ -270,10 +270,10 @@ namespace ps2rpc
         auto footer_labels_layout = new QHBoxLayout();
         layout->addLayout(footer_labels_layout);
 
-        auto appinfo_string = QCoreApplication::applicationName() + " v" +
-                              QCoreApplication::applicationVersion();
-        auto appinfo_label = new QLabel(appinfo_string, this);
-        footer_labels_layout->addWidget(appinfo_label);
+        auto version_string = tr("Version %1")
+                                  .arg(QCoreApplication::applicationVersion());
+        auto version_label = new QLabel(version_string, this);
+        footer_labels_layout->addWidget(version_label);
 
         auto link = getProjectLink();
         auto title = tr("Project Repository");
@@ -282,7 +282,6 @@ namespace ps2rpc
         footer_labels_layout->addWidget(repo_label);
         repo_label->setTextFormat(Qt::TextFormat::MarkdownText);
         repo_label->setOpenExternalLinks(true);
-        repo_label->setAlignment(Qt::AlignRight);
 
         auto footer_buttons_layout = new QHBoxLayout();
         layout->addLayout(footer_buttons_layout);
