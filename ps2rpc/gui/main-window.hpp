@@ -4,6 +4,7 @@
 #define PS2RPC_GUI_MAINWINDOW_HPP
 
 #include <QtCore/QObject>
+#include <QtCore/QStringList>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QLabel>
@@ -20,7 +21,12 @@ namespace ps2rpc
     public:
         MainWindow();
 
+    private Q_SLOTS:
+        void onCharacterChanged(int index);
+
     private:
+        void openCharacterManager(const QStringList &characters);
+
         QString getProjectLink() const;
         void setEventFrequency(double events_per_second);
         void setEventLatency(int latency_ms);

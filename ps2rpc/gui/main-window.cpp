@@ -5,7 +5,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDateTime>
 #include <QtCore/QObject>
-#include <QtGui/QIcon>
+#include <QtCore/QStringList>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QGroupBox>
@@ -15,6 +15,7 @@
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QVBoxLayout>
 
+#include "gui/character-manager.hpp"
 #include "gui/timeago.hpp"
 
 namespace ps2rpc
@@ -32,6 +33,73 @@ namespace ps2rpc
 #ifdef Q_OS_WIN
         setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);
 #endif // Q_OS_WIN
+
+        QObject::connect(characters_combo_box_,
+                         &QComboBox::currentIndexChanged,
+                         this,
+                         &MainWindow::onCharacterChanged);
+    }
+
+    void MainWindow::onCharacterChanged(int index)
+    {
+        if (index < 0)
+        {
+            return;
+    }
+        if (characters_combo_box_->count() <= 2)
+        {
+            resetCharacterComboBox();
+        }
+        if (index == characters_combo_box_->count() - 1)
+        {
+            // Get existing characters
+            QStringList characters;
+            for (int i = 0; i < characters_combo_box_->count() - 2; ++i)
+            {
+                characters.append(characters_combo_box_->itemText(i));
+            }
+            openCharacterManager(characters);
+        }
+        // TODO: Handle existing being selected
+    }
+
+    void MainWindow::openCharacterManager(const QStringList &characters)
+    {
+        auto dialog = new CharacterManager(this);
+        // Show the dialog
+        if (dialog->exec() == QDialog::DialogCode::Accepted)
+        {
+            // Update characters dropdown
+            auto list = dialog->findChild<QListWidget *>();
+            // Reset the dropdown
+            resetCharacterComboBox();
+            // Add characters from manager
+            for (int i = 0; i < list->count(); ++i)
+            {
+                auto name = list->item(i)->text();
+                // Offset of 2 because of the separator and "Manage" items
+                auto index = characters_combo_box_->count() - 2;
+                characters_combo_box_->insertItem(index, name);
+            }
+            // Select the topmost character if any were added
+            if (list->count() > 0)
+            {
+                characters_combo_box_->setCurrentIndex(0);
+            }
+        }
+        else
+        {
+            // Dialog was cancelled - if we had characters, select the first
+            if (characters_combo_box_->count() > 2)
+            {
+                characters_combo_box_->setCurrentIndex(0);
+            }
+            else
+            {
+                // Otherwise, select nothing
+                characters_combo_box_->setCurrentIndex(-1);
+            }
+        }
     }
 
     QString MainWindow::getProjectLink() const
@@ -97,6 +165,8 @@ namespace ps2rpc
         characters_combo_box_->clear();
         characters_combo_box_->insertSeparator(0);
         characters_combo_box_->addItem(tr("Manage characters…"), QVariant(0));
+        characters_combo_box_->setPlaceholderText(tr("Select a character"));
+        characters_combo_box_->setCurrentIndex(-1);
     }
 
     void MainWindow::setupUi()
