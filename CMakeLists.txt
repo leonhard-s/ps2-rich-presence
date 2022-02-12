@@ -23,6 +23,10 @@ configure_file(
   ${CMAKE_CURRENT_BINARY_DIR}/ps2rpc/config.hpp
   @ONLY
 )
+# Application icon
+if(WIN32)
+  set(APP_ICON_RESOURCE "windows/ps2rpc.rc")
+endif()
 # Main executable
 add_executable(Ps2RichPresence
   "ps2rpc/appdata/appid.hpp"
@@ -43,6 +47,7 @@ add_executable(Ps2RichPresence
   "ps2rpc/tracker.hpp"
   "ps2rpc/tracker.cpp"
   "ps2rpc/main.cpp"
+  ${APP_ICON_RESOURCE}
 )
 target_include_directories(Ps2RichPresence
   PRIVATE
@@ -58,4 +63,9 @@ target_link_libraries(Ps2RichPresence
     Arx 
     Discord
     Ps2Data
+)
+# Set executable name
+set_target_properties(Ps2RichPresence
+  PROPERTIES
+    OUTPUT_NAME "PS2 Rich Presence"
 )
