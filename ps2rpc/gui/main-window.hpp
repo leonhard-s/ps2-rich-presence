@@ -29,6 +29,8 @@ namespace ps2rpc
         void setLastPresence(bool never);
         void setLastPresence(QDateTime timestamp);
         void setStatus(const QString &status);
+
+        void resetCharacterComboBox();
         void setupUi();
 
         // GUI elements

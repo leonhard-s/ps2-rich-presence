@@ -88,6 +88,17 @@ namespace ps2rpc
         status_->setText(tr("Status: ") + status);
     }
 
+    void MainWindow::resetCharacterComboBox()
+    {
+        if (characters_combo_box_ == nullptr)
+        {
+            return;
+        }
+        characters_combo_box_->clear();
+        characters_combo_box_->insertSeparator(0);
+        characters_combo_box_->addItem(tr("Manage characters…"), QVariant(0));
+    }
+
     void MainWindow::setupUi()
     {
 
@@ -101,8 +112,7 @@ namespace ps2rpc
         characters_layout->addWidget(character_label);
         characters_combo_box_ = new QComboBox(this);
         characters_layout->addWidget(characters_combo_box_);
-        characters_combo_box_->insertSeparator(0);
-        characters_combo_box_->addItem(tr("Manage characters…"), QVariant(0));
+        resetCharacterComboBox();
         characters_layout->setStretch(0, 1);
         characters_layout->setStretch(1, 2);
 
