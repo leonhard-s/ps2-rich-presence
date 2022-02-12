@@ -38,6 +38,10 @@ namespace ps2rpc
                          &QComboBox::currentIndexChanged,
                          this,
                          &MainWindow::onCharacterChanged);
+        QObject::connect(minimise_button_,
+                         &QPushButton::clicked,
+                         this,
+                         &MainWindow::showMinimized);
     }
 
     void MainWindow::onCharacterChanged(int index)
