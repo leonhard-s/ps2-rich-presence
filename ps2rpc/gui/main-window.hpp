@@ -35,6 +35,7 @@ namespace ps2rpc
         void setLastPresence(bool never);
         void setLastPresence(QDateTime timestamp);
         void setStatus(const QString &status);
+        void setTrackingEnabled(bool enabled);
 
         void resetCharacterComboBox();
         void setupUi();
@@ -49,7 +50,7 @@ namespace ps2rpc
         QCheckBox *auto_track_;
         QCheckBox *start_with_windows_;
         QCheckBox *minimise_to_tray_;
-        QPushButton *connect_button_;
+        QPushButton *enable_button_;
         QPushButton *minimise_button_;
     };
 

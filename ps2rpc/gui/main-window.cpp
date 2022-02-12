@@ -161,6 +161,11 @@ namespace ps2rpc
         status_->setText(tr("Status: ") + status);
     }
 
+    void MainWindow::setTrackingEnabled(bool enabled)
+    {
+        enable_button_->setText(enabled ? tr("Disable") : tr("Enable"));
+    }
+
     void MainWindow::resetCharacterComboBox()
     {
         if (characters_combo_box_ == nullptr)
@@ -278,8 +283,9 @@ namespace ps2rpc
         auto footer_buttons_layout = new QHBoxLayout();
         layout->addLayout(footer_buttons_layout);
 
-        connect_button_ = new QPushButton(tr("Connect"), this);
-        footer_buttons_layout->addWidget(connect_button_);
+        enable_button_ = new QPushButton("", this);
+        setTrackingEnabled(true);
+        footer_buttons_layout->addWidget(enable_button_);
         minimise_button_ = new QPushButton(tr("Minimize"), this);
         minimise_button_->setChecked(true);
         footer_buttons_layout->addWidget(minimise_button_);
