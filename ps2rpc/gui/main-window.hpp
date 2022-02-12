@@ -3,6 +3,7 @@
 #ifndef PS2RPC_GUI_MAINWINDOW_HPP
 #define PS2RPC_GUI_MAINWINDOW_HPP
 
+#include <QtCore/QObject>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QLabel>
@@ -20,6 +21,14 @@ namespace ps2rpc
         MainWindow();
 
     private:
+        QString getProjectLink() const;
+        void setEventFrequency(double events_per_second);
+        void setEventLatency(int latency_ms);
+        void setLastPayload(bool never);
+        void setLastPayload(QDateTime timestamp);
+        void setLastPresence(bool never);
+        void setLastPresence(QDateTime timestamp);
+        void setStatus(const QString &status);
         void setupUi();
 
         // GUI elements
