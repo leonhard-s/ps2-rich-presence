@@ -25,7 +25,7 @@ namespace ps2rpc
         void onCharacterChanged(int index);
 
     private:
-        void openCharacterManager(const QStringList &characters);
+        void openCharacterManager(const QStringList &characters = {});
 
         QString getProjectLink() const;
         void setEventFrequency(double events_per_second);

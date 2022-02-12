@@ -66,6 +66,11 @@ namespace ps2rpc
     void MainWindow::openCharacterManager(const QStringList &characters)
     {
         auto dialog = new CharacterManager(this);
+        // Add existing characters
+        for (const auto &character : characters)
+        {
+            dialog->addCharacter(character);
+        }
         // Show the dialog
         if (dialog->exec() == QDialog::DialogCode::Accepted)
         {

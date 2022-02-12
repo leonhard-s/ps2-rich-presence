@@ -4,6 +4,7 @@
 #define PS2RPC_GUI_CHARACTER_MANAGER_HPP
 
 #include <QtCore/QObject>
+#include <QtCore/QString>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QPushButton>
@@ -17,6 +18,8 @@ namespace ps2rpc
 
     public:
         explicit CharacterManager(QWidget *parent = nullptr);
+
+        void addCharacter(const QString &character);
 
     Q_SIGNALS:
         void characterAdded(int index, const QString &name);

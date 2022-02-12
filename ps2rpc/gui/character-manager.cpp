@@ -43,6 +43,15 @@ namespace ps2rpc
                          this, &CharacterManager::onCharacterSelected);
     }
 
+    void CharacterManager::addCharacter(const QString &character)
+    {
+        if (list_ != nullptr)
+        {
+            list_->addItem(character);
+            emit characterAdded(list_->count() - 1, character);
+        }
+    }
+
     void CharacterManager::onAddButtonClicked()
     {
         QScopedPointer<QDialog> dialog(createCharacterNameInputDialog());
@@ -50,8 +59,25 @@ namespace ps2rpc
         {
             return;
         }
-        // TODO: Validate that this character exists
         auto name = dialog->findChild<QLineEdit *>()->text();
+        // Ignore empty string
+        if (name.isEmpty())
+        {
+            return;
+        }
+        // Ignore duplicates
+        for (int i = 0; i < list_->count(); ++i)
+        {
+            if (list_->item(i)->text() == name)
+            {
+                QMessageBox::information(this,
+                                         tr("Character Manager"),
+                                         tr("Character already exists."),
+                                         QMessageBox::Ok);
+                return;
+            }
+        }
+        // TODO: Validate that this character exists
         list_->addItem(name);
         emit characterAdded(list_->count() - 1, name);
     }
