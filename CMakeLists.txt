@@ -31,6 +31,7 @@ add_executable(Ps2RichPresence
   "ps2rpc/appdata/serviceid.hpp"
   "ps2rpc/gui/main-window.hpp"
   "ps2rpc/gui/main-window.cpp"
+  "ps2rpc/gui/timeago.hpp"
   "ps2rpc/presence/factory.hpp"
   "ps2rpc/presence/factory.cpp"
   "ps2rpc/presence/handler.hpp"
