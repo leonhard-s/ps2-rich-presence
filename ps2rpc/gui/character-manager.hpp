@@ -5,6 +5,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
+#include <QtCore/QUrl>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QPushButton>
@@ -31,6 +32,7 @@ namespace ps2rpc
         void onCharacterSelected();
 
     private:
+        QUrl getCharacterInfoUrl(const QString &character) const;
         QDialog *createCharacterNameInputDialog();
         void setupUi();
 

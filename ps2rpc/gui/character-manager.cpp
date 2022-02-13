@@ -2,9 +2,16 @@
 
 #include "gui/character-manager.hpp"
 
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonDocument>
 #include <QtCore/QRegularExpression>
 #include <QtCore/QScopedPointer>
+#include <QtCore/QUrl>
+#include <QtCore/QUrlQuery>
 #include <QtGui/QRegularExpressionValidator>
+#include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkRequest>
+#include <QtNetwork/QNetworkReply>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QGridLayout>
@@ -14,6 +21,8 @@
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QVBoxLayout>
+
+#include "appdata/serviceid.hpp"
 
 namespace ps2rpc
 {
@@ -77,9 +86,34 @@ namespace ps2rpc
                 return;
             }
         }
-        // TODO: Validate that this character exists
-        list_->addItem(name);
-        emit characterAdded(list_->count() - 1, name);
+        // Validate that this character exists
+        auto manager = new QNetworkAccessManager();
+        auto reply = manager->get(QNetworkRequest(getCharacterInfoUrl(name)));
+        QObject::connect(reply, &QNetworkReply::finished,
+                         [this, name, manager, reply]()
+                         {
+                             if (reply->error() != QNetworkReply::NetworkError::NoError)
+                             {
+                                 // TODO: Unable to verify that char exists
+                                 return;
+                             }
+                             // Validate payload
+                             auto data = reply->readAll();
+                             auto json = QJsonDocument::fromJson(data);
+                             if (json["character_list"].toArray().count() == 0)
+                             {
+
+                                 QMessageBox::information(this,
+                                                          tr("Character Manager"),
+                                                          tr("Character does not exist."),
+                                                          QMessageBox::Ok);
+                                 return;
+                             }
+                             // TODO: Store character info
+                             list_->addItem(name);
+                             emit characterAdded(list_->count() - 1, name);
+                             delete manager;
+                         });
     }
 
     void CharacterManager::onRemoveButtonClicked()
@@ -107,6 +141,21 @@ namespace ps2rpc
     {
         // Enable the remove button if a character is selected
         button_remove_->setEnabled(list_->currentRow() != -1);
+    }
+
+    QUrl CharacterManager::getCharacterInfoUrl(const QString &character) const
+    {
+        auto service_id = QString(SERVICE_ID);
+        QUrl url;
+        url.setScheme("https");
+        url.setHost("census.daybreakgames.com");
+        url.setPath("/" + service_id + "/get/ps2:v2/character");
+        QUrlQuery query;
+        query.addQueryItem("name.first_lower", character.toLower());
+        query.addQueryItem("c:join", "characters_world^show:world_id^inject_at:world");
+        query.addQueryItem("c:show", "character_id,name.first,faction_id,profile_id");
+        url.setQuery(query);
+        return url;
     }
 
     QDialog *CharacterManager::createCharacterNameInputDialog()
