@@ -4,8 +4,10 @@
 #define PS2RPC_GUI_CHARACTER_MANAGER_HPP
 
 #include <QtCore/QObject>
+#include <QtCore/QScopedPointer>
 #include <QtCore/QString>
 #include <QtCore/QUrl>
+#include <QtNetwork/QNetworkAccessManager>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QPushButton>
@@ -30,11 +32,14 @@ namespace ps2rpc
         void onAddButtonClicked();
         void onRemoveButtonClicked();
         void onCharacterSelected();
+        void onCharacterInfoReceived();
 
     private:
         QUrl getCharacterInfoUrl(const QString &character) const;
         QDialog *createCharacterNameInputDialog();
         void setupUi();
+
+        QScopedPointer<QNetworkAccessManager> manager_;
 
         QListWidget *list_;
         QPushButton *button_add_;
