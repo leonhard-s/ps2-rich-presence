@@ -11,9 +11,11 @@ find_package(Qt6 6.2.3 REQUIRED
 )
 
 add_library(Arx STATIC
+  "include/arx/payload.hpp"
   "include/arx/ess/client.hpp"
   "include/arx/ess/subs.hpp"
   "include/arx/ess.hpp"
+  "src/payload.cpp"
   "src/ess/client.cpp"
   "src/ess/subs.cpp"
 )

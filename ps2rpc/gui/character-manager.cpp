@@ -24,6 +24,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QVBoxLayout>
 
+#include "arx/payload.hpp"
 #include "ps2.hpp"
 
 #include "appdata/serviceid.hpp"
@@ -96,7 +97,7 @@ namespace ps2rpc
                          this, &CharacterManager::onCharacterInfoReceived);
         // Create temp character entry to show while waiting for reply
         auto item = new QListWidgetItem(tr("Loading '%1'…").arg(name));
-        item->setData(Qt::UserRole, name.toLower());
+        item->setData(Qt::UserRole, QVariant::fromValue(reply));
         list_->addItem(item);
     }
 
@@ -133,6 +134,16 @@ namespace ps2rpc
         // function returns)
         QScopedPointer<QNetworkReply> reply(
             qobject_cast<QNetworkReply *>(sender()));
+        // Remove temporary list entry
+        for (int i = 0; i < list_->count(); i++)
+        {
+            if (list_->item(i)->data(Qt::UserRole).value<QNetworkReply *>() ==
+                reply.data())
+            {
+                list_->takeItem(i);
+                break;
+            }
+        }
         // Check for errors
         if (reply->error() != QNetworkReply::NetworkError::NoError)
         {
@@ -142,18 +153,10 @@ namespace ps2rpc
                                   QMessageBox::Ok);
             return;
         }
-        // Parse reply
-        QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
-        if (doc.isNull())
-        {
-            QMessageBox::critical(this,
-                                  tr("Character Manager"),
-                                  tr("Failed to parse character info."),
-                                  QMessageBox::Ok);
-            return;
-        }
         // Validate payload
-        if (!doc.isObject())
+        QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+        const QString collection = "character";
+        if (!arx::isPayloadValid(collection, doc.object()))
         {
             QMessageBox::critical(this,
                                   tr("Character Manager"),
@@ -161,7 +164,7 @@ namespace ps2rpc
                                   QMessageBox::Ok);
             return;
         }
-        if (doc["returned"].toInt() < 1)
+        if (arx::isPayloadEmpty(collection, doc.object()))
         {
             QMessageBox::critical(this,
                                   tr("Character Manager"),
@@ -169,16 +172,8 @@ namespace ps2rpc
                                   QMessageBox::Ok);
             return;
         }
-        auto character_list = doc["character_list"].toArray();
-        if (character_list.size() < 1)
-        {
-            QMessageBox::critical(this,
-                                  tr("Character Manager"),
-                                  tr("Invalid character info payload."),
-                                  QMessageBox::Ok);
-            return;
-        }
-        auto character_data = character_list[0].toObject();
+        auto character_data = arx::payloadResultAsObject(
+            collection, doc.object());
         // Add character to list
         auto name = character_data["name"].toObject()["first"].toString();
         ps2::CharacterId id = character_data["character_id"]
@@ -188,18 +183,10 @@ namespace ps2rpc
         auto faction_id = character_data["faction_id"].toString().toInt();
         auto world_data = character_data["world"].toObject();
         auto world_id = world_data["world_id"].toString().toInt();
-        // Replace temp item with actual character entry
-        for (int i = 0; i < list_->count(); i++)
-        {
-            auto item = list_->item(i);
-            if (item->data(Qt::UserRole).toString() == name.toLower())
-            {
-                item->setData(Qt::UserRole, 0); // Clear temp flag
-                // Set actual character data
-                item->setText(name);
-                // TODO: Store related character info
-            }
-        }
+        // Create character entry
+        auto item = new QListWidgetItem(name);
+        // TODO: Load character data into Qt::UserRole
+        list_->addItem(item);
     }
 
     QUrl CharacterManager::getCharacterInfoUrl(const QString &character) const
