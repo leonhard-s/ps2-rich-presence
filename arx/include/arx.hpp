@@ -3,7 +3,9 @@
 #ifndef ARX_HPP
 #define ARX_HPP
 
+#include "arx/query.hpp"
 #include "arx/payload.hpp"
+#include "arx/urlgen.hpp"
 #include "arx/support.hpp"
 
 #endif // ARX_HPP
