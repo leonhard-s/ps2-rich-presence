@@ -24,10 +24,13 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QVBoxLayout>
 
-#include "arx/payload.hpp"
+#include <string>
+
+#include "arx.hpp"
 #include "ps2.hpp"
 
 #include "appdata/serviceid.hpp"
+#include "utils.hpp"
 
 namespace ps2rpc
 {
@@ -191,17 +194,18 @@ namespace ps2rpc
 
     QUrl CharacterManager::getCharacterInfoUrl(const QString &character) const
     {
-        auto service_id = QString(SERVICE_ID);
-        QUrl url;
-        url.setScheme("https");
-        url.setHost("census.daybreakgames.com");
-        url.setPath("/" + service_id + "/get/ps2:v2/character");
-        QUrlQuery query;
-        query.addQueryItem("name.first_lower", character.toLower());
-        query.addQueryItem("c:join", "characters_world^show:world_id^inject_at:world");
-        query.addQueryItem("c:show", "character_id,name.first,faction_id,profile_id");
-        url.setQuery(query);
-        return url;
+        auto name = character.toLower().toStdString();
+        // Create API query
+        arx::Query query("character", SERVICE_ID);
+        query.addTerm(arx::SearchTerm("name.first_lower", name));
+        auto join = arx::JoinData("characters_world");
+        join.show.push_back("world_id");
+        join.inject_at = "world";
+        query.addJoin(join);
+        query.setShow(
+            {"character_id", "name.first", "faction_id", "profile_id"});
+        // Build QUrl object
+        return qUrlFromArxQuery(query);
     }
 
     QDialog *CharacterManager::createCharacterNameInputDialog()
