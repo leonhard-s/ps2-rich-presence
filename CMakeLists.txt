@@ -46,6 +46,8 @@ add_executable(Ps2RichPresence
   "ps2rpc/game/state.cpp"
   "ps2rpc/tracker.hpp"
   "ps2rpc/tracker.cpp"
+  "ps2rpc/utils.hpp"
+  "ps2rpc/utils.cpp"
   "ps2rpc/main.cpp"
   ${APP_ICON_RESOURCE}
 )

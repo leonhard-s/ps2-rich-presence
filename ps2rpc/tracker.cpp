@@ -14,10 +14,12 @@
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
 
+#include "arx.hpp"
 #include "arx/ess.hpp"
 
 #include "appdata/serviceid.hpp"
 #include "game/state.hpp"
+#include "utils.hpp"
 
 namespace ps2rpc
 {
@@ -157,16 +159,14 @@ namespace ps2rpc
 
     QNetworkRequest ActivityTracker::getCharacterInfoRequest(ps2::CharacterId character_id)
     {
-        QUrl url;
-        url.setScheme("https");
-        url.setHost("census.daybreakgames.com");
-        url.setPath(QString("/") + SERVICE_ID + "/get/ps2:v2/character/");
-        QUrlQuery query;
-        query.addQueryItem("character_id", QString::number(character_id));
-        query.addQueryItem("c:show", "faction_id,profile_id,character_id");
-        query.addQueryItem("c:join", "characters_world");
-        url.setQuery(query);
-        return QNetworkRequest(url);
+        // Create Query via ARX
+        arx::Query query("character", SERVICE_ID);
+        query.addTerm(arx::SearchTerm("faction_id", std::to_string(character_id)));
+        query.setShow({"faction_id", "profile_id", "character_id"});
+        auto join = arx::JoinData("characters_world");
+        join.show.push_back("name.en");
+        query.addJoin(join);
+        return QNetworkRequest(qUrlFromArxQuery(query));
     }
 
     arx::Subscription ActivityTracker::generateSubscription() const
