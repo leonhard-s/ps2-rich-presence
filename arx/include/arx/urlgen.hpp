@@ -4,6 +4,10 @@
 #define ARX_URLGEN_HPP
 
 #include <string>
+#include <utility>
+#include <vector>
+
+#include "query.hpp"
 
 namespace arx
 {
@@ -17,6 +21,9 @@ namespace arx
                                    const std::string &verb = "get",
                                    const std::string &namespace_ = "ps2",
                                    const std::string &collection = "");
+
+    std::vector<std::pair<std::string, std::string>> getQueryItems(
+        const Query *query);
 
 } // namespace arx
 
