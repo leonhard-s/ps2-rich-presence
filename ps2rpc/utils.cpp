@@ -32,8 +32,6 @@ namespace ps2rpc
 
     QJsonObject getJsonPayload(QNetworkReply &reply)
     {
-        // Seek to teh beginning of the data in case it was already read before
-        reply.seek(0);
         auto data = static_cast<QString>(reply.readAll());
         auto doc = QJsonDocument::fromJson(data.toUtf8());
         return doc.object();
