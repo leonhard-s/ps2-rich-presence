@@ -17,6 +17,7 @@
 #include "arx/ess.hpp"
 
 #include "appdata/serviceid.hpp"
+#include "game/character-info.hpp"
 #include "game/state.hpp"
 #include "utils.hpp"
 
@@ -29,12 +30,10 @@ namespace ps2rpc
         // Create WebSocket client for event streaming endpoint
         ess_client_.reset(new arx::EssClient(SERVICE_ID, "ps2", this));
         QObject::connect(ess_client_.get(), &arx::EssClient::payloadReceived, this, &ActivityTracker::onPayloadReceived);
-        QObject::connect(this, &ActivityTracker::ready, this, &ActivityTracker::onCharacterInfoReady);
-        // Create Network Access Manager for REST requests
-        network_manager_.reset(new QNetworkAccessManager(this));
-        QNetworkRequest request = getCharacterInfoRequest(character_id);
-        auto reply = network_manager_->get(request); // Pointer to be deleted by reply handler
-        QObject::connect(reply, &QNetworkReply::finished, this, &ActivityTracker::onCharacerRequestFinished);
+        // Create character info stub and populate it
+        char_info_.reset(new CharacterInfo(character_id, this));
+        QObject::connect(char_info_.get(), &CharacterInfo::infoChanged,
+                         this, &ActivityTracker::onCharacterInfoUpdated);
     }
 
     void ActivityTracker::onPayloadReceived(const QString &event_name, const QJsonObject &payload)
@@ -90,79 +89,24 @@ namespace ps2rpc
         }
     }
 
-    void ActivityTracker::onCharacerRequestFinished()
+    void ActivityTracker::onCharacterInfoUpdated()
     {
-        auto reply = qobject_cast<QNetworkReply *>(QObject::sender());
-        if (reply->error() != QNetworkReply::NoError)
+        if (ess_client_->isConnected())
         {
-            qWarning() << "Error occurred while getting character info:" << reply->errorString();
+            // Clear existing subscriptions
+            ess_client_->clearSubscriptions();
         }
         else
         {
-            auto payload = getJsonPayload(*reply);
-            onCharacterInfoReceived(payload);
+            ess_client_->connect();
+            // Set idle state until we see a payload
+            GameState state;
+            state_factory_.buildState(state);
+            emit stateChanged(state);
         }
-        // Clean up the reply object
-        reply->deleteLater();
-    }
-
-    void ActivityTracker::onCharacterInfoReceived(const QJsonObject payload)
-    {
-        // Break up the outer list
-        auto char_list = payload["character_list"].toArray();
-        if (char_list.empty())
-        {
-            qWarning() << "Character list is empty";
-            return;
-        }
-        auto char_obj = char_list.at(0).toObject();
-        // Get the character ID
-        auto character_id = char_obj["character_id"].toString().toLongLong();
-        // Get the faction ID
-        auto faction_id = char_obj["faction_id"].toString().toInt();
-        // Get the last seen profile
-        auto profile_id = char_obj["profile_id"].toString().toInt();
-        // Process world join
-        auto world_join = char_obj["character_id_join_characters_world"].toObject();
-        auto world_id = world_join["world_id"].toString().toInt();
-        // Set internal fields
-        character_id_ = character_id;
-        ps2::Faction faction;
-        ps2::faction_from_faction_id(faction_id, faction);
-        ps2::Server server;
-        ps2::server_from_world_id(world_id, server);
-        ps2::Class class_;
-        ps2::class_from_profile_id(profile_id, class_);
-        state_factory_.setFaction(faction);
-        state_factory_.setTeam(faction);
-        state_factory_.setServer(server);
-        state_factory_.setProfile(class_);
-        emit ready();
-    }
-
-    void ActivityTracker::onCharacterInfoReady()
-    {
+        // Resubscribe for the updated character info
         auto sub = generateSubscription();
         ess_client_->subscribe(sub);
-        if (!ess_client_->isConnected())
-        {
-            ess_client_->connect();
-        }
-        GameState state;
-        state_factory_.buildState(state);
-        emit stateChanged(state);
-    }
-
-    QNetworkRequest ActivityTracker::getCharacterInfoRequest(ps2::CharacterId character_id)
-    {
-        // Create Query via ARX
-        arx::Query query("character", SERVICE_ID);
-        query.addTerm(arx::SearchTerm("faction_id", std::to_string(character_id)));
-        query.setShow({"faction_id", "profile_id", "character_id"});
-        auto join = arx::JoinData("characters_world");
-        join.show.push_back("name.en");
-        query.addJoin(join);
-        return QNetworkRequest(qUrlFromArxQuery(query));
     }
 
     arx::Subscription ActivityTracker::generateSubscription() const
