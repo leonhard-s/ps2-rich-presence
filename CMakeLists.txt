@@ -42,6 +42,8 @@ add_executable(Ps2RichPresence
   "ps2rpc/presence/factory.cpp"
   "ps2rpc/presence/handler.hpp"
   "ps2rpc/presence/handler.cpp"
+  "ps2rpc/game/character-info.hpp"
+  "ps2rpc/game/character-info.cpp"
   "ps2rpc/game/state.hpp"
   "ps2rpc/game/state.cpp"
   "ps2rpc/tracker.hpp"
