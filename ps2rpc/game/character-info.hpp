@@ -7,6 +7,7 @@
 #include <QtCore/QScopedPointer>
 #include <QtCore/QString>
 #include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkRequest>
 
 #include "ps2.hpp"
 
@@ -36,7 +37,15 @@ namespace ps2rpc
     Q_SIGNALS:
         void infoChanged();
 
+    public Q_SLOTS:
+        void populate();
+
+    private Q_SLOTS:
+        void onCharacterInfoRequestFinished();
+
     private:
+        QNetworkRequest getCharacterInfoRequest();
+        void handleCharacterInfoPayload(const QJsonObject &payload);
         void updateFieldsIfChanged(ps2::CharacterId id,
                                    const QString &name,
                                    ps2::Faction faction,
