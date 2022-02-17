@@ -3,7 +3,6 @@
 #include "tracker.hpp"
 
 #include <QtCore/QJsonArray>
-#include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
 #include <QtCore/QObject>
 #include <QtCore/QScopedPointer>
@@ -100,10 +99,7 @@ namespace ps2rpc
         }
         else
         {
-            auto data = static_cast<QString>(reply->readAll());
-            auto doc = QJsonDocument::fromJson(data.toUtf8());
-            auto payload = doc.object();
-            // Handle payload
+            auto payload = getJsonPayload(*reply);
             onCharacterInfoReceived(payload);
         }
         // Clean up the reply object

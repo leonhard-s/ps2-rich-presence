@@ -2,8 +2,12 @@
 
 #include "utils.hpp"
 
+#include <QtCore/QJsonObject>
+#include <QtCore/QJsonDocument>
+#include <QtCore/QString>
 #include <QtCore/QUrl>
 #include <QtCore/QUrlQuery>
+#include <QtNetwork/QNetworkReply>
 
 #include "arx.hpp"
 
@@ -24,6 +28,15 @@ namespace ps2rpc
         }
         url.setQuery(q);
         return url;
+    }
+
+    QJsonObject getJsonPayload(QNetworkReply &reply)
+    {
+        // Seek to teh beginning of the data in case it was already read before
+        reply.seek(0);
+        auto data = static_cast<QString>(reply.readAll());
+        auto doc = QJsonDocument::fromJson(data.toUtf8());
+        return doc.object();
     }
 
 } // namespace ps2rpc

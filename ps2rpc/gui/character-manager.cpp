@@ -2,8 +2,6 @@
 
 #include "gui/character-manager.hpp"
 
-#include <QtCore/QJsonArray>
-#include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
 #include <QtCore/QRegularExpression>
 #include <QtCore/QScopedPointer>
@@ -157,9 +155,9 @@ namespace ps2rpc
             return;
         }
         // Validate payload
-        QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
         const QString collection = "character";
-        if (!arx::isPayloadValid(collection, doc.object()))
+        auto payload = getJsonPayload(*reply);
+        if (!arx::isPayloadValid(collection, payload))
         {
             QMessageBox::critical(this,
                                   tr("Character Manager"),
@@ -167,7 +165,7 @@ namespace ps2rpc
                                   QMessageBox::Ok);
             return;
         }
-        if (arx::isPayloadEmpty(collection, doc.object()))
+        if (arx::isPayloadEmpty(collection, payload))
         {
             QMessageBox::critical(this,
                                   tr("Character Manager"),
@@ -175,16 +173,13 @@ namespace ps2rpc
                                   QMessageBox::Ok);
             return;
         }
-        auto character_data = arx::payloadResultAsObject(
-            collection, doc.object());
+        auto data = arx::payloadResultAsObject(collection, payload);
         // Add character to list
-        auto name = character_data["name"].toObject()["first"].toString();
-        ps2::CharacterId id = character_data["character_id"]
-                                  .toString()
-                                  .toULongLong();
-        auto profile_id = character_data["profile_id"].toString().toInt();
-        auto faction_id = character_data["faction_id"].toString().toInt();
-        auto world_data = character_data["world"].toObject();
+        auto name = data["name"].toObject()["first"].toString();
+        ps2::CharacterId id = data["character_id"].toString().toULongLong();
+        auto profile_id = data["profile_id"].toString().toInt();
+        auto faction_id = data["faction_id"].toString().toInt();
+        auto world_data = data["world"].toObject();
         auto world_id = world_data["world_id"].toString().toInt();
         // Create character entry
         auto item = new QListWidgetItem(name);
