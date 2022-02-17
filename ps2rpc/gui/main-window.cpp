@@ -85,10 +85,12 @@ namespace ps2rpc
             // Add characters from manager
             for (int i = 0; i < list->count(); ++i)
             {
-                auto name = list->item(i)->text();
+                auto item = list->item(i);
+                auto name = item->text();
+                auto id = item->data(Qt::UserRole);
                 // Offset of 2 because of the separator and "Manage" items
                 auto index = characters_combo_box_->count() - 2;
-                characters_combo_box_->insertItem(index, name);
+                characters_combo_box_->insertItem(index, name, id);
             }
             // Select the topmost character if any were added
             if (list->count() > 0)

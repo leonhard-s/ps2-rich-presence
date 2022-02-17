@@ -28,6 +28,7 @@
 #include "ps2.hpp"
 
 #include "appdata/serviceid.hpp"
+#include "game/character-info.hpp"
 #include "utils.hpp"
 
 namespace ps2rpc
@@ -174,16 +175,11 @@ namespace ps2rpc
             return;
         }
         auto data = arx::payloadResultAsObject(collection, payload);
-        // Add character to list
-        auto name = data["name"].toObject()["first"].toString();
-        ps2::CharacterId id = data["character_id"].toString().toULongLong();
-        auto profile_id = data["profile_id"].toString().toInt();
-        auto faction_id = data["faction_id"].toString().toInt();
-        auto world_data = data["world"].toObject();
-        auto world_id = world_data["world_id"].toString().toInt();
+        // Parse character data
+        auto info = parseCharacterPayload(data);
         // Create character entry
-        auto item = new QListWidgetItem(name);
-        // TODO: Load character data into Qt::UserRole
+        auto item = new QListWidgetItem(info.getName());
+        item->setData(Qt::UserRole, info.getId());
         list_->addItem(item);
     }
 
@@ -201,6 +197,36 @@ namespace ps2rpc
             {"character_id", "name.first", "faction_id", "profile_id"});
         // Build QUrl object
         return qUrlFromArxQuery(query);
+    }
+
+    CharacterInfo CharacterManager::parseCharacterPayload(const QJsonObject &payload)
+    {
+        // Extract character data from payload
+        auto name = payload["name"].toObject()["first"].toString();
+        ps2::CharacterId id = payload["character_id"].toString().toULongLong();
+        ps2::FactionId faction_id = payload["faction_id"].toString().toInt();
+        ps2::ProfileId profile_id = payload["profile_id"].toString().toInt();
+        auto world_data = payload["world"].toObject();
+        ps2::WorldId world_id = world_data["world_id"].toString().toInt();
+        // Convert IDs to enum values
+        auto faction = ps2::Faction::NS;
+        if (ps2::faction_from_faction_id(faction_id, faction))
+        {
+            qWarning() << "Unable to convert faction ID:" << faction_id;
+        }
+        auto class_ = ps2::Class::LightAssault;
+        if (ps2::class_from_profile_id(profile_id, class_))
+        {
+            qWarning() << "Unable to create class from profile ID:"
+                       << profile_id;
+        }
+        auto server = ps2::Server::Connery;
+        if (ps2::server_from_world_id(world_id, server))
+        {
+            qWarning() << "Unable to create server from world ID:" << world_id;
+        }
+        // Create character info
+        return CharacterInfo(id, name, faction, class_, server);
     }
 
     QDialog *CharacterManager::createCharacterNameInputDialog()

@@ -3,6 +3,7 @@
 #ifndef PS2RPC_GUI_CHARACTER_MANAGER_HPP
 #define PS2RPC_GUI_CHARACTER_MANAGER_HPP
 
+#include <QtCore/QJsonObject>
 #include <QtCore/QObject>
 #include <QtCore/QScopedPointer>
 #include <QtCore/QString>
@@ -11,6 +12,8 @@
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QPushButton>
+
+#include "game/character-info.hpp"
 
 namespace ps2rpc
 {
@@ -36,6 +39,7 @@ namespace ps2rpc
 
     private:
         QUrl getCharacterInfoUrl(const QString &character) const;
+        CharacterInfo parseCharacterPayload(const QJsonObject &payload);
         QDialog *createCharacterNameInputDialog();
         void setupUi();
 
