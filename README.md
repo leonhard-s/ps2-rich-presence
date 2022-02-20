@@ -1,54 +1,70 @@
 # <img src="https://raw.githubusercontent.com/leonhard-s/ps2-rich-presence/main/assets/icon.png" align="left" height="140"/>PS2 Rich Presence
 
-An open source utility providing [Discord Rich Presence](https://discord.com/rich-presence) for [PlanetSide 2](https://www.planetside2.com/home).
+An open source project providing [Rich Presence](https://discord.com/rich-presence) for [PlanetSide 2](https://www.planetside2.com/home).
 
-<!-- TODO: Add repository shields -->
+<!-- TODO: Enable repository shields after release. -->
 
-<!-- TODO: Add example presence screenshots -->
+![Build Workflow Status](https://img.shields.io/github/workflow/status/leonhard-s/ps2-rich-presence/build)
+![License](https://img.shields.io/github/license/leonhard-s/ps2-rich-presence)
+![Total Downloads](https://img.shields.io/github/downloads/leonhard-s/ps2-rich-presence/total)
+![GitHub Release Date](https://img.shields.io/github/release-date/leonhard-s/ps2-rich-presence)
 
-[Overview](#overview) • [Features](#features) • [License / Disclaimer](#license) • [Installation](#installation) • [Contributing](#contributing)
+[Overview](#overview) • [Features](#features) • [Limitations](#limitations) • [License](#license) • [Installation](#installation) • [Contributing](#contributing)
 
 ## Overview
 
-<!-- TODO: Add comparison of normal Discord game detection and Rich Presence -->
+The PlanetSide 2 Rich Presence Client (PS2RPC) is a project enabling you to display the current status of your PS2 character on [Discord](https://discord.com/).
 
-This application aims to provide a richer Discord experience for PlanetSide 2 players by integrating with Discord's Rich Presence API.
+<!-- TODO: Add example presence screenshots -->
 
-It does this by listening to the game's [Streaming API](https://census.daybreakgames.com/#what-is-websocket) to monitor your in-game activity, and then updating your Discord presence accordingly.
+This application runs independently of the main PlanetSide 2 executable and does not affect your in-game experience. Instead, it listens to the game's event stream and infers the current status of your character based on kills and experience gain.
+
+***Note:** PS2RPC is a third-party tool and not affiliated with [Rogue Planet Games](https://www.rogueplanetgaming.com/home) or the PlanetSide 2 development team in any way.*
 
 ## Features
 
-- Low-bandwidth requirements
-- GUI interface for configuration
-- Operates completely independenty from the PS2 installation\*
-- Automatically enable Rich Presence when logging into the game
-- Activity detection (class, vehicle, etc.)
+- **Display your character's status on Discord**
+- **Detection of current continent, class, and vehicle**
+- **Lightweight**
+- **Low bandwidth requirements**
+- **Automatic tracking upon login**
 
-*\*Since PS2RPC uses the API stream rather than the game's actual traffic, you do not even have to run this on the same device you're playing on. As long as there is a local Discord client and an internet connection, it will work.*
+## Limitations
+
+This application is not tied to the game executable or your player account. Its only way to detect your character's status is to listen to the game's event stream, and it is limited to the events and activities it can detect.
+
+This means that there are things that PS2RPC cannot detect, such as:
+
+- Whether the player is currently in a squad or platoon
+- Where on the map they are
+- Any situation where you are not gaining any experience for an extended period of time
+
+Additionally, we intentionally do not support display of character or outfit names for privacy reasons as there is no way to ensure that the tracked character belongs to the player who is running the application.
 
 ## License
 
-### Source Code
+The PS2 Rich Presence Client is licensed under the [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.en.html).
 
-This application uses [PyQt6](https://pypi.org/project/PyQt6/) and inherits its GPL-3.0 license. See [LICENSE](https://github.com/leonhard-s/ps2-rich-presence/blob/main/LICENSE) for details.
+We do not recommend basing your own work on this project, but feel free to use it as a reference for your own projects or reach out to the developers if you have any questions.
 
-> **Note:**  
-> For a more permissible license, considering basing your work the [Auraxium](https://github.com/leonhard-s/auraxium) Python package instead.
->
-> Most of this project's complexity lies in getting the [asyncio](https://docs.python.org/3/library/asyncio.html)-based Auraxium client working in a [Qt](https://www.qt.io/product/qt6)-based application. Without GUI or Qt-related utilities, this entire application would only require a few dozen lines of code.
+### Game Artwork and Icons
 
-### Assets
+Most artworks used in this application are based on assets available through the [Daybreak Game Company Census API](http://census.daybreakgames.com/), which were then modified (e.g., upscaled, traced, or cropped) for our requirements. See the [Assets README](https://github.com/leonhard-s/ps2-rich-presence/tree/main/assets) for details on where these assets came from and how exactly they were altered.
 
-Most artworks used in this application are based on assets available through the Daybreak Game Company [Census API](http://census.daybreakgames.com/), which were then modified (e.g. upscaled, traced, or cropped) for our requirements. See the [Assets README](https://github.com/leonhard-s/ps2-rich-presence/tree/main/assets) for details on what assets were used and how exactly they were altered.
+Use of our modifications is permitted without restriction. Note that your use still has to comply with the [Census API Policy](http://census.daybreakgames.com/#services-api-policy) and the [Daybreak Game Company Terms of Service](https://www.daybreakgames.com/terms-of-service#section13).
 
-Use of our modifications is permitted without restriction. Note that your use still has to comply with the [Census API Policy](http://census.daybreakgames.com/#services-api-policy) and the Daybreak Game Company [Terms of Service](https://www.daybreakgames.com/terms-of-service#section13).
+### Screenshots
+
+Some assets, such as the continent artworks, are derived from in-game screenshots taken by project contributors. You can find the full-size screenshots [here](https://github.com/leonhard-s/ps2-rich-presence/tree/main/assets/screenshots).
+
+You are free to use and modify these screenshots for your own projects given compliance with the PlanetSide 2 [Terms of Service](https://www.daybreakgames.com/terms-of-service#section13).
 
 ## Installation
 
-TBD
+This project is still under development and must be installed from source. A standalone installer and portable ZIP version will be provided for all releases.
 
 ## Contributing
 
 If you encounter any issues using PS2RPC or would like to suggest a new feature or change, feel free to get in touch via the repository [issues](https://github.com/leonhard-s/ps2-rich-presence/issues).
 
-Please also consider lack of clarity or undocumented features when creating issues. Using this application should be as simple as launching the game itself, and any improvement to make the app clearer and more intuitive to use is worth discussing.
+Please also consider lack of clarity or undocumented features when creating issues. Using this application should be straightforward for anyone familiar with the game, and any improvement to make the app clearer and more intuitive to use is worth discussing.
