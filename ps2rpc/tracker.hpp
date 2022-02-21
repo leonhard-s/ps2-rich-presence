@@ -22,23 +22,24 @@ namespace ps2rpc
         Q_OBJECT
 
     public:
-        explicit ActivityTracker(ps2::CharacterId character_id);
+        explicit ActivityTracker(const CharacterData &character);
+
+        CharacterData getCharacter() const;
 
     Q_SIGNALS:
         void ready();
         void stateChanged(GameState state);
 
     private Q_SLOTS:
-        void onPayloadReceived(const QString &event_name, const QJsonObject &payload);
-        void onCharacterInfoUpdated();
+        void onPayloadReceived(const QString &event_name,
+                               const QJsonObject &payload);
 
     private:
         arx::Subscription generateSubscription() const;
 
-        ps2::CharacterId character_id_;
+        CharacterData character_;
         GameStateFactory state_factory_;
         GameState current_state_;
-        QScopedPointer<CharacterInfo> char_info_;
         QScopedPointer<arx::EssClient> ess_client_;
     };
 

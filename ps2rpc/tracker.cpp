@@ -24,23 +24,27 @@
 namespace ps2rpc
 {
 
-    ActivityTracker::ActivityTracker(ps2::CharacterId character_id)
-        : character_id_{character_id}, ess_client_{}, state_factory_{character_id_, ps2::Faction::VS, ps2::Server::Cobalt}
+    ActivityTracker::ActivityTracker(const CharacterData &character)
+        : character_{character}, ess_client_{}, state_factory_{character.id, character.faction, character.server, character.class_}
     {
         // Create WebSocket client for event streaming endpoint
         ess_client_.reset(new arx::EssClient(SERVICE_ID, "ps2", this));
+        ess_client_->subscribe(generateSubscription());
+        ess_client_->connect();
         QObject::connect(ess_client_.get(), &arx::EssClient::payloadReceived, this, &ActivityTracker::onPayloadReceived);
-        // Create character info stub and populate it
-        char_info_.reset(new CharacterInfo(character_id, this));
-        QObject::connect(char_info_.get(), &CharacterInfo::infoChanged,
-                         this, &ActivityTracker::onCharacterInfoUpdated);
+    }
+
+    CharacterData ActivityTracker::getCharacter() const
+    {
+        return character_;
     }
 
     void ActivityTracker::onPayloadReceived(const QString &event_name, const QJsonObject &payload)
     {
         // Character ID
-        ps2::CharacterId character_id = character_id_;
-        bool are_we_the_baddies = payload["attacker_character_id"].toString().toLongLong() == character_id;
+        bool are_we_the_baddies = payload["attacker_character_id"]
+                                      .toString()
+                                      .toLongLong() == character_.id;
         // Team
         // TODO: Implement team ID once it is implemented on the API side
         ps2::Faction team = state_factory_.getFaction();
@@ -89,33 +93,13 @@ namespace ps2rpc
         }
     }
 
-    void ActivityTracker::onCharacterInfoUpdated()
-    {
-        if (ess_client_->isConnected())
-        {
-            // Clear existing subscriptions
-            ess_client_->clearSubscriptions();
-        }
-        else
-        {
-            ess_client_->connect();
-            // Set idle state until we see a payload
-            GameState state;
-            state_factory_.buildState(state);
-            emit stateChanged(state);
-        }
-        // Resubscribe for the updated character info
-        auto sub = generateSubscription();
-        ess_client_->subscribe(sub);
-    }
-
     arx::Subscription ActivityTracker::generateSubscription() const
     {
         return arx::Subscription(
             // Event name(s)
             "Death",
             // Character IDs
-            {QString::number(character_id_)},
+            {QString::number(character_.id)},
             // World IDs
             {"all"});
     }
