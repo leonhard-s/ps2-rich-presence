@@ -2,6 +2,7 @@
 
 #include "game/character-info.hpp"
 
+#include <QtCore/QDebug>
 #include <QtCore/QJsonObject>
 #include <QtCore/QObject>
 #include <QtCore/QString>
@@ -17,6 +18,45 @@
 
 namespace ps2rpc
 {
+
+    CharacterData::CharacterData()
+        : id{0},
+          name{""},
+          faction{ps2::Faction::NS},
+          class_{ps2::Class::LightAssault},
+          server{ps2::Server::Connery} {}
+
+    CharacterData::CharacterData(ps2::CharacterId id,
+                                 const QString &name,
+                                 ps2::Faction faction,
+                                 ps2::Class class_,
+                                 ps2::Server server)
+        : id{id},
+          name{name},
+          faction{faction},
+          class_{class_},
+          server{server} {}
+
+    bool CharacterData::operator==(const CharacterData &other) const
+    {
+        return id == other.id &&
+               name == other.name &&
+               faction == other.faction &&
+               class_ == other.class_ &&
+               server == other.server;
+    }
+
+    bool CharacterData::operator!=(const CharacterData &other) const
+    {
+        return !(*this == other);
+    }
+
+    QDebug operator<<(QDebug dbg, const CharacterData &info)
+    {
+        std::string tag;
+        ps2::faction_to_tag(info.faction, tag);
+        return dbg << (info.name + "[" + QString::fromStdString(tag) + "]");
+    }
 
     CharacterInfo::CharacterInfo(QObject *parent)
         : QObject(parent), id_{0}, name_{}, faction_{ps2::Faction::NS},
