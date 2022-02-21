@@ -78,12 +78,7 @@ namespace ps2rpc
                                    ps2::Class class_,
                                    ps2::Server server);
 
-        ps2::CharacterId id_;
-        QString name_;
-        ps2::Faction faction_;
-        ps2::Class class_;
-        ps2::Server server_;
-
+        CharacterData info_;
         QScopedPointer<QNetworkAccessManager> manager_;
     };
 

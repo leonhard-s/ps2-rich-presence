@@ -59,8 +59,7 @@ namespace ps2rpc
     }
 
     CharacterInfo::CharacterInfo(QObject *parent)
-        : QObject(parent), id_{0}, name_{}, faction_{ps2::Faction::NS},
-          class_{ps2::Class::LightAssault}, server_{ps2::Server::Connery}
+        : QObject(parent), info_{}
     {
         manager_.reset(new QNetworkAccessManager(this));
     }
@@ -68,7 +67,7 @@ namespace ps2rpc
     CharacterInfo::CharacterInfo(ps2::CharacterId id, QObject *parent)
         : CharacterInfo(parent)
     {
-        id_ = id;
+        info_.id = id;
     }
 
     CharacterInfo::CharacterInfo(ps2::CharacterId id,
@@ -79,45 +78,46 @@ namespace ps2rpc
                                  QObject *parent)
         : CharacterInfo(id, parent)
     {
-        name_ = name;
-        faction_ = faction;
-        this->class_ = class_;
-        server_ = server;
+        info_.name = name;
+        info_.faction = faction;
+        info_.class_ = class_;
+        info_.server = server;
     }
 
     ps2::CharacterId CharacterInfo::getId() const
     {
-        return id_;
+        return info_.id;
     }
 
     QString CharacterInfo::getName() const
     {
-        return name_;
+        return info_.name;
     }
 
     ps2::Faction CharacterInfo::getFaction() const
     {
-        return faction_;
+        return info_.faction;
     }
 
     ps2::Class CharacterInfo::getClass() const
     {
-        return class_;
+        return info_.class_;
     }
 
     ps2::Server CharacterInfo::getServer() const
     {
-        return server_;
+        return info_.server;
     }
 
     void CharacterInfo::populate()
     {
         // Only look up sensible character IDs
-        if (id_ <= 0)
+        auto id = info_.id;
+        if (id <= 0)
         {
             qWarning() << "Call to CharacterInfo::populate() ignored due to "
                           "invalid character ID:"
-                       << id_;
+                       << id;
             return;
         }
         // Generate request
@@ -156,7 +156,8 @@ namespace ps2rpc
     {
         // Create Query via ARX
         arx::Query query("character", SERVICE_ID);
-        query.addTerm(arx::SearchTerm("character_id", std::to_string(id_)));
+        query.addTerm(
+            arx::SearchTerm("character_id", std::to_string(info_.id)));
         query.setShow(
             {"character_id", "name.first", "faction_id", "profile_id"});
         auto join = arx::JoinData("characters_world");
@@ -215,29 +216,29 @@ namespace ps2rpc
                                               ps2::Server server)
     {
         bool changed = false;
-        if (id != id_)
+        if (id != info_.id)
         {
-            id_ = id;
+            info_.id = id;
             changed = true;
         }
-        if (name != name_)
+        if (name != info_.name)
         {
-            name_ = name;
+            info_.name = name;
             changed = true;
         }
-        if (faction != faction_)
+        if (faction != info_.faction)
         {
-            faction_ = faction;
+            info_.faction = faction;
             changed = true;
         }
-        if (class_ != this->class_)
+        if (class_ != info_.class_)
         {
-            this->class_ = class_;
+            info_.class_ = class_;
             changed = true;
         }
-        if (server != server_)
+        if (server != info_.server)
         {
-            server_ = server;
+            info_.server = server;
             changed = true;
         }
         // Emit signal if any fields changed
