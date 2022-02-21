@@ -51,14 +51,14 @@ namespace ps2rpc
                       const QString &name,
                       ps2::Faction faction,
                       ps2::Class class_,
-                      ps2::Server world,
+                      ps2::Server server,
                       QObject *parent = nullptr);
 
         ps2::CharacterId getId() const;
         QString getName() const;
         ps2::Faction getFaction() const;
         ps2::Class getClass() const;
-        ps2::Server getWorld() const;
+        ps2::Server getServer() const;
 
     Q_SIGNALS:
         void infoChanged();
@@ -76,13 +76,13 @@ namespace ps2rpc
                                    const QString &name,
                                    ps2::Faction faction,
                                    ps2::Class class_,
-                                   ps2::Server world);
+                                   ps2::Server server);
 
         ps2::CharacterId id_;
         QString name_;
         ps2::Faction faction_;
         ps2::Class class_;
-        ps2::Server world_;
+        ps2::Server server_;
 
         QScopedPointer<QNetworkAccessManager> manager_;
     };

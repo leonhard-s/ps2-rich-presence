@@ -60,7 +60,7 @@ namespace ps2rpc
 
     CharacterInfo::CharacterInfo(QObject *parent)
         : QObject(parent), id_{0}, name_{}, faction_{ps2::Faction::NS},
-          class_{ps2::Class::LightAssault}, world_{ps2::Server::Connery}
+          class_{ps2::Class::LightAssault}, server_{ps2::Server::Connery}
     {
         manager_.reset(new QNetworkAccessManager(this));
     }
@@ -75,14 +75,14 @@ namespace ps2rpc
                                  const QString &name,
                                  ps2::Faction faction,
                                  ps2::Class class_,
-                                 ps2::Server world,
+                                 ps2::Server server,
                                  QObject *parent)
         : CharacterInfo(id, parent)
     {
         name_ = name;
         faction_ = faction;
         this->class_ = class_;
-        world_ = world;
+        server_ = server;
     }
 
     ps2::CharacterId CharacterInfo::getId() const
@@ -105,9 +105,9 @@ namespace ps2rpc
         return class_;
     }
 
-    ps2::Server CharacterInfo::getWorld() const
+    ps2::Server CharacterInfo::getServer() const
     {
-        return world_;
+        return server_;
     }
 
     void CharacterInfo::populate()
@@ -197,21 +197,22 @@ namespace ps2rpc
             qWarning() << "Failed to get class from profile ID" << profile_id;
             return;
         }
-        ps2::Server new_world;
-        if (ps2::server_from_world_id(world_id, new_world))
+        ps2::Server new_server;
+        if (ps2::server_from_world_id(world_id, new_server))
         {
-            qWarning() << "Failed to convert world ID" << world_id;
+            qWarning() << "Failed to get server from world ID" << world_id;
             return;
         }
         // Update fields
-        updateFieldsIfChanged(new_id, new_name, new_faction, new_class, new_world);
+        updateFieldsIfChanged(
+            new_id, new_name, new_faction, new_class, new_server);
     }
 
     void CharacterInfo::updateFieldsIfChanged(ps2::CharacterId id,
                                               const QString &name,
                                               ps2::Faction faction,
                                               ps2::Class class_,
-                                              ps2::Server world)
+                                              ps2::Server server)
     {
         bool changed = false;
         if (id != id_)
@@ -234,9 +235,9 @@ namespace ps2rpc
             this->class_ = class_;
             changed = true;
         }
-        if (world != world_)
+        if (server != server_)
         {
-            world_ = world;
+            server_ = server;
             changed = true;
         }
         // Emit signal if any fields changed
