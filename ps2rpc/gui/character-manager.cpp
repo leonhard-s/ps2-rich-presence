@@ -174,12 +174,12 @@ namespace ps2rpc
                                   QMessageBox::Ok);
             return;
         }
-        auto data = arx::payloadResultAsObject(collection, payload);
+        auto result = arx::payloadResultAsObject(collection, payload);
         // Parse character data
-        auto info = parseCharacterPayload(data);
+        auto info = parseCharacterPayload(result);
         // Create character entry
-        auto item = new QListWidgetItem(info.getName());
-        item->setData(Qt::UserRole, info.getId());
+        auto item = new QListWidgetItem(info.name);
+        item->setData(Qt::UserRole, info.id);
         list_->addItem(item);
     }
 
@@ -199,7 +199,7 @@ namespace ps2rpc
         return qUrlFromArxQuery(query);
     }
 
-    CharacterInfo CharacterManager::parseCharacterPayload(const QJsonObject &payload)
+    CharacterData CharacterManager::parseCharacterPayload(const QJsonObject &payload)
     {
         // Extract character data from payload
         auto name = payload["name"].toObject()["first"].toString();
@@ -226,7 +226,7 @@ namespace ps2rpc
             qWarning() << "Unable to create server from world ID:" << world_id;
         }
         // Create character info
-        return CharacterInfo(id, name, faction, class_, server);
+        return CharacterData(id, name, faction, class_, server);
     }
 
     QDialog *CharacterManager::createCharacterNameInputDialog()
