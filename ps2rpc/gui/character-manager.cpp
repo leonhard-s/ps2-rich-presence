@@ -59,12 +59,14 @@ namespace ps2rpc
                          this, &CharacterManager::onCharacterSelected);
     }
 
-    void CharacterManager::addCharacter(const QString &character)
+    void CharacterManager::addCharacter(const CharacterData &character)
     {
         if (list_ != nullptr)
         {
-            list_->addItem(character);
-            emit characterAdded(list_->count() - 1, character);
+            auto item = new QListWidgetItem(character.name);
+            auto data = QVariant::fromValue(character);
+            item->setData(Qt::UserRole, data);
+            list_->addItem(item);
         }
     }
 
@@ -99,6 +101,8 @@ namespace ps2rpc
                          this, &CharacterManager::onCharacterInfoReceived);
         // Create temp character entry to show while waiting for reply
         auto item = new QListWidgetItem(tr("Loading '%1'…").arg(name));
+        // Make unselectable
+        item->setFlags(item->flags() & ~Qt::ItemIsSelectable);
         item->setData(Qt::UserRole, QVariant::fromValue(reply));
         list_->addItem(item);
     }
@@ -174,12 +178,13 @@ namespace ps2rpc
                                   QMessageBox::Ok);
             return;
         }
-        auto data = arx::payloadResultAsObject(collection, payload);
+        auto result = arx::payloadResultAsObject(collection, payload);
         // Parse character data
-        auto info = parseCharacterPayload(data);
+        auto info = parseCharacterPayload(result);
+        auto data = QVariant::fromValue(info);
         // Create character entry
-        auto item = new QListWidgetItem(info.getName());
-        item->setData(Qt::UserRole, info.getId());
+        auto item = new QListWidgetItem(info.name);
+        item->setData(Qt::UserRole, data);
         list_->addItem(item);
     }
 
@@ -199,7 +204,7 @@ namespace ps2rpc
         return qUrlFromArxQuery(query);
     }
 
-    CharacterInfo CharacterManager::parseCharacterPayload(const QJsonObject &payload)
+    CharacterData CharacterManager::parseCharacterPayload(const QJsonObject &payload)
     {
         // Extract character data from payload
         auto name = payload["name"].toObject()["first"].toString();
@@ -226,7 +231,7 @@ namespace ps2rpc
             qWarning() << "Unable to create server from world ID:" << world_id;
         }
         // Create character info
-        return CharacterInfo(id, name, faction, class_, server);
+        return CharacterData(id, name, faction, class_, server);
     }
 
     QDialog *CharacterManager::createCharacterNameInputDialog()

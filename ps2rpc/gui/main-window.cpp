@@ -4,8 +4,9 @@
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDateTime>
+#include <QtCore/QDebug>
+#include <QtCore/QList>
 #include <QtCore/QObject>
-#include <QtCore/QStringList>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QGroupBox>
@@ -15,6 +16,7 @@
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QVBoxLayout>
 
+#include "game/character-info.hpp"
 #include "gui/character-manager.hpp"
 #include "gui/timeago.hpp"
 
@@ -50,24 +52,32 @@ namespace ps2rpc
         {
             return;
         }
-        if (characters_combo_box_->count() <= 2)
-        {
-            resetCharacterComboBox();
-        }
+        // Is last item (manage button)
         if (index == characters_combo_box_->count() - 1)
         {
             // Get existing characters
-            QStringList characters;
+            QList<CharacterData> characters;
             for (int i = 0; i < characters_combo_box_->count() - 2; ++i)
             {
-                characters.append(characters_combo_box_->itemText(i));
+                auto data = characters_combo_box_->itemData(i);
+                characters.append(data.value<CharacterData>());
             }
             openCharacterManager(characters);
         }
-        // TODO: Handle existing being selected
+        // A character was selected
+        auto data = characters_combo_box_->itemData(index, Qt::UserRole);
+        auto info = data.value<CharacterData>();
+        // Ignore non-character selections
+        if (info.id == 0)
+        {
+            return;
+        }
+        // TODO: Use character data to start the tracker
+        qDebug() << "Character selected:" << info;
     }
 
-    void MainWindow::openCharacterManager(const QStringList &characters)
+    void MainWindow::openCharacterManager(
+        const QList<CharacterData> &characters)
     {
         auto dialog = new CharacterManager(this);
         // Add existing characters
@@ -86,11 +96,17 @@ namespace ps2rpc
             for (int i = 0; i < list->count(); ++i)
             {
                 auto item = list->item(i);
-                auto name = item->text();
-                auto id = item->data(Qt::UserRole);
+                // Only consider selectable entries (ignores pending items)
+                if (!(item->flags() & Qt::ItemFlag::ItemIsSelectable))
+                {
+                    continue;
+                }
+                auto info = item->data(Qt::UserRole).value<CharacterData>();
+                auto data = QVariant::fromValue(info);
                 // Offset of 2 because of the separator and "Manage" items
                 auto index = characters_combo_box_->count() - 2;
-                characters_combo_box_->insertItem(index, name, id);
+                characters_combo_box_->insertItem(index, info.name, info.id);
+                characters_combo_box_->setItemData(index, data, Qt::UserRole);
             }
             // Select the topmost character if any were added
             if (list->count() > 0)

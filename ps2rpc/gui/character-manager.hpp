@@ -25,11 +25,11 @@ namespace ps2rpc
     public:
         explicit CharacterManager(QWidget *parent = nullptr);
 
-        void addCharacter(const QString &character);
+        void addCharacter(const CharacterData &character);
 
     Q_SIGNALS:
-        void characterAdded(int index, const QString &name);
-        void characterRemoved(int index, const QString &name);
+        void characterAdded(int index, const CharacterData &name);
+        void characterRemoved(int index, const CharacterData &name);
 
     private Q_SLOTS:
         void onAddButtonClicked();
@@ -39,7 +39,7 @@ namespace ps2rpc
 
     private:
         QUrl getCharacterInfoUrl(const QString &character) const;
-        CharacterInfo parseCharacterPayload(const QJsonObject &payload);
+        CharacterData parseCharacterPayload(const QJsonObject &payload);
         QDialog *createCharacterNameInputDialog();
         void setupUi();
 
