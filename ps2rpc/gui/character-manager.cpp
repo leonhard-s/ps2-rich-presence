@@ -59,12 +59,14 @@ namespace ps2rpc
                          this, &CharacterManager::onCharacterSelected);
     }
 
-    void CharacterManager::addCharacter(const QString &character)
+    void CharacterManager::addCharacter(const CharacterData &character)
     {
         if (list_ != nullptr)
         {
-            list_->addItem(character);
-            emit characterAdded(list_->count() - 1, character);
+            auto item = new QListWidgetItem(character.name);
+            auto data = QVariant::fromValue(character);
+            item->setData(Qt::UserRole, data);
+            list_->addItem(item);
         }
     }
 
@@ -99,6 +101,8 @@ namespace ps2rpc
                          this, &CharacterManager::onCharacterInfoReceived);
         // Create temp character entry to show while waiting for reply
         auto item = new QListWidgetItem(tr("Loading '%1'…").arg(name));
+        // Make unselectable
+        item->setFlags(item->flags() & ~Qt::ItemIsSelectable);
         item->setData(Qt::UserRole, QVariant::fromValue(reply));
         list_->addItem(item);
     }
@@ -177,9 +181,10 @@ namespace ps2rpc
         auto result = arx::payloadResultAsObject(collection, payload);
         // Parse character data
         auto info = parseCharacterPayload(result);
+        auto data = QVariant::fromValue(info);
         // Create character entry
         auto item = new QListWidgetItem(info.name);
-        item->setData(Qt::UserRole, info.id);
+        item->setData(Qt::UserRole, data);
         list_->addItem(item);
     }
 

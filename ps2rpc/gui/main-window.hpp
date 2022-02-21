@@ -3,13 +3,15 @@
 #ifndef PS2RPC_GUI_MAINWINDOW_HPP
 #define PS2RPC_GUI_MAINWINDOW_HPP
 
+#include <QtCore/QList>
 #include <QtCore/QObject>
-#include <QtCore/QStringList>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QWidget>
+
+#include "game/character-info.hpp"
 
 namespace ps2rpc
 {
@@ -25,7 +27,7 @@ namespace ps2rpc
         void onCharacterChanged(int index);
 
     private:
-        void openCharacterManager(const QStringList &characters = {});
+        void openCharacterManager(const QList<CharacterData> &characters = {});
 
         QString getProjectLink() const;
         void setEventFrequency(double events_per_second);
