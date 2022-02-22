@@ -18,9 +18,8 @@ namespace ps2rpc
     public:
         explicit PresenceHandler(QObject *parent = nullptr);
 
-        // Q_SIGNALS:
-
     public Q_SLOTS:
+        void clearActivity();
         void setActivity(discord::Activity activity);
 
     private:
