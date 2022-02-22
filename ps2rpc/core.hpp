@@ -5,6 +5,7 @@
 
 #include <QtCore/QDateTime>
 #include <QtCore/QJsonObject>
+#include <QtCore/QList>
 #include <QtCore/QObject>
 #include <QtCore/QScopedPointer>
 #include <QtCore/QString>
@@ -33,6 +34,7 @@ namespace ps2rpc
         QDateTime getLastEventPayload() const;
         QDateTime getLastGameStateUpdate() const;
         QDateTime getLastPresenceUpdate() const;
+        double getEventFrequency() const;
 
     Q_SIGNALS:
         void characterChanged(const CharacterData &character);
@@ -49,6 +51,7 @@ namespace ps2rpc
     private:
         void schedulePresenceUpdate();
         void updatePresence();
+        void updateRecentEventsList();
 
         QScopedPointer<QTimer> rate_limit_timer_;
         CharacterData character_;
@@ -59,6 +62,7 @@ namespace ps2rpc
         QDateTime last_event_payload_;
         QDateTime last_game_state_update_;
         QDateTime last_presence_update_;
+        QList<QDateTime> recent_events_;
     };
 
 } // namespace ps2rpc

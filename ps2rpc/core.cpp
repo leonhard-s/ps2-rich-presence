@@ -73,6 +73,17 @@ namespace ps2rpc
         return last_presence_update_;
     }
 
+    double RichPresenceApp::getEventFrequency() const
+    {
+        if (recent_events_.empty())
+        {
+            return 0.0;
+        }
+        auto oldest_event = recent_events_.front();
+        double timespan = QDateTime::currentDateTime().secsTo(oldest_event);
+        return timespan / recent_events_.size();
+    }
+
     void RichPresenceApp::onEventPayloadReceived(const QString &event_name,
                                                  const QJsonObject &payload)
     {
@@ -82,6 +93,7 @@ namespace ps2rpc
         Q_UNUSED(payload);
 
         last_event_payload_ = QDateTime::currentDateTime();
+        updateRecentEventsList();
         emit eventPayloadReceived();
     }
 
@@ -138,6 +150,18 @@ namespace ps2rpc
             discord_->clearActivity();
         }
         emit presenceUpdated();
+    }
+
+    void RichPresenceApp::updateRecentEventsList()
+    {
+        auto now = QDateTime::currentDateTime();
+        // Only keep the 100 most recent events
+        while (recent_events_.size() > 100)
+        {
+            recent_events_.pop_front();
+        }
+        // Add the new event to the list
+        recent_events_.push_back(now);
     }
 
 } // namespace ps2rpc
