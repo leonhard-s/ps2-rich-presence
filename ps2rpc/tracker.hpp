@@ -22,7 +22,8 @@ namespace ps2rpc
         Q_OBJECT
 
     public:
-        explicit ActivityTracker(const CharacterData &character);
+        ActivityTracker(const CharacterData &character,
+                        QObject *parent = nullptr);
 
         CharacterData getCharacter() const;
 
