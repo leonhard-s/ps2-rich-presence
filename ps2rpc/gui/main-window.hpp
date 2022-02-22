@@ -5,6 +5,7 @@
 
 #include <QtCore/QList>
 #include <QtCore/QObject>
+#include <QtCore/QScopedPointer>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QLabel>
@@ -12,6 +13,7 @@
 #include <QtWidgets/QWidget>
 
 #include "game/character-info.hpp"
+#include "tracker.hpp"
 
 namespace ps2rpc
 {
@@ -23,8 +25,18 @@ namespace ps2rpc
     public:
         MainWindow();
 
+        bool isTrackingEnabled() const;
+        bool isTrackerRunning() const;
+
+    public slots:
+        void startTracking(const CharacterData &character);
+        void stopTracking();
+
     private Q_SLOTS:
         void onCharacterChanged(int index);
+        void onGameStateChanged(const GameState &state);
+        void onPayloadReceived(const QString &event_name,
+                               const QJsonObject &payload);
 
     private:
         void openCharacterManager(const QList<CharacterData> &characters = {});
@@ -41,6 +53,8 @@ namespace ps2rpc
 
         void resetCharacterComboBox();
         void setupUi();
+
+        QScopedPointer<ActivityTracker> tracker_;
 
         // GUI elements
         QComboBox *characters_combo_box_;

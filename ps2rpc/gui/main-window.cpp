@@ -46,6 +46,46 @@ namespace ps2rpc
                          &MainWindow::showMinimized);
     }
 
+    bool MainWindow::isTrackingEnabled() const
+    {
+        // TODO: Hook up enable/disable switch
+        return true;
+    }
+
+    bool MainWindow::isTrackerRunning() const
+    {
+        return tracker_ != nullptr;
+    }
+
+    void MainWindow::startTracking(const CharacterData &character)
+    {
+        if (tracker_ != nullptr)
+        {
+            tracker_->deleteLater();
+        }
+        tracker_.reset(new ActivityTracker(character));
+        QObject::connect(tracker_.get(),
+                         &ActivityTracker::stateChanged,
+                         this,
+                         &MainWindow::onGameStateChanged);
+        QObject::connect(tracker_.get(),
+                         &ActivityTracker::payloadReceived,
+                         this,
+                         &MainWindow::onPayloadReceived);
+        qDebug() << "Starting tracking for" << character.name;
+        status_->setText(tr("Tracking active for %1").arg(character.name));
+    }
+
+    void MainWindow::stopTracking()
+    {
+        if (tracker_ != nullptr)
+        {
+            tracker_->deleteLater();
+        }
+        tracker_.reset();
+        status_->setText(tr("Tracking stopped"));
+    }
+
     void MainWindow::onCharacterChanged(int index)
     {
         if (index < 0)
@@ -72,8 +112,31 @@ namespace ps2rpc
         {
             return;
         }
-        // TODO: Use character data to start the tracker
-        qDebug() << "Character selected:" << info;
+        // If the tracker is already running for another character, stop it
+        if (isTrackerRunning())
+        {
+            if (tracker_->getCharacter() == info)
+            {
+                // We are already tracking this character, nothing to be done
+                return;
+            }
+            // The tracked character has changed, stop the tracker
+            qDebug() << "Stopping tracker for" << tracker_->getCharacter();
+            stopTracking();
+        }
+        // Start tracking
+        startTracking(info);
+    }
+
+    void MainWindow::onGameStateChanged(const GameState &state)
+    {
+        // TODO: Update presence
+    }
+
+    void MainWindow::onPayloadReceived(const QString &event_name,
+                                       const QJsonObject &payload)
+    {
+        setLastPayload(QDateTime::currentDateTimeUtc());
     }
 
     void MainWindow::openCharacterManager(
