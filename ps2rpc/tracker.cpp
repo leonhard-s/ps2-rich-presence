@@ -41,6 +41,7 @@ namespace ps2rpc
 
     void ActivityTracker::onPayloadReceived(const QString &event_name, const QJsonObject &payload)
     {
+        emit payloadReceived(event_name, payload);
         // Character ID
         bool are_we_the_baddies = payload["attacker_character_id"]
                                       .toString()

@@ -29,6 +29,8 @@ namespace ps2rpc
     Q_SIGNALS:
         void ready();
         void stateChanged(GameState state);
+        void payloadReceived(const QString &event_name,
+                             const QJsonObject &payload);
 
     private Q_SLOTS:
         void onPayloadReceived(const QString &event_name,
