@@ -16,6 +16,8 @@ namespace ps2rpc
         Q_OBJECT
 
     public:
+        static constexpr qint16 PRESENCE_UPDATE_RATE_LIMIT = 15000;
+
         explicit PresenceHandler(QObject *parent = nullptr);
 
     public Q_SLOTS:

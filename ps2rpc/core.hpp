@@ -3,10 +3,12 @@
 #ifndef PS2RPC_CORE_HPP
 #define PS2RPC_CORE_HPP
 
+#include <QtCore/QDateTime>
 #include <QtCore/QJsonObject>
 #include <QtCore/QObject>
 #include <QtCore/QScopedPointer>
 #include <QtCore/QString>
+#include <QtCore/QTimer>
 
 #include "game/character-info.hpp"
 #include "presence/factory.hpp"
@@ -23,21 +25,40 @@ namespace ps2rpc
     public:
         explicit RichPresenceApp(QObject *parent = nullptr);
 
-        bool hasCharacter() const;
+        bool getRichPresenceEnabled() const;
+        void setRichPresenceEnabled(bool enabled);
         CharacterData getCharacter() const;
-
-    public Q_SLOTS:
         void setCharacter(const CharacterData &character);
 
+        QDateTime getLastEventPayload() const;
+        QDateTime getLastGameStateUpdate() const;
+        QDateTime getLastPresenceUpdate() const;
+
+    Q_SIGNALS:
+        void characterChanged(const CharacterData &character);
+        void eventPayloadReceived();
+        void gameStateChanged();
+        void presenceUpdated();
+
     private Q_SLOTS:
+        void onEventPayloadReceived(const QString &event_name,
+                                    const QJsonObject &payload);
         void onGameStateChanged(const GameState &state);
-        void onEssPayloadReceived(const QString &event_name,
-                                  const QJsonObject &payload);
+        void onRateLimitTimerExpired();
 
     private:
-        QScopedPointer<ActivityTracker> tracker_;
+        void schedulePresenceUpdate();
+        void updatePresence();
+
+        QScopedPointer<QTimer> rate_limit_timer_;
+        CharacterData character_;
+        bool presence_enabled_;
+        QScopedPointer<PresenceFactory> presence_;
         QScopedPointer<PresenceHandler> discord_;
-        QScopedPointer<PresenceFactory> factory_;
+
+        QDateTime last_event_payload_;
+        QDateTime last_game_state_update_;
+        QDateTime last_presence_update_;
     };
 
 } // namespace ps2rpc
