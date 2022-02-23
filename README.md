@@ -8,6 +8,22 @@ An open source utility providing [Discord Rich Presence](https://discord.com/ric
 
 [Overview](#overview) • [Features](#features) • [License / Disclaimer](#license) • [Installation](#installation) • [Contributing](#contributing)
 
+# Archived Branch
+
+You are on an outdated, archived branch of this repository. Please head to the [current version](https://github.com/leonhard-s/ps2-rich-presence) unless you intend to poke around in the old codebase.
+
+The version on this branch is neither complete, nor maintained.
+
+## Background
+
+This application was originally written in Python for convenience and as a quick proof-of-concept.
+
+It successfully managed to get the [Auraxium](https://github.com/leonhard-s/auraxium) API wrapper to run on PyQt6, but packaging this workaround into a standalone executable proved cumbersome.
+
+Since this project is meant to be used by non-programmers as a standalone executable, it was decided that it would be rewritten in C++ and plain Qt6, without Python dependencies.
+
+Note that most of the code is required to handle the GUI and to create PyQt-compatible wrappers for the asynchronous Python APIs. Checkout the Auraxium wrapper if you don't need to interface with Qt.
+
 ## Overview
 
 <!-- TODO: Add comparison of normal Discord game detection and Rich Presence -->
