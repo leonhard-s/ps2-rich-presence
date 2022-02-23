@@ -16,6 +16,8 @@
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QVBoxLayout>
 
+#include <numeric>
+
 #include "game/character-info.hpp"
 #include "gui/character-manager.hpp"
 #include "gui/timeago.hpp"
@@ -201,7 +203,7 @@ namespace ps2rpc
 
     void MainWindow::setEventFrequency(double events_per_second)
     {
-        if (events_per_second < 0.0)
+        if (events_per_second < 0.0 || std::isinf(events_per_second))
         {
             event_frequency_->setText(tr("Unknown"));
         }
