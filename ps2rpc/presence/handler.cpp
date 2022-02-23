@@ -42,7 +42,7 @@ namespace ps2rpc
         discord_core_->ActivityManager().ClearActivity(
             [](discord::Result result)
             { qDebug() << ((result == discord::Result::Ok) ? "Succeeded" : "Failed")
-                       << "clearing activity!\n"; });
+                       << "clearing activity!"; });
     }
 
     void PresenceHandler::setActivity(discord::Activity activity)
@@ -50,7 +50,7 @@ namespace ps2rpc
         discord_core_->ActivityManager().UpdateActivity(
             activity, [](discord::Result result)
             { qDebug() << ((result == discord::Result::Ok) ? "Succeeded" : "Failed")
-                       << "updating activity!\n"; });
+                       << "updating activity!"; });
     }
 
 } // namespace ps2rpc
