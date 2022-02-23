@@ -21,7 +21,7 @@ namespace ps2
             class_ = Class::Infiltrator;
             break;
         // Light Assault
-        case 2:  // NC
+        case 3:  // NC
         case 10: // TR
         case 17: // VS
         case 29: // NSO
