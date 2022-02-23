@@ -3,6 +3,7 @@
 #include "core.hpp"
 
 #include <QtCore/QDateTime>
+#include <QtCore/QDebug>
 #include <QtCore/QJsonObject>
 #include <QtCore/QObject>
 #include <QtCore/QString>
@@ -13,18 +14,24 @@
 #include "game/character-info.hpp"
 #include "game/state.hpp"
 #include "presence/handler.hpp"
+#include "tracker.hpp"
 
 namespace ps2rpc
 {
 
     RichPresenceApp::RichPresenceApp(QObject *parent)
-        : QObject(parent), presence_enabled_{true}
+        : QObject(parent), presence_enabled_{true}, event_latency_{-1.0}
     {
+        presence_.reset(new PresenceFactory(this));
+        discord_.reset(new PresenceHandler(this));
+        // Reset timestamps
+        last_event_payload_ = QDateTime::fromSecsSinceEpoch(0);
+        last_game_state_update_ = QDateTime::fromSecsSinceEpoch(0);
+        last_presence_update_ = QDateTime::fromSecsSinceEpoch(0);
         // Set up rate limiting timer
         rate_limit_timer_.reset(new QTimer(this));
-        rate_limit_timer_->setInterval(0); // ASAP
         rate_limit_timer_->setSingleShot(true);
-        rate_limit_timer_->start();
+        rate_limit_timer_->start(0);
         QObject::connect(rate_limit_timer_.get(), &QTimer::timeout,
                          this, &RichPresenceApp::onRateLimitTimerExpired);
     }
@@ -54,6 +61,18 @@ namespace ps2rpc
         if (character_ != character)
         {
             character_ = character;
+            if (character.id != 0)
+            {
+                tracker_.reset(new ActivityTracker(character, this));
+                QObject::connect(tracker_.get(), &ActivityTracker::payloadReceived,
+                                 this, &RichPresenceApp::onEventPayloadReceived);
+                QObject::connect(tracker_.get(), &ActivityTracker::stateChanged,
+                                 this, &RichPresenceApp::onGameStateChanged);
+            }
+            else
+            {
+                tracker_.reset();
+            }
             emit characterChanged(character_);
         }
     }
@@ -73,6 +92,11 @@ namespace ps2rpc
         return last_presence_update_;
     }
 
+    int RichPresenceApp::getEventLatency() const
+    {
+        return event_latency_;
+    }
+
     double RichPresenceApp::getEventFrequency() const
     {
         if (recent_events_.empty())
@@ -80,8 +104,10 @@ namespace ps2rpc
             return 0.0;
         }
         auto oldest_event = recent_events_.front();
-        double timespan = QDateTime::currentDateTime().secsTo(oldest_event);
-        return timespan / recent_events_.size();
+        auto now = QDateTime::currentDateTimeUtc();
+        double timespan = oldest_event.secsTo(now);
+        auto freq = recent_events_.size() / timespan;
+        return freq;
     }
 
     void RichPresenceApp::onEventPayloadReceived(const QString &event_name,
@@ -90,9 +116,15 @@ namespace ps2rpc
         // The app only cares about if there are messages coming in. Handling
         // the payloads and dealing with error states is the tracker's problem.
         Q_UNUSED(event_name);
-        Q_UNUSED(payload);
 
-        last_event_payload_ = QDateTime::currentDateTime();
+        // Get timestamp of the event
+        auto timestamp = payload["timestamp"].toString().toLongLong();
+        auto event_time = QDateTime::fromSecsSinceEpoch(
+            timestamp, Qt::TimeSpec::UTC);
+        auto now = QDateTime::currentDateTimeUtc();
+        event_latency_ = event_time.msecsTo(now);
+        // Update recent events list; used for event frequency calculation
+        last_event_payload_ = now;
         updateRecentEventsList();
         emit eventPayloadReceived();
     }
@@ -115,9 +147,10 @@ namespace ps2rpc
         auto rate_limit = PresenceHandler::PRESENCE_UPDATE_RATE_LIMIT;
         // If it has been longer than the rate limit since the last presence
         // update, update the presence immediately
-        auto now = QDateTime::currentDateTime();
-        if (now.msecsTo(last_presence_update_) > rate_limit)
+        auto now = QDateTime::currentDateTimeUtc();
+        if (last_presence_update_.msecsTo(now) > rate_limit)
         {
+            qDebug() << "Scheduling immediate presence update";
             updatePresence();
             return;
         }
@@ -127,19 +160,21 @@ namespace ps2rpc
         // meanwhile, so the next update will be the most up-to-date one.
         if (rate_limit_timer_->isActive())
         {
+            qDebug() << "Presence update timer is already running";
             return;
         }
         // Calculate the number of seconds until we ar eallowed to update the
         // presence again.
         auto ms_until_next_update =
             rate_limit - now.msecsTo(last_presence_update_);
+        qDebug() << "Scheduling presence update in" << ms_until_next_update << "ms";
         // (Re)start the timer. Presence will be updated when the timer fires.
         rate_limit_timer_->start(ms_until_next_update);
     }
 
     void RichPresenceApp::updatePresence()
     {
-        last_presence_update_ = QDateTime::currentDateTime();
+        last_presence_update_ = QDateTime::currentDateTimeUtc();
         if (presence_enabled_)
         {
             auto activity = presence_->getPresenceAsActivity();
@@ -154,7 +189,7 @@ namespace ps2rpc
 
     void RichPresenceApp::updateRecentEventsList()
     {
-        auto now = QDateTime::currentDateTime();
+        auto now = QDateTime::currentDateTimeUtc();
         // Only keep the 100 most recent events
         while (recent_events_.size() > 100)
         {

@@ -34,6 +34,7 @@ namespace ps2rpc
         QDateTime getLastEventPayload() const;
         QDateTime getLastGameStateUpdate() const;
         QDateTime getLastPresenceUpdate() const;
+        int getEventLatency() const;
         double getEventFrequency() const;
 
     Q_SIGNALS:
@@ -58,6 +59,8 @@ namespace ps2rpc
         bool presence_enabled_;
         QScopedPointer<PresenceFactory> presence_;
         QScopedPointer<PresenceHandler> discord_;
+        double event_latency_;
+        QScopedPointer<ActivityTracker> tracker_;
 
         QDateTime last_event_payload_;
         QDateTime last_game_state_update_;

@@ -44,6 +44,12 @@ namespace ps2rpc
                          &QPushButton::clicked,
                          this,
                          &MainWindow::showMinimized);
+        // Create application object
+        app_.reset(new RichPresenceApp(this));
+        QObject::connect(app_.get(), &RichPresenceApp::presenceUpdated,
+                         this, &MainWindow::onPresenceUpdated);
+        QObject::connect(app_.get(), &RichPresenceApp::eventPayloadReceived,
+                         this, &MainWindow::onEventPayloadReceived);
     }
 
     bool MainWindow::isTrackingEnabled() const
@@ -54,35 +60,18 @@ namespace ps2rpc
 
     bool MainWindow::isTrackerRunning() const
     {
-        return tracker_ != nullptr;
+        return app_->getCharacter().id != 0;
     }
 
     void MainWindow::startTracking(const CharacterData &character)
     {
-        if (tracker_ != nullptr)
-        {
-            tracker_->deleteLater();
-        }
-        tracker_.reset(new ActivityTracker(character));
-        QObject::connect(tracker_.get(),
-                         &ActivityTracker::stateChanged,
-                         this,
-                         &MainWindow::onGameStateChanged);
-        QObject::connect(tracker_.get(),
-                         &ActivityTracker::payloadReceived,
-                         this,
-                         &MainWindow::onPayloadReceived);
-        qDebug() << "Starting tracking for" << character.name;
+        app_->setCharacter(character);
         status_->setText(tr("Tracking active for %1").arg(character.name));
     }
 
     void MainWindow::stopTracking()
     {
-        if (tracker_ != nullptr)
-        {
-            tracker_->deleteLater();
-        }
-        tracker_.reset();
+        app_->setCharacter(CharacterData());
         status_->setText(tr("Tracking stopped"));
     }
 
@@ -115,28 +104,31 @@ namespace ps2rpc
         // If the tracker is already running for another character, stop it
         if (isTrackerRunning())
         {
-            if (tracker_->getCharacter() == info)
+            auto current = app_->getCharacter();
+            if (current == info)
             {
                 // We are already tracking this character, nothing to be done
                 return;
             }
             // The tracked character has changed, stop the tracker
-            qDebug() << "Stopping tracker for" << tracker_->getCharacter();
+            qDebug() << "Stopping tracker for" << current;
             stopTracking();
         }
         // Start tracking
         startTracking(info);
     }
 
-    void MainWindow::onGameStateChanged(const GameState &state)
+    void MainWindow::onEventPayloadReceived()
     {
-        // TODO: Update presence
+        updateEventLatency();
+        updateEventFrequency();
+        setLastPayload(app_->getLastEventPayload());
     }
 
-    void MainWindow::onPayloadReceived(const QString &event_name,
-                                       const QJsonObject &payload)
+    void MainWindow::onPresenceUpdated()
     {
-        setLastPayload(QDateTime::currentDateTimeUtc());
+        auto timestamp = app_->getLastPresenceUpdate();
+        setLastPresence(timestamp);
     }
 
     void MainWindow::openCharacterManager(
@@ -190,6 +182,16 @@ namespace ps2rpc
                 characters_combo_box_->setCurrentIndex(-1);
             }
         }
+    }
+
+    void MainWindow::updateEventLatency()
+    {
+        setEventLatency(app_->getEventLatency());
+    }
+
+    void MainWindow::updateEventFrequency()
+    {
+        setEventFrequency(app_->getEventFrequency());
     }
 
     QString MainWindow::getProjectLink() const
