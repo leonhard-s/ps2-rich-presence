@@ -1,0 +1,9 @@
+{
+    "editor.rulers": [
+        79,
+    ],
+    "files.associations": {
+        "*.hpp.in": "cpp",
+    },
+    "ltex.language": "en-US",
+}
