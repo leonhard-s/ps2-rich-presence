@@ -51,7 +51,7 @@ namespace ps2rpc
         ps2::Faction team = state_factory_.getFaction();
         // Class
         ps2::LoadoutId loadout_id = are_we_the_baddies ? payload["attacker_loadout_id"].toString().toInt()
-                                                       : payload["loaodut_id"].toString().toInt();
+                                                       : payload["character_loadout_id"].toString().toInt();
         ps2::Class class_;
         if (ps2::class_from_loadout_id(loadout_id, class_))
         {
