@@ -166,7 +166,7 @@ namespace ps2rpc
         // Calculate the number of seconds until we ar eallowed to update the
         // presence again.
         auto ms_until_next_update =
-            rate_limit - now.msecsTo(last_presence_update_);
+            rate_limit - last_presence_update_.msecsTo(now);
         qDebug() << "Scheduling presence update in" << ms_until_next_update << "ms";
         // (Re)start the timer. Presence will be updated when the timer fires.
         rate_limit_timer_->start(ms_until_next_update);
