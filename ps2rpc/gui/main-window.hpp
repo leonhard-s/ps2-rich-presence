@@ -13,7 +13,7 @@
 #include <QtWidgets/QWidget>
 
 #include "game/character-info.hpp"
-#include "tracker.hpp"
+#include "core.hpp"
 
 namespace ps2rpc
 {
@@ -34,12 +34,13 @@ namespace ps2rpc
 
     private Q_SLOTS:
         void onCharacterChanged(int index);
-        void onGameStateChanged(const GameState &state);
-        void onPayloadReceived(const QString &event_name,
-                               const QJsonObject &payload);
+        void onEventPayloadReceived();
+        void onPresenceUpdated();
 
     private:
         void openCharacterManager(const QList<CharacterData> &characters = {});
+        void updateEventLatency();
+        void updateEventFrequency();
 
         QString getProjectLink() const;
         void setEventFrequency(double events_per_second);
@@ -54,7 +55,7 @@ namespace ps2rpc
         void resetCharacterComboBox();
         void setupUi();
 
-        QScopedPointer<ActivityTracker> tracker_;
+        QScopedPointer<RichPresenceApp> app_;
 
         // GUI elements
         QComboBox *characters_combo_box_;

@@ -24,8 +24,8 @@
 namespace ps2rpc
 {
 
-    ActivityTracker::ActivityTracker(const CharacterData &character)
-        : character_{character}, ess_client_{}, state_factory_{character.id, character.faction, character.server, character.class_}
+    ActivityTracker::ActivityTracker(const CharacterData &character, QObject *parent)
+        : QObject(parent), character_{character}, ess_client_{}, state_factory_{character.id, character.faction, character.server, character.class_}
     {
         // Create WebSocket client for event streaming endpoint
         ess_client_.reset(new arx::EssClient(SERVICE_ID, "ps2", this));

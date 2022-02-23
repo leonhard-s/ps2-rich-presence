@@ -37,11 +37,20 @@ namespace ps2rpc
         timer_->start();
     }
 
+    void PresenceHandler::clearActivity()
+    {
+        discord_core_->ActivityManager().ClearActivity(
+            [](discord::Result result)
+            { qDebug() << ((result == discord::Result::Ok) ? "Succeeded" : "Failed")
+                       << "clearing activity!\n"; });
+    }
+
     void PresenceHandler::setActivity(discord::Activity activity)
     {
-        discord_core_->ActivityManager().UpdateActivity(activity, [](discord::Result result)
-                                                        { qDebug() << ((result == discord::Result::Ok) ? "Succeeded" : "Failed")
-                                                                   << " updating activity!\n"; });
+        discord_core_->ActivityManager().UpdateActivity(
+            activity, [](discord::Result result)
+            { qDebug() << ((result == discord::Result::Ok) ? "Succeeded" : "Failed")
+                       << "updating activity!\n"; });
     }
 
 } // namespace ps2rpc

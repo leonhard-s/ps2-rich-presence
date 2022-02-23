@@ -2,6 +2,7 @@
 
 #include "arx/payload.hpp"
 
+#include <QtCore/QDebug>
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonObject>
 #include <QtCore/QString>

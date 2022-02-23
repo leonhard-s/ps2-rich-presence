@@ -2,11 +2,13 @@
 
 #include "arx/ess/client.hpp"
 
+#include <QtCore/QDebug>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
 #include <QtCore/QList>
 #include <QtCore/QObject>
 #include <QtCore/QString>
+#include <QtCore/QTimer>
 #include <QtCore/QUrl>
 #include <QtCore/QUrlQuery>
 #include <QtWebSockets/QWebSocket>
@@ -96,10 +98,17 @@ namespace arx
     void EssClient::onConnected()
     {
         emit connected();
-        for (const auto &subscription : subscriptions_)
-        {
-            subscribe(subscription);
-        }
+        auto timer = new QTimer(this);
+        timer->setInterval(100);
+        timer->setSingleShot(true);
+        QObject::connect(timer, &QTimer::timeout, [timer, this]()
+                         {
+                            timer->deleteLater();
+                            for (const auto &subscription : subscriptions_)
+                            {
+                                subscribe(subscription);
+                            } });
+        timer->start();
     }
 
     void EssClient::onDisconnected()
