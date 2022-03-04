@@ -106,6 +106,8 @@ install(CODE "execute_process(COMMAND
 set(CPACK_PACKAGE_NAME "PS2 Rich Presence")
 # Vendor name
 set(CPACK_PACKAGE_VENDOR "Leonhard S.")
+# Application package description
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Rich Presence Support for PS2")
 # Define installer filename
 set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME} v${CMAKE_PROJECT_VERSION}")
 # Set default install folder name
@@ -120,6 +122,8 @@ set(CPACK_RESOURCE_FILE_LICENSE "${LICENSE_FILE}")
 set(CPACK_MONOLOTHIC_INSTALL TRUE)
 # CPack generator to use
 set(CPACK_GENERATOR "WIX")
+# Specify the creation of start menu shortcuts
+set(CPACK_PACKAGE_EXECUTABLES "PS2 Rich Presence" "PS2 Rich Presence")
 
 # WIX Configuration
 
