@@ -108,6 +108,8 @@ set(CPACK_PACKAGE_NAME "PS2 Rich Presence")
 set(CPACK_PACKAGE_VENDOR "Leonhard S.")
 # Define installer filename
 set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME} v${CMAKE_PROJECT_VERSION}")
+# Set default install folder name
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "PS2 Rich Presence")
 # Package icon used during installation
 set(CPACK_PACKAGE_ICON "${PROJECT_SOURCE_DIR}/windows/ps2rpc.ico")
 # Specify license file (requires extension, hence a copy is made)
