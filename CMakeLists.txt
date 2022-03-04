@@ -86,7 +86,8 @@ set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/local_install")
 
 # Install application
 install(TARGETS Ps2RichPresence
-  RUNTIME DESTINATION ".")
+  RUNTIME DESTINATION "."
+)
 # Install Discord SDK
 set(DISCORD_LIB_DIR "${PROJECT_SOURCE_DIR}/discord-sdk/lib/x86_64/")
 install(FILES
@@ -98,6 +99,9 @@ get_target_property(ps2rpc_bin_name Ps2RichPresence OUTPUT_NAME)
 install(CODE "execute_process(COMMAND 
     \"${windeployqt_exe}\" \"${CMAKE_INSTALL_PREFIX}/${ps2rpc_bin_name}.exe\"
   )"
+)
+install(DIRECTORY "${CMAKE_INSTALL_PREFIX}/"
+  DESTINATION "."
 )
 
 # CPack Configuration
