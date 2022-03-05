@@ -32,6 +32,10 @@ namespace ps2rpc
         {
             return QCoreApplication::translate("TimeAgo", "%1 minute(s) ago").arg(time_ago / 60);
         }
+        else if (timestamp == QDateTime::fromSecsSinceEpoch(0))
+        {
+            return QCoreApplication::translate("TimeAgo", "never");
+        }
         else
         {
             return QCoreApplication::translate("TimeAgo", "over an hour ago");

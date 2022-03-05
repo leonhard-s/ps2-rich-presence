@@ -215,7 +215,7 @@ namespace ps2rpc
     {
         if (events_per_second < 0.0 || std::isinf(events_per_second))
         {
-            event_frequency_->setText(tr("Unknown"));
+            event_frequency_->setText(tr("unknown"));
         }
         else
         {
@@ -227,7 +227,7 @@ namespace ps2rpc
     {
         if (latency_ms < 0)
         {
-            latency_->setText(tr("Unknown"));
+            latency_->setText(tr("unknown"));
         }
         else
         {
@@ -235,22 +235,14 @@ namespace ps2rpc
         }
     }
 
-    void MainWindow::setLastPayload(bool never)
-    {
-        payload_ago_->setText(tr("Never"));
-    }
-
-    void MainWindow::setLastPayload(QDateTime timestamp)
+    void MainWindow::setLastPayload(
+        QDateTime timestamp = QDateTime::fromSecsSinceEpoch(0))
     {
         payload_ago_->setText(getTimeAgo(timestamp));
     }
 
-    void MainWindow::setLastPresence(bool never)
-    {
-        presence_ago_->setText(tr("Never"));
-    }
-
-    void MainWindow::setLastPresence(QDateTime timestamp)
+    void MainWindow::setLastPresence(
+        QDateTime timestamp = QDateTime::fromSecsSinceEpoch(0))
     {
         presence_ago_->setText(getTimeAgo(timestamp));
     }
@@ -329,14 +321,14 @@ namespace ps2rpc
             tr("Last event payload") + ":", this);
         statistics_layout->addWidget(payload_ago_label, 2, 0);
         payload_ago_ = new QLabel("", this);
-        setLastPayload(false); // "Never"
+        setLastPayload();
         statistics_layout->addWidget(payload_ago_, 2, 1);
 
         auto presence_ago_label = new QLabel(
             tr("Last presence update") + ":", this);
         statistics_layout->addWidget(presence_ago_label, 3, 0);
         presence_ago_ = new QLabel("", this);
-        setLastPresence(false); // "Never"
+        setLastPresence();
         statistics_layout->addWidget(presence_ago_, 3, 1);
 
         statistics_layout->setColumnMinimumWidth(0, 120);
