@@ -48,10 +48,16 @@ namespace ps2rpc
                          &MainWindow::showMinimized);
         // Create application object
         app_.reset(new RichPresenceApp(this));
-        QObject::connect(app_.get(), &RichPresenceApp::presenceUpdated,
-                         this, &MainWindow::onPresenceUpdated);
         QObject::connect(app_.get(), &RichPresenceApp::eventPayloadReceived,
                          this, &MainWindow::onEventPayloadReceived);
+
+        // Update "last X" labels periodically
+        last_seen_timer_.reset(new QTimer(this));
+        last_seen_timer_->setInterval(1000);
+        last_seen_timer_->setSingleShot(false);
+        QObject::connect(last_seen_timer_.get(), &QTimer::timeout,
+                         this, &MainWindow::onLastSeenTimerExpired);
+        last_seen_timer_->start();
     }
 
     bool MainWindow::isTrackingEnabled() const
@@ -124,13 +130,11 @@ namespace ps2rpc
     {
         updateEventLatency();
         updateEventFrequency();
-        setLastPayload(app_->getLastEventPayload());
     }
 
-    void MainWindow::onPresenceUpdated()
+    void MainWindow::onLastSeenTimerExpired()
     {
-        auto timestamp = app_->getLastPresenceUpdate();
-        setLastPresence(timestamp);
+        updateLastSeenLabels();
     }
 
     void MainWindow::openCharacterManager(
@@ -194,6 +198,12 @@ namespace ps2rpc
     void MainWindow::updateEventFrequency()
     {
         setEventFrequency(app_->getEventFrequency());
+    }
+
+    void MainWindow::updateLastSeenLabels()
+    {
+        setLastPresence(app_->getLastPresenceUpdate());
+        setLastPayload(app_->getLastEventPayload());
     }
 
     QString MainWindow::getProjectLink() const

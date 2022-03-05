@@ -6,6 +6,7 @@
 #include <QtCore/QList>
 #include <QtCore/QObject>
 #include <QtCore/QScopedPointer>
+#include <QtCore/QTimer>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QLabel>
@@ -35,12 +36,13 @@ namespace ps2rpc
     private Q_SLOTS:
         void onCharacterChanged(int index);
         void onEventPayloadReceived();
-        void onPresenceUpdated();
+        void onLastSeenTimerExpired();
 
     private:
         void openCharacterManager(const QList<CharacterData> &characters = {});
         void updateEventLatency();
         void updateEventFrequency();
+        void updateLastSeenLabels();
 
         QString getProjectLink() const;
         void setEventFrequency(double events_per_second);
@@ -56,6 +58,7 @@ namespace ps2rpc
         void setupUi();
 
         QScopedPointer<RichPresenceApp> app_;
+        QScopedPointer<QTimer> last_seen_timer_;
 
         // GUI elements
         QComboBox *characters_combo_box_;
