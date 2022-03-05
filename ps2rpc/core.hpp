@@ -35,7 +35,7 @@ namespace ps2rpc
         QDateTime getLastGameStateUpdate() const;
         QDateTime getLastPresenceUpdate() const;
         int getEventLatency() const;
-        double getEventFrequency() const;
+        double getEventFrequency();
 
     Q_SIGNALS:
         void characterChanged(const CharacterData &character);
@@ -50,6 +50,7 @@ namespace ps2rpc
         void onRateLimitTimerExpired();
 
     private:
+        void pruneRecentEvents();
         void schedulePresenceUpdate();
         void updatePresence();
         void updateRecentEventsList();

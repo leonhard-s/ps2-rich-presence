@@ -97,8 +97,9 @@ namespace ps2rpc
         return event_latency_;
     }
 
-    double RichPresenceApp::getEventFrequency() const
+    double RichPresenceApp::getEventFrequency()
     {
+        pruneRecentEvents();
         if (recent_events_.empty())
         {
             return 0.0;
@@ -140,6 +141,23 @@ namespace ps2rpc
     void RichPresenceApp::onRateLimitTimerExpired()
     {
         updatePresence();
+    }
+
+    void RichPresenceApp::pruneRecentEvents()
+    {
+        // Remove events older than 30 seconds from the list
+        auto now = QDateTime::currentDateTimeUtc();
+        for (auto it = recent_events_.begin(); it != recent_events_.end();)
+        {
+            if (it->msecsTo(now) > 30000)
+            {
+                it = recent_events_.erase(it);
+            }
+            else
+            {
+                ++it;
+            }
+        }
     }
 
     void RichPresenceApp::schedulePresenceUpdate()
