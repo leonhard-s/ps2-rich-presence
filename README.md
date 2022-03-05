@@ -21,13 +21,24 @@ This application runs independently of the main PlanetSide 2 executable and does
 
 ***Note:** PS2RPC is a third-party tool and not affiliated with [Rogue Planet Games](https://www.rogueplanetgaming.com/home) or the PlanetSide 2 development team in any way.*
 
+## Work In Progress
+
+This utility is still in its early stages of development. Many features are missing (see below) and bugs are certain. If you find some, please do not hesitate to [report them](https://github.com/leonhard-s/ps2-rich-presence/issues).
+
+### Noteworthy omissions
+
+- Characters are not remembered between sessions
+- No start-on-login support
+- No minimizing to tray
+- No automatic tracking of characters on login or failover when they log off
+
 ## Features
 
 - **Display your character's status on Discord**
 - **Detection of current continent, class, and vehicle**
 - **Lightweight**
 - **Low bandwidth requirements**
-- **Automatic tracking upon login**
+- ~~**Automatic tracking upon login**~~ (soon)
 
 ## Limitations
 
