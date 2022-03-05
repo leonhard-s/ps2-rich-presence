@@ -33,7 +33,7 @@ if(WIN32)
   set(APP_ICON_RESOURCE "${PROJECT_SOURCE_DIR}/windows/ps2rpc.rc")
 endif()
 # Main executable
-add_executable(Ps2RichPresence
+add_executable(Ps2RichPresence WIN32
   "ps2rpc/appdata/appid.hpp"
   "ps2rpc/appdata/assets.hpp"
   "ps2rpc/appdata/assets.cpp"
