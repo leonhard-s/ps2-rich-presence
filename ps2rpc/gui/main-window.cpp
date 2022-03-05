@@ -33,6 +33,11 @@ namespace ps2rpc
         setFixedHeight(380);
         // Create GUI elements
         setupUi();
+        // Disable widgets for not yet implemented features
+        enable_button_->setEnabled(false);
+        start_with_windows_->setEnabled(false);
+        auto_track_->setEnabled(false);
+        minimise_to_tray_->setEnabled(false);
         // Disable maximise button on Windows
 #ifdef Q_OS_WIN
         setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);
