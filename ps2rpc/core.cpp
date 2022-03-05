@@ -73,6 +73,13 @@ namespace ps2rpc
             {
                 tracker_.reset();
             }
+            // Reset timestamps and payload cache
+            last_event_payload_ = QDateTime::fromSecsSinceEpoch(0);
+            last_game_state_update_ = QDateTime::fromSecsSinceEpoch(0);
+            event_latency_ = -1.0;
+            recent_events_.clear();
+            emit eventPayloadReceived();
+            emit gameStateChanged();
             emit characterChanged(character_);
         }
     }
