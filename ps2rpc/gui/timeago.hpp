@@ -18,7 +18,7 @@ namespace ps2rpc
     QString getTimeAgo(const QDateTime &timestamp)
     {
         // Get time diference in seconds
-        const auto time_ago = QDateTime::currentDateTime().secsTo(timestamp);
+        const auto time_ago = timestamp.secsTo(QDateTime::currentDateTime());
         // Return time ago in a human readable format
         if (time_ago < 5)
         {
