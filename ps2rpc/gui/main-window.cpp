@@ -213,13 +213,14 @@ namespace ps2rpc
 
     void MainWindow::setEventFrequency(double events_per_second)
     {
-        if (events_per_second < 0.0 || std::isinf(events_per_second))
+        if (events_per_second <= 0.0 || std::isinf(events_per_second))
         {
-            event_frequency_->setText(tr("unknown"));
+            event_frequency_->setText(tr("not enough events"));
         }
         else
         {
-            event_frequency_->setText(QString::number(events_per_second, 'f', 2));
+            event_frequency_->setText(
+                QString::number(events_per_second, 'f', 2));
         }
     }
 
@@ -227,7 +228,7 @@ namespace ps2rpc
     {
         if (latency_ms < 0)
         {
-            latency_->setText(tr("unknown"));
+            latency_->setText(tr("n/a"));
         }
         else
         {
