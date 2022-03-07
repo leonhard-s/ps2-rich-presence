@@ -5,7 +5,7 @@ set(CMAKE_PROJECT_HOMEPAGE_URL "https://github.com/leonhard-s/ps2-rich-presence"
 
 set(CMAKE_AUTOMOC ON)
 
-find_package(Qt6 6.2.3 REQUIRED
+find_package(Qt6 6.2.0 CONFIG REQUIRED
   COMPONENTS
     Core
     Gui
