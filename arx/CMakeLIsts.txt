@@ -33,7 +33,7 @@ target_include_directories(Arx
     ${PROJECT_SOURCE_DIR}/src
 )
 target_link_libraries(Arx
-  PRIVATE
+  PUBLIC
     Qt::Core
     Qt::WebSockets
 )
