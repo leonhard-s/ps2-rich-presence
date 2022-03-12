@@ -22,8 +22,8 @@ add_subdirectory(ps2data)
 
 # Process config header; this lets us access project name and version strings
 configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/ps2rpc/config.hpp.in
-  ${CMAKE_CURRENT_BINARY_DIR}/ps2rpc/config.hpp
+  "${CMAKE_CURRENT_SOURCE_DIR}/ps2rpc/config.hpp.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/ps2rpc/config.hpp"
   @ONLY
 )
 # Application icon
@@ -60,8 +60,8 @@ add_executable(Ps2RichPresence WIN32
 )
 target_include_directories(Ps2RichPresence
   PRIVATE
-    ${PROJECT_SOURCE_DIR}/ps2rpc
-    ${PROJECT_BINARY_DIR}/ps2rpc # Required for config.hpp.in
+    "${PROJECT_SOURCE_DIR}/ps2rpc"
+    "${PROJECT_BINARY_DIR}/ps2rpc" # Required for config.hpp.in
 )
 target_link_libraries(Ps2RichPresence
   PRIVATE
