@@ -5,6 +5,7 @@ set(CMAKE_PROJECT_HOMEPAGE_URL "https://github.com/leonhard-s/ps2-rich-presence"
 
 set(CMAKE_AUTOMOC ON)
 
+# Qt
 find_package(Qt6 6.2.0 CONFIG REQUIRED
   COMPONENTS
     Core
@@ -12,14 +13,11 @@ find_package(Qt6 6.2.0 CONFIG REQUIRED
     Network
     Widgets
 )
-if(Qt6_FOUND AND WIN32)
-  # This utility is required when installing on Windows
-  set(windeployqt_exe "${Qt6_DIR}/../../../bin/windeployqt.exe")
-endif()
-
-# First-party libraries
+# Discord Game SDK
+include("${PROJECT_SOURCE_DIR}/cmake/FetchDiscord.cmake")
+# PlanetSide 2 API wrapper
 add_subdirectory(arx)
-add_subdirectory(discord-sdk)
+# Game-specific data library
 add_subdirectory(ps2data)
 
 # Process config header; this lets us access project name and version strings
@@ -72,7 +70,7 @@ target_link_libraries(Ps2RichPresence
     Qt::Network
     Qt::Widgets
     Arx 
-    Discord
+    discord_game_sdk
     Ps2Data
 )
 # Set executable name
@@ -88,20 +86,11 @@ set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/local_install")
 install(TARGETS Ps2RichPresence
   RUNTIME DESTINATION "."
 )
-# Install Discord SDK
-set(DISCORD_LIB_DIR "${PROJECT_SOURCE_DIR}/discord-sdk/lib/x86_64/")
-install(FILES
-  "${DISCORD_LIB_DIR}/discord_game_sdk.dll"
-  DESTINATION "."
-)
 # Install Qt
 get_target_property(ps2rpc_bin_name Ps2RichPresence OUTPUT_NAME)
 install(CODE "execute_process(COMMAND 
     \"${windeployqt_exe}\" \"${CMAKE_INSTALL_PREFIX}/${ps2rpc_bin_name}.exe\"
   )"
-)
-install(DIRECTORY "${CMAKE_INSTALL_PREFIX}/"
-  DESTINATION "."
 )
 
 # CPack Configuration
