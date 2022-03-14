@@ -11,33 +11,33 @@ namespace arx
 {
 
     Subscription::Subscription(const QString &event_name)
-        : character_ids_{{"all"}},
+        : logical_and_{false},
           event_names_{{event_name}},
-          logical_and_{false},
+          character_ids_{{"all"}},
           world_ids_{{"all"}} {}
 
     Subscription::Subscription(const QStringList &event_names)
-        : character_ids_{{"all"}},
+        : logical_and_{false},
           event_names_{event_names},
-          logical_and_{false},
+          character_ids_{{"all"}},
           world_ids_{{"all"}} {}
 
     Subscription::Subscription(const QString &event_name,
                                const QStringList &character_ids,
                                const QStringList &world_ids,
                                bool logical_and)
-        : character_ids_{character_ids},
+        : logical_and_{logical_and},
           event_names_{{event_name}},
-          logical_and_{logical_and},
+          character_ids_{character_ids},
           world_ids_{world_ids} {}
 
     Subscription::Subscription(const QStringList &event_names,
                                const QStringList &character_ids,
                                const QStringList &world_ids,
                                bool logical_and)
-        : character_ids_{character_ids},
+        : logical_and_{logical_and},
           event_names_{event_names},
-          logical_and_{logical_and},
+          character_ids_{character_ids},
           world_ids_{world_ids} {}
 
     bool Subscription::operator==(const Subscription &other) const
