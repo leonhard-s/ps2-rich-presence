@@ -6,7 +6,7 @@ set(CMAKE_PROJECT_HOMEPAGE_URL "https://github.com/leonhard-s/ps2-rich-presence"
 set(CMAKE_AUTOMOC ON)
 
 # Set pedantic compiler flags
-if (MSVC)
+if(MSVC)
     add_compile_options(/W4 /WX)
 else()
     add_compile_options(-Wall -Wextra -pedantic -Werror)
