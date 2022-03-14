@@ -18,9 +18,9 @@ namespace arx
         return joins;
     }
 
-    void SupportsJoin::setJoins(std::initializer_list<JoinData> joins)
+    void SupportsJoin::setJoins(std::initializer_list<JoinData> join_list)
     {
-        this->joins = joins;
+        this->joins = join_list;
     }
 
     JoinData &SupportsJoin::addJoin(JoinData &join)
@@ -181,9 +181,9 @@ namespace arx
         return namespace_;
     }
 
-    void Query::setNamespace(const std::string &namespace_)
+    void Query::setNamespace(const std::string &game)
     {
-        this->namespace_ = namespace_;
+        this->namespace_ = game;
     }
 
     std::string Query::getCollection() const
@@ -266,9 +266,9 @@ namespace arx
         return case_;
     }
 
-    void Query::setCase(bool case_)
+    void Query::setCase(bool value)
     {
-        this->case_ = case_;
+        this->case_ = value;
     }
 
     int Query::getLimit() const
