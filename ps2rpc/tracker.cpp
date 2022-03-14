@@ -46,7 +46,7 @@ namespace ps2rpc
         // Character ID
         bool are_we_the_baddies = payload["attacker_character_id"]
                                       .toString()
-                                      .toLongLong() == character_.id;
+                                      .toULongLong() == character_.id;
         // Team
         // TODO: Implement team ID once it is implemented on the API side
         ps2::Faction team = state_factory_.getFaction();
