@@ -84,6 +84,6 @@ namespace ps2rpc
 
 } // namespace ps2rpc
 
-Q_DECLARE_METATYPE(ps2rpc::CharacterData);
+Q_DECLARE_METATYPE(ps2rpc::CharacterData)
 
 #endif // PS2RPC_GAME_CHARACTER_INFO_HPP

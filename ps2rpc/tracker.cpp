@@ -25,7 +25,8 @@ namespace ps2rpc
 {
 
     ActivityTracker::ActivityTracker(const CharacterData &character, QObject *parent)
-        : QObject(parent), character_{character}, ess_client_{}, state_factory_{character.id, character.faction, character.server, character.class_}
+        : QObject(parent), character_{character}, state_factory_{character.id, character.faction, character.server, character.class_},
+          current_state_{}, ess_client_{}
     {
         // Create WebSocket client for event streaming endpoint
         ess_client_.reset(new arx::EssClient(SERVICE_ID, "ps2", this));
@@ -45,7 +46,7 @@ namespace ps2rpc
         // Character ID
         bool are_we_the_baddies = payload["attacker_character_id"]
                                       .toString()
-                                      .toLongLong() == character_.id;
+                                      .toULongLong() == character_.id;
         // Team
         // TODO: Implement team ID once it is implemented on the API side
         ps2::Faction team = state_factory_.getFaction();

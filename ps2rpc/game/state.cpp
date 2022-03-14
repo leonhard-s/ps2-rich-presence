@@ -67,9 +67,9 @@ namespace ps2rpc
         return vehicle_;
     }
 
-    void GameStateFactory::setProfile(ps2::Class class_) noexcept
+    void GameStateFactory::setProfile(ps2::Class klass) noexcept
     {
-        this->class_ = class_;
+        this->class_ = klass;
         vehicle_ = ps2::Vehicle::None;
     }
 

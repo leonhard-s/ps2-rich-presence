@@ -5,7 +5,7 @@
 
 #include <QtCore/QJsonObject>
 #include <QtCore/QObject>
-#include <QtCore/QScopedPOinter>
+#include <QtCore/QScopedPointer>
 #include <QtCore/QString>
 
 #include "arx/ess.hpp"
