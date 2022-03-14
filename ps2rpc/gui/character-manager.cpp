@@ -64,8 +64,7 @@ namespace ps2rpc
         if (list_ != nullptr)
         {
             auto item = new QListWidgetItem(character.name);
-            auto data = QVariant::fromValue(character);
-            item->setData(Qt::UserRole, data);
+            item->setData(Qt::UserRole, QVariant::fromValue(character));
             list_->addItem(item);
         }
     }
@@ -181,10 +180,9 @@ namespace ps2rpc
         auto result = arx::payloadResultAsObject(collection, payload);
         // Parse character data
         auto info = parseCharacterPayload(result);
-        auto data = QVariant::fromValue(info);
         // Create character entry
         auto item = new QListWidgetItem(info.name);
-        item->setData(Qt::UserRole, data);
+        item->setData(Qt::UserRole, QVariant::fromValue(info));
         list_->addItem(item);
     }
 

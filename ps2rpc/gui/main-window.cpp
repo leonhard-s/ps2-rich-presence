@@ -101,14 +101,13 @@ namespace ps2rpc
             QList<CharacterData> characters;
             for (int i = 0; i < characters_combo_box_->count() - 2; ++i)
             {
-                auto data = characters_combo_box_->itemData(i);
-                characters.append(data.value<CharacterData>());
+                characters.append(
+                    characters_combo_box_->itemData(i).value<CharacterData>());
             }
             openCharacterManager(characters);
         }
         // A character was selected
-        auto data = characters_combo_box_->itemData(index, Qt::UserRole);
-        auto info = data.value<CharacterData>();
+        auto info = characters_combo_box_->itemData(index).value<CharacterData>();
         // Ignore non-character selections
         if (info.id == 0)
         {
@@ -168,11 +167,10 @@ namespace ps2rpc
                     continue;
                 }
                 auto info = item->data(Qt::UserRole).value<CharacterData>();
-                auto data = QVariant::fromValue(info);
                 // Offset of 2 because of the separator and "Manage" items
                 auto index = characters_combo_box_->count() - 2;
-                characters_combo_box_->insertItem(index, info.name, info.id);
-                characters_combo_box_->setItemData(index, data, Qt::UserRole);
+                characters_combo_box_->insertItem(
+                    index, info.name, QVariant::fromValue(info));
             }
             // Select the topmost character if any were added
             if (list->count() > 0)
