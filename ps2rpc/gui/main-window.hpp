@@ -29,6 +29,9 @@ namespace ps2rpc
         bool isPresenceEnabled() const;
         bool isTrackerRunning() const;
 
+        void saveConfig();
+        void loadConfig();
+
     public slots:
         void startTracking(const CharacterData &character);
         void stopTracking();

@@ -7,6 +7,8 @@
 #include <QtCore/QDebug>
 #include <QtCore/QList>
 #include <QtCore/QObject>
+#include <QtCore/QVariantList>
+#include <QtCore/QVariantMap>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QGroupBox>
@@ -21,6 +23,7 @@
 #include "game/character-info.hpp"
 #include "gui/character-manager.hpp"
 #include "gui/timeago.hpp"
+#include "persistence.hpp"
 
 namespace ps2rpc
 {
@@ -56,6 +59,9 @@ namespace ps2rpc
         QObject::connect(app_.get(), &RichPresenceApp::eventPayloadReceived,
                          this, &MainWindow::onEventPayloadReceived);
 
+        // Restore last app state
+        loadConfig();
+
         // Update "last X" labels periodically
         last_seen_timer_.reset(new QTimer(this));
         last_seen_timer_->setInterval(1000);
@@ -74,6 +80,40 @@ namespace ps2rpc
     bool MainWindow::isTrackerRunning() const
     {
         return app_->getCharacter().id != 0;
+    }
+
+    void MainWindow::saveConfig()
+    {
+        QVariantMap config;
+        // Save known characters
+        QVariantList characters;
+        for (int i = 0; i < characters_combo_box_->count() - 2; ++i)
+        {
+            characters.append(characters_combo_box_->itemData(i));
+        }
+        config["characters"] = characters;
+        // Save GUI config
+        config["auto_track"] = auto_track_->isChecked();
+        config["start_with_os"] = start_with_windows_->isChecked();
+        config["minimise_to_tray"] = minimise_to_tray_->isChecked();
+        config["presence_enabled"] = isPresenceEnabled();
+        // Save to user data
+        AppConfigManager::save(config);
+    }
+
+    void MainWindow::loadConfig()
+    {
+        QVariantMap config = AppConfigManager::load();
+        // Load known characters
+        QVariantList characters = config["characters"].toList();
+        for (const auto &character : characters)
+        {
+            auto info = character.value<CharacterData>();
+            characters_combo_box_->insertItem(
+                characters_combo_box_->count() - 2,
+                info.name, character);
+        }
+        // TODO: Load GUI config
     }
 
     void MainWindow::startTracking(const CharacterData &character)
@@ -177,6 +217,8 @@ namespace ps2rpc
             {
                 characters_combo_box_->setCurrentIndex(0);
             }
+            // Save application config
+            saveConfig();
         }
         else
         {
