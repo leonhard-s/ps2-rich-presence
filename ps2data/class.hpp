@@ -5,6 +5,7 @@
 
 #include <string>
 
+#include "faction.hpp"
 #include "id-types.hpp"
 
 namespace ps2
@@ -47,6 +48,15 @@ namespace ps2
      * @return 0 on success, -1 on failure.
      */
     int class_to_display_name(Class class_, std::string &display_name);
+
+    /**
+     * Return the Census API profile ID for a given class enum value.
+     *
+     * @param class_ The class enum value.
+     * @param faction The faction of the profile to return.
+     * @return The Census API profile ID.
+     */
+    ProfileId class_to_profile_id(Class class_, Faction faction);
 
 } // namespace ps2
 

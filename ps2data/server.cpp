@@ -65,4 +65,25 @@ namespace ps2
         return 0;
     }
 
+    WorldId server_to_world_id(Server server)
+    {
+        switch (server)
+        {
+        case Server::Connery:
+            return 1;
+        case Server::Miller:
+            return 10;
+        case Server::Cobalt:
+            return 13;
+        case Server::Emerald:
+            return 17;
+        case Server::Jaeger:
+            return 19;
+        case Server::SolTech:
+            return 40;
+        default:
+            return 0;
+        }
+    }
+
 } // namespace ps2

@@ -84,4 +84,21 @@ namespace ps2
         return 0;
     }
 
+    FactionId faction_to_faction_id(Faction faction)
+    {
+        switch (faction)
+        {
+        case Faction::VS:
+            return 1;
+        case Faction::NC:
+            return 2;
+        case Faction::TR:
+            return 3;
+        case Faction::NSO:
+            return 4;
+        default:
+            return 0;
+        }
+    }
+
 } // namespace ps2
