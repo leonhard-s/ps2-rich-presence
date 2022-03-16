@@ -4,6 +4,7 @@
 
 #include <string>
 
+#include "faction.hpp"
 #include "id-types.hpp"
 
 namespace ps2
@@ -139,6 +140,99 @@ namespace ps2
             return -1;
         }
         return 0;
+    }
+
+    ProfileId class_to_profile_id(Class class_, Faction faction)
+    {
+        switch (class_)
+        {
+        case Class::Infiltrator:
+            switch (faction)
+            {
+            case Faction::NC:
+                return 2;
+            case Faction::TR:
+                return 10;
+            case Faction::VS:
+                return 17;
+            case Faction::NSO:
+                return 190;
+            default:
+                return 0;
+            }
+        case Class::LightAssault:
+            switch (faction)
+            {
+            case Faction::NC:
+                return 4;
+            case Faction::TR:
+                return 12;
+            case Faction::VS:
+                return 19;
+            case Faction::NSO:
+                return 191;
+            default:
+                return 0;
+            }
+        case Class::CombatMedic:
+            switch (faction)
+            {
+            case Faction::NC:
+                return 5;
+            case Faction::TR:
+                return 13;
+            case Faction::VS:
+                return 20;
+            case Faction::NSO:
+                return 192;
+            default:
+                return 0;
+            }
+        case Class::Engineer:
+            switch (faction)
+            {
+            case Faction::NC:
+                return 6;
+            case Faction::TR:
+                return 14;
+            case Faction::VS:
+                return 21;
+            case Faction::NSO:
+                return 193;
+            default:
+                return 0;
+            }
+        case Class::HeavyAssault:
+            switch (faction)
+            {
+            case Faction::NC:
+                return 7;
+            case Faction::TR:
+                return 15;
+            case Faction::VS:
+                return 22;
+            case Faction::NSO:
+                return 194;
+            default:
+                return 0;
+            }
+        case Class::MAX:
+            switch (faction)
+            {
+            case Faction::NC:
+                return 8;
+            case Faction::TR:
+                return 16;
+            case Faction::VS:
+                return 23;
+            case Faction::NSO:
+                return 252;
+            default:
+                return 0;
+            }
+        default:
+            return 0;
+        }
     }
 
 } // namespace ps2

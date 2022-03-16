@@ -39,6 +39,14 @@ namespace ps2
      */
     int server_to_display_name(Server server, std::string &display_name);
 
+    /**
+     * Return the Census API world ID for a given server enum value.
+     *
+     * @param server The server enum value.
+     * @return The Census API world ID.
+     */
+    WorldId server_to_world_id(Server server);
+
 } // namespace ps2
 
 #endif // PS2DATA_SERVER_HPP

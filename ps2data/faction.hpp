@@ -47,6 +47,14 @@ namespace ps2
      */
     int faction_to_tag(Faction faction, std::string &tag);
 
+    /**
+     * Return the Census API faction ID for a given faction enum value.
+     *
+     * @param faction The faction enum value.
+     * @return The Census API faction ID.
+     */
+    FactionId faction_to_faction_id(Faction faction);
+
 } // namespace ps2
 
 #endif // PS2DATA_FACTION_HPP
