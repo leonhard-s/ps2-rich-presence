@@ -26,7 +26,7 @@ namespace ps2rpc
     public:
         MainWindow();
 
-        bool isTrackingEnabled() const;
+        bool isPresenceEnabled() const;
         bool isTrackerRunning() const;
 
     public slots:

@@ -65,7 +65,7 @@ namespace ps2rpc
         last_seen_timer_->start();
     }
 
-    bool MainWindow::isTrackingEnabled() const
+    bool MainWindow::isPresenceEnabled() const
     {
         // TODO: Hook up enable/disable switch
         return true;
