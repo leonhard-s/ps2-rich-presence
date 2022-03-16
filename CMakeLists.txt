@@ -58,6 +58,8 @@ add_executable(Ps2RichPresence WIN32
   "ps2rpc/game/state.cpp"
   "ps2rpc/core.hpp"
   "ps2rpc/core.cpp"
+  "ps2rpc/persistence.hpp"
+  "ps2rpc/persistence.cpp"
   "ps2rpc/tracker.hpp"
   "ps2rpc/tracker.cpp"
   "ps2rpc/utils.hpp"
