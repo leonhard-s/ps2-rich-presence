@@ -169,9 +169,10 @@ namespace ps2rpc
         return QNetworkRequest(url);
     }
 
-    void CharacterInfo::handleCharacterInfoPayload(const QJsonObject &payload)
+    void CharacterInfo::handleCharacterInfoPayload(
+        const arx::json_object &payload)
     {
-        if (!arx::isPayloadValid("character", payload))
+        if (!arx::validatePayload("character", payload))
         {
             qWarning() << "CharacterInfo::handleCharacterInfoPayload(): "
                           "Invalid JSON payload";
@@ -180,29 +181,26 @@ namespace ps2rpc
         // Get character object
         auto data = arx::payloadResultAsObject("character", payload);
         // Get new fields from payload
-        auto new_id = data["character_id"].toString().toLongLong();
-        auto new_name = data["name"].toObject()["first"].toString();
-        auto faction_id = data["faction_id"].toString().toInt();
-        auto profile_id = data["profile_id"].toString().toInt();
-        auto world_id = data["world"].toObject()["world_id"].toString().toInt();
-        // Convert ps2-specific IDs
-        ps2::Faction new_faction;
-        if (ps2::faction_from_faction_id(faction_id, new_faction))
+        auto new_id = characterIdFromJson(data);
+        auto new_name = QString::fromStdString(characterNameFromJson(data));
+        auto new_faction = factionFromJson(data);
+        auto new_class = classFromJsonProfile(data);
+        // Resolve characters_world join
+        auto new_server = ps2::Server::Connery;
+        auto world_data = data.find("world");
+        if (world_data == data.end())
         {
-            qWarning() << "Failed to convert faction ID" << faction_id;
-            return;
+            qWarning() << "CharacterInfo::handleCharacterInfoPayload():"
+                       << "No world join data in payload";
         }
-        ps2::Class new_class;
-        if (ps2::class_from_profile_id(profile_id, new_class))
+        else if (!world_data->is_object())
         {
-            qWarning() << "Failed to get class from profile ID" << profile_id;
-            return;
+            qWarning() << "CharacterInfo::handleCharacterInfoPayload():"
+                       << "World join data is not an object";
         }
-        ps2::Server new_server;
-        if (ps2::server_from_world_id(world_id, new_server))
+        else
         {
-            qWarning() << "Failed to get server from world ID" << world_id;
-            return;
+            new_server = serverFromJson(*world_data);
         }
         // Update fields
         updateFieldsIfChanged(

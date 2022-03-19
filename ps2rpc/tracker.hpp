@@ -8,6 +8,7 @@
 #include <QtCore/QScopedPointer>
 #include <QtCore/QString>
 
+#include "arx.hpp"
 #include "arx/ess.hpp"
 #include "ps2.hpp"
 
@@ -35,7 +36,7 @@ namespace ps2rpc
 
     private Q_SLOTS:
         void onPayloadReceived(const QString &event_name,
-                               const QJsonObject &payload);
+                               const arx::json_object &payload);
 
     private:
         arx::Subscription generateSubscription() const;

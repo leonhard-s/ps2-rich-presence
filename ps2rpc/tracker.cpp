@@ -3,6 +3,7 @@
 #include "tracker.hpp"
 
 #include <QtCore/QJsonArray>
+#include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
 #include <QtCore/QObject>
 #include <QtCore/QScopedPointer>
@@ -40,8 +41,12 @@ namespace ps2rpc
         return character_;
     }
 
-    void ActivityTracker::onPayloadReceived(const QString &event_name, const QJsonObject &payload)
+    void ActivityTracker::onPayloadReceived(const QString &event_name,
+                                            const arx::json_object &arx_payload)
     {
+        // HACK: Replace payload with Qt JSON version
+        auto doc = QJsonDocument::fromJson(arx_payload.dump().c_str());
+        auto payload = doc.object();
         emit payloadReceived(event_name, payload);
         // Character ID
         bool are_we_the_baddies = payload["attacker_character_id"]

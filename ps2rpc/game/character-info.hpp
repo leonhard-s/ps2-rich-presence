@@ -4,7 +4,6 @@
 #define PS2RPC_GAME_CHARACTER_INFO_HPP
 
 #include <QtCore/QDebug>
-#include <QtCore/QJsonObject>
 #include <QtCore/QMetaType>
 #include <QtCore/QObject>
 #include <QtCore/QScopedPointer>
@@ -12,6 +11,7 @@
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkRequest>
 
+#include "arx.hpp"
 #include "ps2.hpp"
 
 namespace ps2rpc
@@ -59,6 +59,8 @@ namespace ps2rpc
         ps2::Faction getFaction() const;
         ps2::Class getClass() const;
         ps2::Server getServer() const;
+        
+        void handleCharacterInfoPayload(const arx::json_object &payload);
 
     Q_SIGNALS:
         void infoChanged();
@@ -71,7 +73,6 @@ namespace ps2rpc
 
     private:
         QNetworkRequest getCharacterInfoRequest();
-        void handleCharacterInfoPayload(const QJsonObject &payload);
         void updateFieldsIfChanged(ps2::CharacterId id,
                                    const QString &name,
                                    ps2::Faction faction,
