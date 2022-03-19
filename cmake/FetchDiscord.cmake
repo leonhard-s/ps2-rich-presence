@@ -1,5 +1,5 @@
 # This script will download the given version of the Discord Game SDK and
-# create the imported target Discord::GameSDK from it.
+# create a CMake target for it.
 
 # Script Configuration
 set(DISCORD_SDK_URL "https://dl-game-sdk.discordapp.net/2.5.6/discord_game_sdk.zip")
