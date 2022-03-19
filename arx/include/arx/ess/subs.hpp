@@ -5,7 +5,8 @@
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-#include <QtCore/QJsonObject>
+
+#include "arx/types.hpp"
 
 namespace arx
 {
@@ -39,12 +40,12 @@ namespace arx
         QStringList getWorldIds() const;
         bool getLogicalAndFlag() const;
 
-        QJsonObject buildSubscribePayload() const;
-        QJsonObject buildUnsubscribePayload() const;
-        static QJsonObject buildUnsubscribeAllPayload();
+        json_object buildSubscribePayload() const;
+        json_object buildUnsubscribePayload() const;
+        static json_object buildUnsubscribeAllPayload();
 
     private:
-        QJsonObject buildBasicPayload() const;
+        json_object buildBasicPayload() const;
 
         bool logical_and_;
         QStringList event_names_;

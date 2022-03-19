@@ -3,13 +3,13 @@
 #ifndef ARX_ESS_CLIENT_HPP
 #define ARX_ESS_CLIENT_HPP
 
-#include <QtCore/QJsonObject>
 #include <QtCore/QList>
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtWebSockets/QWebSocket>
 
+#include "arx/types.hpp"
 #include "arx/ess/subs.hpp"
 
 namespace arx
@@ -38,9 +38,9 @@ namespace arx
     Q_SIGNALS:
         void connected();
         void disconnected();
-        void heartbeatReceived(QJsonObject data);
+        void heartbeatReceived(json_object data);
         void messageReceived(QString message);
-        void payloadReceived(QString event_name, QJsonObject payload);
+        void payloadReceived(QString event_name, json_object payload);
         void subscriptionAdded(Subscription subscription);
         void subscriptionRemoved(Subscription subscription);
         void subscriptionsCleared();

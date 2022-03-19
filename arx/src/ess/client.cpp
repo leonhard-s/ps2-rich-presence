@@ -2,9 +2,9 @@
 
 #include "arx/ess/client.hpp"
 
+#include <string>
+
 #include <QtCore/QDebug>
-#include <QtCore/QJsonDocument>
-#include <QtCore/QJsonObject>
 #include <QtCore/QList>
 #include <QtCore/QObject>
 #include <QtCore/QString>
@@ -13,6 +13,7 @@
 #include <QtCore/QUrlQuery>
 #include <QtWebSockets/QWebSocket>
 
+#include "arx/types.hpp"
 #include "arx/ess/subs.hpp"
 
 namespace arx
@@ -63,8 +64,8 @@ namespace arx
         subscriptions_.append(subscription);
         if (isConnected())
         {
-            QJsonObject payload = subscription.buildSubscribePayload();
-            ws_.sendTextMessage(QJsonDocument{payload}.toJson(QJsonDocument::Compact));
+            auto payload = subscription.buildSubscribePayload();
+            ws_.sendTextMessage(QString::fromStdString(payload.dump(4)));
         }
     }
 
@@ -73,8 +74,8 @@ namespace arx
         subscriptions_.removeAll(subscription);
         if (isConnected())
         {
-            QJsonObject payload = subscription.buildUnsubscribePayload();
-            ws_.sendTextMessage(QJsonDocument{payload}.toJson(QJsonDocument::Compact));
+            auto payload = subscription.buildUnsubscribePayload();
+            ws_.sendTextMessage(QString::fromStdString(payload.dump(4)));
         }
         emit subscriptionRemoved(subscription);
     }
@@ -85,8 +86,8 @@ namespace arx
         subscriptions_.clear();
         if (isConnected())
         {
-            QJsonObject payload = Subscription::buildUnsubscribeAllPayload();
-            ws_.sendTextMessage(QJsonDocument{payload}.toJson(QJsonDocument::Compact));
+            auto payload = Subscription::buildUnsubscribeAllPayload();
+            ws_.sendTextMessage(QString::fromStdString(payload.dump(4)));
         }
         for (auto const &subscription : old_subs)
         {
@@ -121,24 +122,19 @@ namespace arx
         // Forward raw payload to anyone who's asking
         emit messageReceived(message);
         // Convert the text message to a JSON object
-        QJsonParseError *error = nullptr;
-        QJsonDocument doc = QJsonDocument::fromJson(message.toUtf8(), error);
-        if (error != nullptr)
-        {
-            qDebug() << "Error parsing message: " << error->errorString();
-            return;
-        }
-        QJsonObject json = doc.object();
+        auto json = json_object::parse(message.toStdString());
         // Ignore messages that are not for us
-        if (json["service"].toString() != "event")
+        auto it = json.find("service");
+        if (it == json.end() || it->get<std::string>() != "event")
         {
             return;
         }
         // Dispatch
         if (json["type"] == "serviceMessage")
         {
-            QJsonObject payload = json["payload"].toObject();
-            QString event_name = payload["event_name"].toString();
+            json_object payload = json["payload"];
+            auto event_name = QString::fromStdString(
+                payload["event_name"].get<std::string>());
             emit payloadReceived(event_name, payload);
         }
         else if (json["type"] == "heartbeat")
