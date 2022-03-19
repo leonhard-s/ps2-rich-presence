@@ -8,8 +8,8 @@ set(CMAKE_AUTOMOC ON)
 find_package(Qt6 6.2.3 REQUIRED
   COMPONENTS
     Core
-    WebSockets
 )
+# JSON
 include("${PROJECT_SOURCE_DIR}/../cmake/FetchJson.cmake")
 
 add_library(Arx STATIC
@@ -40,5 +40,4 @@ target_link_libraries(Arx
   PUBLIC
     nlohmann_json
     Qt::Core
-    Qt::WebSockets
 )
