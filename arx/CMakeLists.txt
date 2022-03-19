@@ -4,16 +4,19 @@ project(Auraxium VERSION 0.1)
 
 set(CMAKE_AUTOMOC ON)
 
+# Qt
 find_package(Qt6 6.2.3 REQUIRED
   COMPONENTS
     Core
     WebSockets
 )
+include("${PROJECT_SOURCE_DIR}/../cmake/FetchJson.cmake")
 
 add_library(Arx STATIC
   "include/arx/query.hpp"
   "include/arx/payload.hpp"
   "include/arx/support.hpp"
+  "include/arx/types.hpp"
   "include/arx/urlgen.hpp"
   "include/arx.hpp"
   "include/arx/ess/client.hpp"
@@ -28,12 +31,14 @@ add_library(Arx STATIC
 )
 target_include_directories(Arx
   PUBLIC
-    ${PROJECT_SOURCE_DIR}/include
+    "${PROJECT_SOURCE_DIR}/include"
   PRIVATE
-    ${PROJECT_SOURCE_DIR}/src
+    "${PROJECT_SOURCE_DIR}/src"
+    "${PROJECT_BINARY_DIR}"
 )
 target_link_libraries(Arx
   PUBLIC
+    nlohmann_json
     Qt::Core
     Qt::WebSockets
 )
