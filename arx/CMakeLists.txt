@@ -19,6 +19,7 @@ add_library(Arx STATIC
   "include/arx/types.hpp"
   "include/arx/urlgen.hpp"
   "include/arx.hpp"
+  "include/arx/ess/endpoint.hpp"
   "include/arx/ess/events.hpp"
   "include/arx/ess/subscription.hpp"
   "include/arx/ess.hpp"
@@ -26,6 +27,7 @@ add_library(Arx STATIC
   "src/payload.cpp"
   "src/support.cpp"
   "src/urlgen.cpp"
+  "src/ess/endpoint.cpp"
   "src/ess/events.cpp"
   "src/ess/subscription.cpp"
 )
