@@ -19,15 +19,13 @@ add_library(Arx STATIC
   "include/arx/types.hpp"
   "include/arx/urlgen.hpp"
   "include/arx.hpp"
-  "include/arx/ess/client.hpp"
-  "include/arx/ess/subs.hpp"
+  "include/arx/ess/subscription.hpp"
   "include/arx/ess.hpp"
   "src/query.cpp"
   "src/payload.cpp"
   "src/support.cpp"
   "src/urlgen.cpp"
-  "src/ess/client.cpp"
-  "src/ess/subs.cpp"
+  "src/ess/subscription.cpp"
 )
 target_include_directories(Arx
   PUBLIC
