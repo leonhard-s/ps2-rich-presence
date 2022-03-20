@@ -14,8 +14,8 @@ namespace arx
     {
     public:
         Subscription(std::vector<string_t> event_names,
-                     std::vector<string_t> characters,
-                     std::vector<string_t> worlds,
+                     std::vector<string_t> characters = {},
+                     std::vector<string_t> worlds = {},
                      bool logical_and = false);
 
         string_t buildSubscribeMessage() const;
