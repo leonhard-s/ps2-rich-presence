@@ -41,7 +41,7 @@ namespace ps2rpc
 
     private:
         QUrl getCharacterInfoUrl(const QString &character) const;
-        CharacterData parseCharacterPayload(const arx::json_object &payload);
+        CharacterData parseCharacterPayload(const arx::json_t &payload);
         QDialog *createCharacterNameInputDialog();
         void setupUi();
 

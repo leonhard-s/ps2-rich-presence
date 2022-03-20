@@ -17,8 +17,8 @@ namespace arx
      * -2 if the payload is missing a required key, and -3 if the return list
      * key is not a JSON array.
      */
-    int validatePayload(const json_string &collection,
-                        const json_object &payload);
+    int validatePayload(const json_string_t &collection,
+                        const json_t &payload);
 
     /**
      * Check whether the given JSON payload return list is empty.
@@ -27,8 +27,8 @@ namespace arx
      * @param payload The payload to check.
      * @return True if the payload return list is empty, false otherwise.
      */
-    bool isPayloadEmpty(const json_string &collection,
-                        const json_object &payload);
+    bool isPayloadEmpty(const json_string_t &collection,
+                        const json_t &payload);
 
     /**
      * Create a JSON object from the given serialised payload.
@@ -36,7 +36,7 @@ namespace arx
      * @param data JSON payload to deserialise.
      * @return A JSON object containing the deserialised payload.
      */
-    json_object parseJson(const json_string &data);
+    json_t parseJson(const json_string_t &data);
 
     /**
      * Retrieve the first result list entry from the given payload.
@@ -45,8 +45,8 @@ namespace arx
      * @param payload The payload to retrieve the first result from.
      * @return The first result list entry from the given payload.
      */
-    json_object payloadResultAsObject(const json_string &collection,
-                                      const json_object &payload);
+    json_t payloadResultAsObject(const json_string_t &collection,
+                                 const json_t &payload);
 
     /**
      * Retrieve the result list from the given payload.
@@ -55,8 +55,8 @@ namespace arx
      * @param payload The payload to retrieve the result list from.
      * @return The result list from the given payload.
      */
-    json_array payloadResultsAsArray(const json_string &collection,
-                                     const json_object &payload);
+    json_array_t payloadResultsAsArray(const json_string_t &collection,
+                                       const json_t &payload);
 
 } // namespace arx
 

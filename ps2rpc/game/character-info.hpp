@@ -59,8 +59,8 @@ namespace ps2rpc
         ps2::Faction getFaction() const;
         ps2::Class getClass() const;
         ps2::Server getServer() const;
-        
-        void handleCharacterInfoPayload(const arx::json_object &payload);
+
+        void handleCharacterInfoPayload(const arx::json_t &payload);
 
     Q_SIGNALS:
         void infoChanged();

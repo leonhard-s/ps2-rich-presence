@@ -40,12 +40,12 @@ namespace arx
         QStringList getWorldIds() const;
         bool getLogicalAndFlag() const;
 
-        json_object buildSubscribePayload() const;
-        json_object buildUnsubscribePayload() const;
-        static json_object buildUnsubscribeAllPayload();
+        json_t buildSubscribePayload() const;
+        json_t buildUnsubscribePayload() const;
+        static json_t buildUnsubscribeAllPayload();
 
     private:
-        json_object buildBasicPayload() const;
+        json_t buildBasicPayload() const;
 
         bool logical_and_;
         QStringList event_names_;

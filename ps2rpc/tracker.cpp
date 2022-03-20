@@ -42,7 +42,7 @@ namespace ps2rpc
     }
 
     void ActivityTracker::onPayloadReceived(const QString &event_name,
-                                            const arx::json_object &arx_payload)
+                                            const arx::json_t &arx_payload)
     {
         // HACK: Replace payload with Qt JSON version
         auto doc = QJsonDocument::fromJson(arx_payload.dump().c_str());

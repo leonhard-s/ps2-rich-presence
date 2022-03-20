@@ -36,7 +36,7 @@ namespace ps2rpc
 
     private Q_SLOTS:
         void onPayloadReceived(const QString &event_name,
-                               const arx::json_object &payload);
+                               const arx::json_object_t &payload);
 
     private:
         arx::Subscription generateSubscription() const;

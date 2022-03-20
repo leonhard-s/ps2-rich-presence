@@ -19,7 +19,7 @@ namespace
 namespace arx
 {
 
-    int validatePayload(const json_string &collection, const json_object &payload)
+    int validatePayload(const json_string_t &collection, const json_t &payload)
     {
         if (payload.contains("error") || payload.contains("errorCode"))
         {
@@ -37,7 +37,7 @@ namespace arx
         return 0;
     }
 
-    bool isPayloadEmpty(const json_string &collection, const json_object &payload)
+    bool isPayloadEmpty(const json_string_t &collection, const json_t &payload)
     {
         if (payload["returned"] == "0")
         {
@@ -51,15 +51,15 @@ namespace arx
         return false;
     }
 
-    json_object payloadResultAsObject(const json_string &collection,
-                                      const json_object &payload)
+    json_t payloadResultAsObject(const json_string_t &collection,
+                                 const json_t &payload)
     {
         auto key = getResultListName(collection);
         return payload[key][0];
     }
 
-    json_array payloadResultsAsArray(const json_string &collection,
-                                     const json_object &payload)
+    json_array_t payloadResultsAsArray(const json_string_t &collection,
+                                       const json_t &payload)
     {
         auto key = getResultListName(collection);
         return payload[key];

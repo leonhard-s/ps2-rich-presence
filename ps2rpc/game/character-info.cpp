@@ -170,7 +170,7 @@ namespace ps2rpc
     }
 
     void CharacterInfo::handleCharacterInfoPayload(
-        const arx::json_object &payload)
+        const arx::json_t &payload)
     {
         if (!arx::validatePayload("character", payload))
         {

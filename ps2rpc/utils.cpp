@@ -15,8 +15,8 @@
 namespace
 {
 
-    arx::json_string stringViaJsonKey(const arx::json_object &object,
-                                      const arx::json_string &key)
+    arx::json_string_t stringViaJsonKey(const arx::json_t &object,
+                                        const arx::json_string_t &key)
     {
         auto it = object.find(key);
         if (it == object.end())
@@ -31,12 +31,12 @@ namespace
                        << object.dump().c_str();
             return "";
         }
-        return it->get<arx::json_string>();
+        return it->get<arx::json_string_t>();
     }
 
     template <typename T>
-    T quotedIntegerViaJsonKey(const arx::json_object &object,
-                              const arx::json_string &key)
+    T quotedIntegerViaJsonKey(const arx::json_t &object,
+                              const arx::json_string_t &key)
     {
         auto val_str = stringViaJsonKey(object, key);
         if (val_str == "")
@@ -67,12 +67,12 @@ namespace ps2rpc
         return url;
     }
 
-    arx::json_object getJsonPayload(QNetworkReply &reply)
+    arx::json_t getJsonPayload(QNetworkReply &reply)
     {
-        return arx::json_object::parse(reply.readAll().toStdString());
+        return arx::json_t::parse(reply.readAll().toStdString());
     }
 
-    ps2::CharacterId characterIdFromJson(const arx::json_object &object)
+    ps2::CharacterId characterIdFromJson(const arx::json_t &object)
     {
         auto id_str = stringViaJsonKey(object, "character_id");
         if (id_str.empty())
@@ -83,7 +83,7 @@ namespace ps2rpc
         return std::strtoull(id_str.c_str(), nullptr, 10);
     }
 
-    std::string characterNameFromJson(const arx::json_object &object)
+    std::string characterNameFromJson(const arx::json_t &object)
     {
         auto it = object.find("name");
         if (it == object.end())
@@ -101,7 +101,7 @@ namespace ps2rpc
         return stringViaJsonKey(*it, "first");
     }
 
-    ps2::Faction factionFromJson(const arx::json_object &object)
+    ps2::Faction factionFromJson(const arx::json_t &object)
     {
         auto id = quotedIntegerViaJsonKey<ps2::FactionId>(object, "faction_id");
         ps2::Faction faction = ps2::Faction::NS;
@@ -112,7 +112,7 @@ namespace ps2rpc
         return faction;
     }
 
-    ps2::Class classFromJsonLoadout(const arx::json_object &payload)
+    ps2::Class classFromJsonLoadout(const arx::json_t &payload)
     {
         auto id = quotedIntegerViaJsonKey<ps2::LoadoutId>(payload, "loadout_id");
         ps2::Class class_ = ps2::Class::LightAssault;
@@ -123,7 +123,7 @@ namespace ps2rpc
         return class_;
     }
 
-    ps2::Class classFromJsonProfile(const arx::json_object &payload)
+    ps2::Class classFromJsonProfile(const arx::json_t &payload)
     {
         auto id = quotedIntegerViaJsonKey<ps2::ProfileId>(payload, "profile_id");
         ps2::Class class_ = ps2::Class::LightAssault;
@@ -134,7 +134,7 @@ namespace ps2rpc
         return class_;
     }
 
-    ps2::Server serverFromJson(const arx::json_object &object)
+    ps2::Server serverFromJson(const arx::json_t &object)
     {
         auto id = quotedIntegerViaJsonKey<ps2::WorldId>(object, "world");
         ps2::Server server = ps2::Server::Connery;

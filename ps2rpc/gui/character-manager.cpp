@@ -205,7 +205,7 @@ namespace ps2rpc
     }
 
     CharacterData CharacterManager::parseCharacterPayload(
-        const arx::json_object &payload)
+        const arx::json_t &payload)
     {
         // Set default/fallback values
         QString name = "N/A";

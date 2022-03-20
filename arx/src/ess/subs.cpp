@@ -73,43 +73,43 @@ namespace arx
         return logical_and_;
     }
 
-    json_object Subscription::buildSubscribePayload() const
+    json_t Subscription::buildSubscribePayload() const
     {
-        json_object json = buildBasicPayload();
+        json_t json = buildBasicPayload();
         json["service"] = "event";
         json["action"] = "subscribe";
         return json;
     }
 
-    json_object Subscription::buildUnsubscribePayload() const
+    json_t Subscription::buildUnsubscribePayload() const
     {
-        json_object json = buildBasicPayload();
+        json_t json = buildBasicPayload();
         json["service"] = "event";
         json["action"] = "clearSubscribe";
         return json;
     }
 
-    json_object Subscription::buildUnsubscribeAllPayload()
+    json_t Subscription::buildUnsubscribeAllPayload()
     {
-        json_object json;
+        json_t json;
         json["service"] = "event";
         json["action"] = "clearSubscribe";
         json["all"] = "true";
         return json;
     }
 
-    json_object Subscription::buildBasicPayload() const
+    json_t Subscription::buildBasicPayload() const
     {
-        json_object json;
+        json_t json;
         // Add event names
-        json_array event_names;
+        json_array_t event_names;
         for (const auto &event_name : event_names_)
         {
             event_names.push_back(event_name.toStdString());
         }
         json["eventNames"] = event_names;
         // Add character ids
-        json_array character_ids;
+        json_array_t character_ids;
         for (const auto &character_id : character_ids_)
         {
             character_ids.push_back(character_id.toStdString());
@@ -119,7 +119,7 @@ namespace arx
             json["characters"] = character_ids;
         }
         // Add world ids
-        json_array world_ids;
+        json_array_t world_ids;
         for (const auto &world_id : world_ids_)
         {
             world_ids.push_back(world_id.toStdString());

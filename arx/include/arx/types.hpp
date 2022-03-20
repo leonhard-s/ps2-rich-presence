@@ -7,13 +7,13 @@
 
 namespace arx
 {
-    using json_object = nlohmann::json;
+    using json_t = nlohmann::json;
 
-    using json_array = json_object::array_t;
+    using json_array_t = json_t::array_t;
 
-    using json_value = json_object::value_t;
+    using json_value_t = json_t::value_t;
 
-    using json_string = json_object::string_t;
+    using json_string_t = json_t::string_t;
 
 } // namespace arx
 
