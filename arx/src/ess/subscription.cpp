@@ -29,6 +29,19 @@ namespace arx
         : event_names_{event_names}, characters_{characters},
           worlds_{worlds}, logical_and_{logical_and} {}
 
+    bool Subscription::operator==(const Subscription &other) const
+    {
+        return event_names_ == other.event_names_ &&
+               characters_ == other.characters_ &&
+               worlds_ == other.worlds_ &&
+               logical_and_ == other.logical_and_;
+    }
+
+    bool Subscription::operator!=(const Subscription &other) const
+    {
+        return !(*this == other);
+    }
+
     string_t Subscription::buildSubscribeMessage() const
     {
         json_t data = subscriptionBoilerplate();

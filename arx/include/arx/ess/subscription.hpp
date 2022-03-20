@@ -18,6 +18,9 @@ namespace arx
                      std::vector<string_t> worlds = {},
                      bool logical_and = false);
 
+        bool operator==(const Subscription &other) const;
+        bool operator!=(const Subscription &other) const;
+
         string_t buildSubscribeMessage() const;
         string_t buildUnsubscribeMessage() const;
 
