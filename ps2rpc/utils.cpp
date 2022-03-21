@@ -72,7 +72,7 @@ namespace ps2rpc
         return arx::json_t::parse(reply.readAll().toStdString());
     }
 
-    ps2::CharacterId characterIdFromJson(const arx::json_t &object)
+    arx::character_id_t characterIdFromJson(const arx::json_t &object)
     {
         auto id_str = stringViaJsonKey(object, "character_id");
         if (id_str.empty())
@@ -103,7 +103,7 @@ namespace ps2rpc
 
     ps2::Faction factionFromJson(const arx::json_t &object)
     {
-        auto id = quotedIntegerViaJsonKey<ps2::FactionId>(object, "faction_id");
+        auto id = quotedIntegerViaJsonKey<arx::faction_id_t>(object, "faction_id");
         ps2::Faction faction = ps2::Faction::NS;
         if (ps2::faction_from_faction_id(id, faction))
         {
@@ -114,7 +114,7 @@ namespace ps2rpc
 
     ps2::Class classFromJsonLoadout(const arx::json_t &payload)
     {
-        auto id = quotedIntegerViaJsonKey<ps2::LoadoutId>(payload, "loadout_id");
+        auto id = quotedIntegerViaJsonKey<arx::loadout_id_t>(payload, "loadout_id");
         ps2::Class class_ = ps2::Class::LightAssault;
         if (ps2::class_from_loadout_id(id, class_))
         {
@@ -125,7 +125,7 @@ namespace ps2rpc
 
     ps2::Class classFromJsonProfile(const arx::json_t &payload)
     {
-        auto id = quotedIntegerViaJsonKey<ps2::ProfileId>(payload, "profile_id");
+        auto id = quotedIntegerViaJsonKey<arx::profile_id_t>(payload, "profile_id");
         ps2::Class class_ = ps2::Class::LightAssault;
         if (ps2::class_from_profile_id(id, class_))
         {
@@ -136,7 +136,7 @@ namespace ps2rpc
 
     ps2::Server serverFromJson(const arx::json_t &object)
     {
-        auto id = quotedIntegerViaJsonKey<ps2::WorldId>(object, "world");
+        auto id = quotedIntegerViaJsonKey<arx::world_id_t>(object, "world");
         ps2::Server server = ps2::Server::Connery;
         if (ps2::server_from_world_id(id, server))
         {

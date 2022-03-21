@@ -26,7 +26,7 @@ namespace ps2rpc
           class_{ps2::Class::LightAssault},
           server{ps2::Server::Connery} {}
 
-    CharacterData::CharacterData(ps2::CharacterId id,
+    CharacterData::CharacterData(arx::character_id_t id,
                                  const QString &name,
                                  ps2::Faction faction,
                                  ps2::Class class_,
@@ -64,13 +64,13 @@ namespace ps2rpc
         manager_.reset(new QNetworkAccessManager(this));
     }
 
-    CharacterInfo::CharacterInfo(ps2::CharacterId id, QObject *parent)
+    CharacterInfo::CharacterInfo(arx::character_id_t id, QObject *parent)
         : CharacterInfo(parent)
     {
         info_.id = id;
     }
 
-    CharacterInfo::CharacterInfo(ps2::CharacterId id,
+    CharacterInfo::CharacterInfo(arx::character_id_t id,
                                  const QString &name,
                                  ps2::Faction faction,
                                  ps2::Class class_,
@@ -84,7 +84,7 @@ namespace ps2rpc
         info_.server = server;
     }
 
-    ps2::CharacterId CharacterInfo::getId() const
+    arx::character_id_t CharacterInfo::getId() const
     {
         return info_.id;
     }
@@ -207,7 +207,7 @@ namespace ps2rpc
             new_id, new_name, new_faction, new_class, new_server);
     }
 
-    void CharacterInfo::updateFieldsIfChanged(ps2::CharacterId id,
+    void CharacterInfo::updateFieldsIfChanged(arx::character_id_t id,
                                               const QString &name,
                                               ps2::Faction faction,
                                               ps2::Class class_,

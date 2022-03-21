@@ -4,12 +4,12 @@
 
 #include <string>
 
-#include "id-types.hpp"
+#include "arx/ps2_types.hpp"
 
 namespace ps2
 {
 
-    int faction_from_faction_id(FactionId faction_id, Faction &faction)
+    int faction_from_faction_id(arx::faction_id_t faction_id, Faction &faction)
     {
         switch (faction_id)
         {
@@ -84,7 +84,7 @@ namespace ps2
         return 0;
     }
 
-    FactionId faction_to_faction_id(Faction faction)
+    arx::faction_id_t faction_to_faction_id(Faction faction)
     {
         switch (faction)
         {

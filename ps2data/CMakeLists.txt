@@ -7,7 +7,6 @@ add_library(Ps2Data STATIC
   "class.cpp"
   "faction.hpp"
   "faction.cpp"
-  "id-types.hpp"
   "ps2.hpp"
   "server.hpp"
   "server.cpp"
@@ -19,4 +18,8 @@ add_library(Ps2Data STATIC
 target_include_directories(Ps2Data
   PUBLIC
     ${PROJECT_SOURCE_DIR}
+)
+target_link_libraries(Ps2Data
+  PUBLIC
+    Arx
 )

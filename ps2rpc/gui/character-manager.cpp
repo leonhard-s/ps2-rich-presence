@@ -209,10 +209,10 @@ namespace ps2rpc
     {
         // Set default/fallback values
         QString name = "N/A";
-        ps2::CharacterId id = 0;
-        ps2::FactionId faction_id = 0;
-        ps2::ProfileId profile_id = 0;
-        ps2::WorldId world_id = 0;
+        arx::character_id_t id = 0;
+        arx::faction_id_t faction_id = 0;
+        arx::profile_id_t profile_id = 0;
+        arx::world_id_t world_id = 0;
         ps2::Faction faction = ps2::Faction::NS;
         ps2::Class class_ = ps2::Class::LightAssault;
         ps2::Server server = ps2::Server::Connery;
@@ -249,7 +249,7 @@ namespace ps2rpc
         auto faction_val = payload["faction_id"];
         if (faction_val.is_number_integer())
         {
-            faction_id = faction_val.get<ps2::FactionId>();
+            faction_id = faction_val.get<arx::faction_id_t>();
         }
         else
         {
@@ -259,7 +259,7 @@ namespace ps2rpc
         auto profile_val = payload["profile_id"];
         if (profile_val.is_number_integer())
         {
-            profile_id = profile_val.get<ps2::ProfileId>();
+            profile_id = profile_val.get<arx::profile_id_t>();
         }
         else
         {
@@ -269,7 +269,7 @@ namespace ps2rpc
         auto world_val = payload["world_id"];
         if (world_val.is_number_integer())
         {
-            world_id = world_val.get<ps2::WorldId>();
+            world_id = world_val.get<arx::world_id_t>();
         }
         else
         {

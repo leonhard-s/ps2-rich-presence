@@ -5,8 +5,9 @@
 
 #include <string>
 
+#include "arx/ps2_types.hpp"
+
 #include "faction.hpp"
-#include "id-types.hpp"
 
 namespace ps2
 {
@@ -29,7 +30,7 @@ namespace ps2
      * @param class_ The class enum value to be populated.
      * @return 0 on success, -1 on failure.
      */
-    int class_from_loadout_id(LoadoutId loadout_id, Class &class_);
+    int class_from_loadout_id(arx::loadout_id_t loadout_id, Class &class_);
 
     /**
      * Return the class enum value for a given Census API profile ID.
@@ -38,7 +39,7 @@ namespace ps2
      * @param class_ The class enum value to be populated.
      * @return 0 on success, -1 on failure.
      */
-    int class_from_profile_id(ProfileId profile_id, Class &class_);
+    int class_from_profile_id(arx::profile_id_t profile_id, Class &class_);
 
     /**
      * Return the display name for a given class enum value.
@@ -56,7 +57,7 @@ namespace ps2
      * @param faction The faction of the profile to return.
      * @return The Census API profile ID.
      */
-    ProfileId class_to_profile_id(Class class_, Faction faction);
+    arx::profile_id_t class_to_profile_id(Class class_, Faction faction);
 
 } // namespace ps2
 

@@ -5,7 +5,7 @@
 
 #include <string>
 
-#include "id-types.hpp"
+#include "arx/ps2_types.hpp"
 
 namespace ps2
 {
@@ -50,7 +50,7 @@ namespace ps2
      * @param vehicle The vehicle enum value to be populated.
      * @return 0 on success, -1 on failure.
      */
-    int vehicle_from_vehicle_id(VehicleId vehicle_id, Vehicle &vehicle);
+    int vehicle_from_vehicle_id(arx::vehicle_id_t vehicle_id, Vehicle &vehicle);
 
     /**
      * Return the display name for a given vehicle enum value.

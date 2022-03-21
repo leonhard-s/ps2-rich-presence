@@ -4,12 +4,12 @@
 
 #include <string>
 
-#include "id-types.hpp"
+#include "arx/ps2_types.hpp"
 
 namespace ps2
 {
 
-    int server_from_world_id(WorldId world_id, Server &server)
+    int server_from_world_id(arx::world_id_t world_id, Server &server)
     {
         switch (world_id)
         {
@@ -65,7 +65,7 @@ namespace ps2
         return 0;
     }
 
-    WorldId server_to_world_id(Server server)
+    arx::world_id_t server_to_world_id(Server server)
     {
         switch (server)
         {

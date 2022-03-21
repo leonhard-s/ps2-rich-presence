@@ -18,7 +18,7 @@ namespace ps2rpc
 
     arx::json_t getJsonPayload(QNetworkReply &reply);
 
-    ps2::CharacterId characterIdFromJson(const arx::json_t &object);
+    arx::character_id_t characterIdFromJson(const arx::json_t &object);
 
     std::string characterNameFromJson(const arx::json_t &object);
 

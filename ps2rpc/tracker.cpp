@@ -58,20 +58,20 @@ namespace ps2rpc
         // TODO: Implement team ID once it is implemented on the API side
         ps2::Faction team = state_factory_.getFaction();
         // Class
-        ps2::LoadoutId loadout_id = are_we_the_baddies ? payload["attacker_loadout_id"].toString().toInt()
-                                                       : payload["character_loadout_id"].toString().toInt();
+        arx::loadout_id_t loadout_id = are_we_the_baddies ? payload["attacker_loadout_id"].toString().toInt()
+                                                          : payload["character_loadout_id"].toString().toInt();
         ps2::Class class_;
         if (ps2::class_from_loadout_id(loadout_id, class_))
         {
             qWarning() << "Unable to get class from loadout ID:" << loadout_id;
         }
         // Vehicle
-        ps2::VehicleId vehicle_id = are_we_the_baddies ? payload["attacker_vehicle_id"].toString().toInt()
-                                                       : payload["vehicle_id"].toString().toInt();
+        arx::vehicle_id_t vehicle_id = are_we_the_baddies ? payload["attacker_vehicle_id"].toString().toInt()
+                                                          : payload["vehicle_id"].toString().toInt();
         ps2::Vehicle vehicle = ps2::Vehicle::None;
         ps2::vehicle_from_vehicle_id(vehicle_id, vehicle);
         // Zone
-        ps2::ZoneId zone_id = payload["zone_id"].toString().toInt();
+        arx::zone_id_t zone_id = payload["zone_id"].toString().toInt();
         ps2::Zone zone;
         if (ps2::zone_from_zone_id(zone_id, zone))
         {

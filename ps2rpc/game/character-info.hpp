@@ -20,7 +20,7 @@ namespace ps2rpc
     struct CharacterData
     {
         CharacterData();
-        CharacterData(ps2::CharacterId id,
+        CharacterData(arx::character_id_t id,
                       const QString &name,
                       ps2::Faction faction,
                       ps2::Class class_,
@@ -31,7 +31,7 @@ namespace ps2rpc
         bool operator==(const CharacterData &other) const;
         bool operator!=(const CharacterData &other) const;
 
-        ps2::CharacterId id;
+        arx::character_id_t id;
         QString name;
         ps2::Faction faction;
         ps2::Class class_;
@@ -46,15 +46,15 @@ namespace ps2rpc
 
     public:
         CharacterInfo(QObject *parent = nullptr);
-        CharacterInfo(ps2::CharacterId id, QObject *parent = nullptr);
-        CharacterInfo(ps2::CharacterId id,
+        CharacterInfo(arx::character_id_t id, QObject *parent = nullptr);
+        CharacterInfo(arx::character_id_t id,
                       const QString &name,
                       ps2::Faction faction,
                       ps2::Class class_,
                       ps2::Server server,
                       QObject *parent = nullptr);
 
-        ps2::CharacterId getId() const;
+        arx::character_id_t getId() const;
         QString getName() const;
         ps2::Faction getFaction() const;
         ps2::Class getClass() const;
@@ -73,7 +73,7 @@ namespace ps2rpc
 
     private:
         QNetworkRequest getCharacterInfoRequest();
-        void updateFieldsIfChanged(ps2::CharacterId id,
+        void updateFieldsIfChanged(arx::character_id_t id,
                                    const QString &name,
                                    ps2::Faction faction,
                                    ps2::Class class_,

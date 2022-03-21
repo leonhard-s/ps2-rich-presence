@@ -13,6 +13,7 @@ find_package(Qt6 6.2.3 REQUIRED
 include("${PROJECT_SOURCE_DIR}/../cmake/FetchJson.cmake")
 
 add_library(Arx STATIC
+  "include/arx/ps2_types.hpp"
   "include/arx/query.hpp"
   "include/arx/payload.hpp"
   "include/arx/support.hpp"
