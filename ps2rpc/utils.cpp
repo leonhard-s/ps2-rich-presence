@@ -105,7 +105,7 @@ namespace ps2rpc
     {
         auto id = quotedIntegerViaJsonKey<ps2::FactionId>(object, "faction_id");
         ps2::Faction faction = ps2::Faction::NS;
-        if (!ps2::faction_from_faction_id(id, faction))
+        if (ps2::faction_from_faction_id(id, faction))
         {
             qWarning() << "Invalid faction_id" << id;
         }
@@ -116,7 +116,7 @@ namespace ps2rpc
     {
         auto id = quotedIntegerViaJsonKey<ps2::LoadoutId>(payload, "loadout_id");
         ps2::Class class_ = ps2::Class::LightAssault;
-        if (!ps2::class_from_loadout_id(id, class_))
+        if (ps2::class_from_loadout_id(id, class_))
         {
             qWarning() << "Invalid loadout_id" << id;
         }
@@ -127,7 +127,7 @@ namespace ps2rpc
     {
         auto id = quotedIntegerViaJsonKey<ps2::ProfileId>(payload, "profile_id");
         ps2::Class class_ = ps2::Class::LightAssault;
-        if (!ps2::class_from_profile_id(id, class_))
+        if (ps2::class_from_profile_id(id, class_))
         {
             qWarning() << "Invalid profile_id" << id;
         }
@@ -138,7 +138,7 @@ namespace ps2rpc
     {
         auto id = quotedIntegerViaJsonKey<ps2::WorldId>(object, "world");
         ps2::Server server = ps2::Server::Connery;
-        if (!ps2::server_from_world_id(id, server))
+        if (ps2::server_from_world_id(id, server))
         {
             qWarning() << "Invalid world" << id;
         }

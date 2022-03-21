@@ -18,6 +18,7 @@
 #include "arx/ess.hpp"
 
 #include "appdata/serviceid.hpp"
+#include "ess_client.hpp"
 #include "game/character-info.hpp"
 #include "game/state.hpp"
 #include "utils.hpp"
@@ -30,10 +31,11 @@ namespace ps2rpc
           current_state_{}, ess_client_{}
     {
         // Create WebSocket client for event streaming endpoint
-        ess_client_.reset(new arx::EssClient(SERVICE_ID, "ps2", this));
+        ess_client_.reset(new EssClient(SERVICE_ID, this));
         ess_client_->subscribe(generateSubscription());
         ess_client_->connect();
-        QObject::connect(ess_client_.get(), &arx::EssClient::payloadReceived, this, &ActivityTracker::onPayloadReceived);
+        QObject::connect(ess_client_.get(), &EssClient::payloadReceived,
+                         this, &ActivityTracker::onPayloadReceived);
     }
 
     CharacterData ActivityTracker::getCharacter() const
@@ -102,13 +104,12 @@ namespace ps2rpc
 
     arx::Subscription ActivityTracker::generateSubscription() const
     {
-        return arx::Subscription(
-            // Event name(s)
-            "Death",
-            // Character IDs
-            {QString::number(character_.id)},
-            // World IDs
-            {"all"});
+        auto sub = arx::Subscription(
+            // Event names
+            {"Death"},
+            // Characters
+            {QString::number(character_.id).toStdString()});
+        return sub;
     }
 
 } // namespace ps2rpc

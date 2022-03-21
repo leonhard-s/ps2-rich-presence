@@ -25,7 +25,7 @@ namespace arx
     Subscription::Subscription(std::vector<string_t> event_names,
                                std::vector<string_t> characters,
                                std::vector<string_t> worlds,
-                               bool logical_and = false)
+                               bool logical_and)
         : event_names_{event_names}, characters_{characters},
           worlds_{worlds}, logical_and_{logical_and} {}
 
@@ -52,7 +52,7 @@ namespace arx
         }
         if (!worlds_.empty())
         {
-            data["eventNames"] = buildWorldList();
+            data["worlds"] = buildWorldList();
         }
         if (logical_and_)
         {
@@ -104,17 +104,32 @@ namespace arx
 
     json_array_t Subscription::buildCharacterList() const
     {
-        return json_array_t(characters_.begin(), characters_.end());
+        json_array_t data;
+        for (const auto &character : characters_)
+        {
+            data.push_back(character);
+        }
+        return data;
     }
 
     json_array_t Subscription::buildEventNameList() const
     {
-        return json_array_t(event_names_.begin(), event_names_.end());
+        json_array_t data;
+        for (const auto &event : event_names_)
+        {
+            data.push_back(event);
+        }
+        return data;
     }
 
     json_array_t Subscription::buildWorldList() const
     {
-        return json_array_t(worlds_.begin(), worlds_.end());
+        json_array_t data;
+        for (const auto &world : worlds_)
+        {
+            data.push_back(world);
+        }
+        return data;
     }
 
 } // namespace arx

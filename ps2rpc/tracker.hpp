@@ -9,9 +9,9 @@
 #include <QtCore/QString>
 
 #include "arx.hpp"
-#include "arx/ess.hpp"
 #include "ps2.hpp"
 
+#include "ess_client.hpp"
 #include "game/character-info.hpp"
 #include "game/state.hpp"
 
@@ -36,7 +36,7 @@ namespace ps2rpc
 
     private Q_SLOTS:
         void onPayloadReceived(const QString &event_name,
-                               const arx::json_object_t &payload);
+                               const arx::json_t &payload);
 
     private:
         arx::Subscription generateSubscription() const;
@@ -44,7 +44,7 @@ namespace ps2rpc
         CharacterData character_;
         GameStateFactory state_factory_;
         GameState current_state_;
-        QScopedPointer<arx::EssClient> ess_client_;
+        QScopedPointer<EssClient> ess_client_;
     };
 
 } // namespace ps2rpc
