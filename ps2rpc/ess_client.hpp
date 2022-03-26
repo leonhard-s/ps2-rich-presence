@@ -33,16 +33,16 @@ namespace ps2rpc
         void disconnected();
         void messageReceived(QString message);
         void payloadReceived(QString event_name, arx::json_t payload);
-        void subscriptionAdded(arx::Subscription subscription);
-        void subscriptionRemoved(arx::Subscription subscription);
+        void subscriptionAdded(const arx::Subscription subscription);
+        void subscriptionRemoved(const arx::Subscription subscription);
         void subscriptionsCleared();
 
     public Q_SLOTS:
         void connect();
         void disconnect();
         void reconnect();
-        void subscribe(const arx::Subscription &subscription);
-        void unsubscribe(const arx::Subscription &subscription);
+        void subscribe(const arx::Subscription subscription);
+        void unsubscribe(const arx::Subscription subscription);
 
     private Q_SLOTS:
         void onConnected();

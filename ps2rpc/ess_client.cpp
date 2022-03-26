@@ -46,7 +46,7 @@ namespace ps2rpc
         ws_.close();
     }
 
-    void EssClient::subscribe(const arx::Subscription &subscription)
+    void EssClient::subscribe(const arx::Subscription subscription)
     {
         subscriptions_.append(subscription);
         if (isConnected())
@@ -59,7 +59,7 @@ namespace ps2rpc
         emit subscriptionAdded(subscription);
     }
 
-    void EssClient::unsubscribe(const arx::Subscription &subscription)
+    void EssClient::unsubscribe(const arx::Subscription subscription)
     {
         subscriptions_.removeAll(subscription);
         if (isConnected())
@@ -85,7 +85,7 @@ namespace ps2rpc
                          {
             qDebug() << "Timer expired, subscribing";
             timer->deleteLater();
-            for( const auto &subscription : subscriptions_)
+            for(auto &subscription : subscriptions_)
             {
                 subscribe(subscription);
             } });
