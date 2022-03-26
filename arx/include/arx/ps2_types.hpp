@@ -23,7 +23,7 @@ namespace arx
     using effect_type_id_t = uint_fast8_t;
     using experience_id_t = uint_fast16_t;
     using facility_id_t = uint_fast32_t;
-    using facility_type_id = uint_fast8_t;
+    using facility_type_id_t = uint_fast8_t;
     using faction_id_t = uint_fast8_t;
     using fire_group_id_t = uint_fast32_t;
     using fire_mode_id_t = uint_fast32_t;
