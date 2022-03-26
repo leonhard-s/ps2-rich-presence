@@ -3,6 +3,9 @@ cmake_minimum_required(VERSION 3.16)
 project(Ps2RichPresence VERSION 0.2.1)
 set(CMAKE_PROJECT_HOMEPAGE_URL "https://github.com/leonhard-s/ps2-rich-presence")
 
+# Project-specific script directory
+set(SCRIPTS "${PROJECT_SOURCE_DIR}/cmake")
+
 set(CMAKE_AUTOMOC ON)
 
 # Set pedantic compiler flags
@@ -21,7 +24,7 @@ find_package(Qt6 6.2.0 CONFIG REQUIRED
     Widgets
 )
 # Discord Game SDK
-include("${PROJECT_SOURCE_DIR}/cmake/FetchDiscord.cmake")
+include("${SCRIPTS}/FetchDiscord.cmake")
 # PlanetSide 2 API wrapper
 add_subdirectory(arx)
 # Game-specific data library
@@ -95,12 +98,32 @@ set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/local_install")
 install(TARGETS Ps2RichPresence
   RUNTIME DESTINATION "."
 )
+
 # Install Qt
-get_target_property(ps2rpc_bin_name Ps2RichPresence OUTPUT_NAME)
-install(CODE "execute_process(COMMAND 
-    \"${windeployqt_exe}\" \"${CMAKE_INSTALL_PREFIX}/${ps2rpc_bin_name}.exe\"
-  )"
-)
+if (WIN32)
+  # Store location of windeployqt for use in dependent scripts
+  set(windeployqt_path_file "${CMAKE_CURRENT_BINARY_DIR}/windeployqt_path.txt")
+  get_target_property(qt_directory Qt6::Core IMPORTED_LOCATION)
+  cmake_path(GET qt_directory PARENT_PATH windeployqt_dir)
+  set(windeployqt_path "${windeployqt_dir}/windeployqt.exe")
+  file(WRITE "${windeployqt_path_file}" "${windeployqt_path}")
+  # Debug
+  install(SCRIPT
+    "${SCRIPTS}/QtInstallDebug.cmake"
+    CONFIGURATIONS Debug
+  )
+  # Release
+  install(SCRIPT
+    "${SCRIPTS}/QtInstallRelease.cmake"
+    CONFIGURATIONS Release
+  )
+  install(DIRECTORY
+    "${CMAKE_CURRENT_BINARY_DIR}/windeployqt_temp/"
+    DESTINATION "."
+  )
+else()
+  message(STATUS "Qt installation is not yet supported on this platform")
+endif()
 
 # CPack Configuration
 
@@ -138,5 +161,4 @@ set(CPACK_WIX_PROGRAM_MENU_FOLDER ".")
 # Project info URL shown in the programs list
 set(CPACK_WIX_PROPERTY_ARPURLINFOABOUT "${CMAKE_PROJECT_HOMEPAGE_URL}")
 
-include(InstallRequiredSystemLibraries)
 include(CPack)
