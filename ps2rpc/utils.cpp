@@ -136,7 +136,7 @@ namespace ps2rpc
 
     ps2::Server serverFromJson(const arx::json_t &object)
     {
-        auto id = quotedIntegerViaJsonKey<arx::world_id_t>(object, "world");
+        auto id = quotedIntegerViaJsonKey<arx::world_id_t>(object, "world_id");
         ps2::Server server = ps2::Server::Connery;
         if (ps2::server_from_world_id(id, server))
         {
