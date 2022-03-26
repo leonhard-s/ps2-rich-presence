@@ -2,13 +2,6 @@ cmake_minimum_required(VERSION 3.0)
 
 project(Auraxium VERSION 0.1)
 
-set(CMAKE_AUTOMOC ON)
-
-# Qt
-find_package(Qt6 6.2.3 REQUIRED
-  COMPONENTS
-    Core
-)
 # JSON
 include("${PROJECT_SOURCE_DIR}/../cmake/FetchJson.cmake")
 
@@ -42,5 +35,4 @@ target_include_directories(Arx
 target_link_libraries(Arx
   PUBLIC
     nlohmann_json
-    Qt::Core
 )
