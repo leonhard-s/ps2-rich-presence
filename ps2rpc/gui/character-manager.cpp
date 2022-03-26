@@ -159,9 +159,9 @@ namespace ps2rpc
             return;
         }
         // Validate payload
-        const QString collection = "character";
+        const std::string collection = "character";
         auto payload = getJsonPayload(*reply);
-        if (!arx::isPayloadValid(collection, payload))
+        if (!arx::validatePayload(collection, payload))
         {
             QMessageBox::critical(this,
                                   tr("Character Manager"),
@@ -177,9 +177,11 @@ namespace ps2rpc
                                   QMessageBox::Ok);
             return;
         }
-        auto result = arx::payloadResultAsObject(collection, payload);
-        // Parse character data
-        auto info = parseCharacterPayload(result);
+        // HACK: Parse character data
+        CharacterInfo temp;
+        temp.handleCharacterInfoPayload(payload);
+        CharacterData info{temp.getId(), temp.getName(), temp.getFaction(),
+                           temp.getClass(), temp.getServer()};
         // Create character entry
         auto item = new QListWidgetItem(info.name);
         item->setData(Qt::UserRole, QVariant::fromValue(info));
@@ -202,28 +204,87 @@ namespace ps2rpc
         return qUrlFromArxQuery(query);
     }
 
-    CharacterData CharacterManager::parseCharacterPayload(const QJsonObject &payload)
+    CharacterData CharacterManager::parseCharacterPayload(
+        const arx::json_t &payload)
     {
-        // Extract character data from payload
-        auto name = payload["name"].toObject()["first"].toString();
-        ps2::CharacterId id = payload["character_id"].toString().toULongLong();
-        ps2::FactionId faction_id = payload["faction_id"].toString().toInt();
-        ps2::ProfileId profile_id = payload["profile_id"].toString().toInt();
-        auto world_data = payload["world"].toObject();
-        ps2::WorldId world_id = world_data["world_id"].toString().toInt();
+        // Set default/fallback values
+        QString name = "N/A";
+        arx::character_id_t id = 0;
+        arx::faction_id_t faction_id = 0;
+        arx::profile_id_t profile_id = 0;
+        arx::world_id_t world_id = 0;
+        ps2::Faction faction = ps2::Faction::NS;
+        ps2::Class class_ = ps2::Class::LightAssault;
+        ps2::Server server = ps2::Server::Connery;
+        // Get name object
+        auto name_obj = payload["name"];
+        if (name_obj.is_object())
+        {
+            // Get name.first value
+            auto name_val = name_obj["first"];
+            if (name_val.is_string())
+            {
+                name = QString::fromStdString(name_val.get<std::string>());
+            }
+            else
+            {
+                qWarning() << "Invalid type: \"name.first\" must be a string";
+            }
+        }
+        else
+        {
+            qWarning() << "Invalid type: key \"name\" must be an object";
+        }
+        // Get character ID
+        auto id_val = payload["character_id"];
+        if (id_val.is_string())
+        {
+            id = std::stoull(id_val.get<std::string>());
+        }
+        else
+        {
+            qWarning() << "Invalid type: \"character_id\" must be a string";
+        }
+        // Get faction
+        auto faction_val = payload["faction_id"];
+        if (faction_val.is_number_integer())
+        {
+            faction_id = faction_val.get<arx::faction_id_t>();
+        }
+        else
+        {
+            qWarning() << "Invalid type: \"faction_id\" must be a number";
+        }
+        // Get profile
+        auto profile_val = payload["profile_id"];
+        if (profile_val.is_number_integer())
+        {
+            profile_id = profile_val.get<arx::profile_id_t>();
+        }
+        else
+        {
+            qWarning() << "Invalid type: \"profile_id\" must be a number";
+        }
+        // Get world
+        auto world_val = payload["world_id"];
+        if (world_val.is_number_integer())
+        {
+            world_id = world_val.get<arx::world_id_t>();
+        }
+        else
+        {
+            qWarning() << "Invalid type: \"world_id\" must be a number";
+        }
         // Convert IDs to enum values
-        auto faction = ps2::Faction::NS;
         if (ps2::faction_from_faction_id(faction_id, faction))
         {
             qWarning() << "Unable to convert faction ID:" << faction_id;
         }
-        auto class_ = ps2::Class::LightAssault;
         if (ps2::class_from_profile_id(profile_id, class_))
         {
             qWarning() << "Unable to create class from profile ID:"
                        << profile_id;
         }
-        auto server = ps2::Server::Connery;
         if (ps2::server_from_world_id(world_id, server))
         {
             qWarning() << "Unable to create server from world ID:" << world_id;

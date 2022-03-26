@@ -5,7 +5,6 @@
 
 #include "class.hpp"
 #include "faction.hpp"
-#include "id-types.hpp"
 #include "server.hpp"
 #include "vehicle.hpp"
 #include "zone.hpp"

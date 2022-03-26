@@ -10,6 +10,7 @@
 #include <QtCore/QStandardPaths>
 #include <QtCore/QString>
 
+#include "arx.hpp"
 #include "ps2.hpp"
 
 #include "game/character-info.hpp"
@@ -23,8 +24,8 @@ namespace
         json["id"] = QString::number(character.id);
         json["name"] = character.name;
         json["faction"] = ps2::faction_to_faction_id(character.faction);
-        json["last_profile"] = ps2::class_to_profile_id(
-            character.class_, character.faction);
+        json["last_profile"] = static_cast<quint16>(ps2::class_to_profile_id(
+            character.class_, character.faction));
         json["world"] = ps2::server_to_world_id(character.server);
         return json;
     }

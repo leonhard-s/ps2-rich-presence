@@ -3,6 +3,7 @@
 #include "tracker.hpp"
 
 #include <QtCore/QJsonArray>
+#include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
 #include <QtCore/QObject>
 #include <QtCore/QScopedPointer>
@@ -17,6 +18,7 @@
 #include "arx/ess.hpp"
 
 #include "appdata/serviceid.hpp"
+#include "ess_client.hpp"
 #include "game/character-info.hpp"
 #include "game/state.hpp"
 #include "utils.hpp"
@@ -29,10 +31,11 @@ namespace ps2rpc
           current_state_{}, ess_client_{}
     {
         // Create WebSocket client for event streaming endpoint
-        ess_client_.reset(new arx::EssClient(SERVICE_ID, "ps2", this));
+        ess_client_.reset(new EssClient(SERVICE_ID, this));
         ess_client_->subscribe(generateSubscription());
         ess_client_->connect();
-        QObject::connect(ess_client_.get(), &arx::EssClient::payloadReceived, this, &ActivityTracker::onPayloadReceived);
+        QObject::connect(ess_client_.get(), &EssClient::payloadReceived,
+                         this, &ActivityTracker::onPayloadReceived);
     }
 
     CharacterData ActivityTracker::getCharacter() const
@@ -40,8 +43,12 @@ namespace ps2rpc
         return character_;
     }
 
-    void ActivityTracker::onPayloadReceived(const QString &event_name, const QJsonObject &payload)
+    void ActivityTracker::onPayloadReceived(const QString &event_name,
+                                            const arx::json_t &arx_payload)
     {
+        // HACK: Replace payload with Qt JSON version
+        auto doc = QJsonDocument::fromJson(arx_payload.dump().c_str());
+        auto payload = doc.object();
         emit payloadReceived(event_name, payload);
         // Character ID
         bool are_we_the_baddies = payload["attacker_character_id"]
@@ -51,20 +58,20 @@ namespace ps2rpc
         // TODO: Implement team ID once it is implemented on the API side
         ps2::Faction team = state_factory_.getFaction();
         // Class
-        ps2::LoadoutId loadout_id = are_we_the_baddies ? payload["attacker_loadout_id"].toString().toInt()
-                                                       : payload["character_loadout_id"].toString().toInt();
+        arx::loadout_id_t loadout_id = are_we_the_baddies ? payload["attacker_loadout_id"].toString().toInt()
+                                                          : payload["character_loadout_id"].toString().toInt();
         ps2::Class class_;
         if (ps2::class_from_loadout_id(loadout_id, class_))
         {
             qWarning() << "Unable to get class from loadout ID:" << loadout_id;
         }
         // Vehicle
-        ps2::VehicleId vehicle_id = are_we_the_baddies ? payload["attacker_vehicle_id"].toString().toInt()
-                                                       : payload["vehicle_id"].toString().toInt();
+        arx::vehicle_id_t vehicle_id = are_we_the_baddies ? payload["attacker_vehicle_id"].toString().toInt()
+                                                          : payload["vehicle_id"].toString().toInt();
         ps2::Vehicle vehicle = ps2::Vehicle::None;
         ps2::vehicle_from_vehicle_id(vehicle_id, vehicle);
         // Zone
-        ps2::ZoneId zone_id = payload["zone_id"].toString().toInt();
+        arx::zone_id_t zone_id = payload["zone_id"].toString().toInt();
         ps2::Zone zone;
         if (ps2::zone_from_zone_id(zone_id, zone))
         {
@@ -97,13 +104,12 @@ namespace ps2rpc
 
     arx::Subscription ActivityTracker::generateSubscription() const
     {
-        return arx::Subscription(
-            // Event name(s)
-            "Death",
-            // Character IDs
-            {QString::number(character_.id)},
-            // World IDs
-            {"all"});
+        auto sub = arx::Subscription(
+            // Event names
+            {"Death"},
+            // Characters
+            {QString::number(character_.id).toStdString()});
+        return sub;
     }
 
 } // namespace ps2rpc

@@ -22,6 +22,7 @@ find_package(Qt6 6.2.0 CONFIG REQUIRED
     Gui
     Network
     Widgets
+    WebSockets
 )
 # Discord Game SDK
 include("${SCRIPTS}/FetchDiscord.cmake")
@@ -61,6 +62,8 @@ add_executable(Ps2RichPresence WIN32
   "ps2rpc/game/state.cpp"
   "ps2rpc/core.hpp"
   "ps2rpc/core.cpp"
+  "ps2rpc/ess_client.hpp"
+  "ps2rpc/ess_client.cpp"
   "ps2rpc/persistence.hpp"
   "ps2rpc/persistence.cpp"
   "ps2rpc/tracker.hpp"
@@ -81,6 +84,7 @@ target_link_libraries(Ps2RichPresence
     Qt::Gui
     Qt::Network
     Qt::Widgets
+    Qt::WebSockets
     Arx 
     discord_game_sdk
     Ps2Data

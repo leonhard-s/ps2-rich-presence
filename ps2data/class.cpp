@@ -4,13 +4,14 @@
 
 #include <string>
 
+#include "arx/ps2_types.hpp"
+
 #include "faction.hpp"
-#include "id-types.hpp"
 
 namespace ps2
 {
 
-    int class_from_loadout_id(LoadoutId loadout_id, Class &class_)
+    int class_from_loadout_id(arx::loadout_id_t loadout_id, Class &class_)
     {
         switch (loadout_id)
         {
@@ -62,7 +63,7 @@ namespace ps2
         return 0;
     }
 
-    int class_from_profile_id(ProfileId profile_id, Class &class_)
+    int class_from_profile_id(arx::profile_id_t profile_id, Class &class_)
     {
         switch (profile_id)
         {
@@ -142,7 +143,7 @@ namespace ps2
         return 0;
     }
 
-    ProfileId class_to_profile_id(Class class_, Faction faction)
+    arx::profile_id_t class_to_profile_id(Class class_, Faction faction)
     {
         switch (class_)
         {

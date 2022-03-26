@@ -2,38 +2,37 @@ cmake_minimum_required(VERSION 3.0)
 
 project(Auraxium VERSION 0.1)
 
-set(CMAKE_AUTOMOC ON)
-
-find_package(Qt6 6.2.3 REQUIRED
-  COMPONENTS
-    Core
-    WebSockets
-)
+# JSON
+include("${PROJECT_SOURCE_DIR}/../cmake/FetchJson.cmake")
 
 add_library(Arx STATIC
+  "include/arx/ps2_types.hpp"
   "include/arx/query.hpp"
   "include/arx/payload.hpp"
   "include/arx/support.hpp"
+  "include/arx/types.hpp"
   "include/arx/urlgen.hpp"
   "include/arx.hpp"
-  "include/arx/ess/client.hpp"
-  "include/arx/ess/subs.hpp"
+  "include/arx/ess/endpoint.hpp"
+  "include/arx/ess/events.hpp"
+  "include/arx/ess/subscription.hpp"
   "include/arx/ess.hpp"
   "src/query.cpp"
   "src/payload.cpp"
   "src/support.cpp"
   "src/urlgen.cpp"
-  "src/ess/client.cpp"
-  "src/ess/subs.cpp"
+  "src/ess/endpoint.cpp"
+  "src/ess/events.cpp"
+  "src/ess/subscription.cpp"
 )
 target_include_directories(Arx
   PUBLIC
-    ${PROJECT_SOURCE_DIR}/include
+    "${PROJECT_SOURCE_DIR}/include"
   PRIVATE
-    ${PROJECT_SOURCE_DIR}/src
+    "${PROJECT_SOURCE_DIR}/src"
+    "${PROJECT_BINARY_DIR}"
 )
 target_link_libraries(Arx
   PUBLIC
-    Qt::Core
-    Qt::WebSockets
+    nlohmann_json
 )
