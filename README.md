@@ -27,7 +27,6 @@ This utility is still in its early stages of development. Many features are miss
 
 ### Noteworthy omissions
 
-- Characters are not remembered between sessions
 - No start-on-login support
 - No minimizing to tray
 - No automatic tracking of characters on login or failover when they log off
