@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(Ps2RichPresence VERSION 0.2.1)
+project(Ps2RichPresence VERSION 0.3.0)
 set(CMAKE_PROJECT_HOMEPAGE_URL "https://github.com/leonhard-s/ps2-rich-presence")
 
 # Project-specific script directory
