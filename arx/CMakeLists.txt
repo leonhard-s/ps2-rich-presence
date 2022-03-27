@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(Auraxium VERSION 0.1)
+project(Auraxium VERSION 0.2)
 
 # JSON
 include("${PROJECT_SOURCE_DIR}/../cmake/FetchJson.cmake")
