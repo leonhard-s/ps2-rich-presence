@@ -1,6 +1,7 @@
 // Copyright 2022 Leonhard S.
 
 #include <QApplication>
+#include <QCoreApplication>
 
 #include "gui/main-window.hpp"
 #include "config.hpp"

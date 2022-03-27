@@ -14,7 +14,7 @@ namespace ps2rpc
     struct GameState
     {
         GameState();
-        GameState(ps2::CharacterId character_id,
+        GameState(arx::character_id_t character_id,
                   ps2::Faction faction,
                   ps2::Faction team,
                   ps2::Server server,
@@ -25,7 +25,7 @@ namespace ps2rpc
         bool operator==(const GameState &other) const;
         bool operator!=(const GameState &other) const;
 
-        ps2::CharacterId character_id;
+        arx::character_id_t character_id;
         ps2::Faction faction;
         ps2::Faction team;
         ps2::Server server;
@@ -48,12 +48,12 @@ namespace ps2rpc
     class GameStateFactory
     {
     public:
-        GameStateFactory(ps2::CharacterId character_id,
+        GameStateFactory(arx::character_id_t character_id,
                          ps2::Faction faction,
                          ps2::Server server,
                          ps2::Class initial_class = ps2::Class::LightAssault);
 
-        ps2::CharacterId getCharacterId() const noexcept;
+        arx::character_id_t getCharacterId() const noexcept;
         ps2::Faction getFaction() const noexcept;
         void setFaction(ps2::Faction faction) noexcept;
         ps2::Server getServer() const noexcept;
@@ -70,7 +70,7 @@ namespace ps2rpc
         int buildState(GameState &game_state) const;
 
     private:
-        ps2::CharacterId character_id_;
+        arx::character_id_t character_id_;
         ps2::Faction faction_;
         ps2::Server server_;
         ps2::Class class_;

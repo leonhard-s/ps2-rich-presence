@@ -5,12 +5,13 @@
 
 #include <QtCore/QJsonObject>
 #include <QtCore/QObject>
-#include <QtCore/QScopedPOinter>
+#include <QtCore/QScopedPointer>
 #include <QtCore/QString>
 
-#include "arx/ess.hpp"
+#include "arx.hpp"
 #include "ps2.hpp"
 
+#include "ess_client.hpp"
 #include "game/character-info.hpp"
 #include "game/state.hpp"
 
@@ -31,11 +32,11 @@ namespace ps2rpc
         void ready();
         void stateChanged(GameState state);
         void payloadReceived(const QString &event_name,
-                             const QJsonObject &payload);
+                             const arx::json_t &payload);
 
     private Q_SLOTS:
         void onPayloadReceived(const QString &event_name,
-                               const QJsonObject &payload);
+                               const arx::json_t &payload);
 
     private:
         arx::Subscription generateSubscription() const;
@@ -43,7 +44,7 @@ namespace ps2rpc
         CharacterData character_;
         GameStateFactory state_factory_;
         GameState current_state_;
-        QScopedPointer<arx::EssClient> ess_client_;
+        QScopedPointer<EssClient> ess_client_;
     };
 
 } // namespace ps2rpc

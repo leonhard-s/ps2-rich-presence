@@ -5,7 +5,7 @@
 
 #include <string>
 
-#include "id-types.hpp"
+#include "arx/ps2_types.hpp"
 
 namespace ps2
 {
@@ -27,7 +27,7 @@ namespace ps2
      * @param faction The faction enum value to be populated.
      * @return 0 on success, -1 on failure.
      */
-    int faction_from_faction_id(FactionId faction_id, Faction &faction);
+    int faction_from_faction_id(arx::faction_id_t faction_id, Faction &faction);
 
     /**
      * Return the display name for a given faction enum value.
@@ -46,6 +46,14 @@ namespace ps2
      * @return 0 on success, -1 on failure.
      */
     int faction_to_tag(Faction faction, std::string &tag);
+
+    /**
+     * Return the Census API faction ID for a given faction enum value.
+     *
+     * @param faction The faction enum value.
+     * @return The Census API faction ID.
+     */
+    arx::faction_id_t faction_to_faction_id(Faction faction);
 
 } // namespace ps2
 

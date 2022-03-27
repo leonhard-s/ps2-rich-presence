@@ -13,6 +13,8 @@
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QPushButton>
 
+#include "arx.hpp"
+
 #include "game/character-info.hpp"
 
 namespace ps2rpc
@@ -39,7 +41,7 @@ namespace ps2rpc
 
     private:
         QUrl getCharacterInfoUrl(const QString &character) const;
-        CharacterData parseCharacterPayload(const QJsonObject &payload);
+        CharacterData parseCharacterPayload(const arx::json_t &payload);
         QDialog *createCharacterNameInputDialog();
         void setupUi();
 

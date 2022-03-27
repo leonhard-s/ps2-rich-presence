@@ -5,7 +5,7 @@
 
 #include <string>
 
-#include "id-types.hpp"
+#include "arx/ps2_types.hpp"
 
 namespace ps2
 {
@@ -31,7 +31,7 @@ namespace ps2
      * @param zone The zone enum value to be populated.
      * @return 0 on success, -1 on failure.
      */
-    int zone_from_zone_id(ZoneId zone_id, Zone &zone);
+    int zone_from_zone_id(arx::zone_id_t zone_id, Zone &zone);
     /**
      * Return the display name for a given zone enum value.
      *

@@ -1,31 +1,40 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(Ps2RichPresence VERSION 0.2.1)
+project(Ps2RichPresence VERSION 0.3.0)
 set(CMAKE_PROJECT_HOMEPAGE_URL "https://github.com/leonhard-s/ps2-rich-presence")
+
+# Project-specific script directory
+set(SCRIPTS "${PROJECT_SOURCE_DIR}/cmake")
 
 set(CMAKE_AUTOMOC ON)
 
-find_package(Qt6 6.2.3 REQUIRED
+# Set pedantic compiler flags
+if(MSVC)
+    add_compile_options(/W4 /WX)
+else()
+    add_compile_options(-Wall -Wextra -pedantic -Werror)
+endif()
+
+# Qt
+find_package(Qt6 6.2.0 CONFIG REQUIRED
   COMPONENTS
     Core
     Gui
     Network
     Widgets
+    WebSockets
 )
-if(Qt6_FOUND AND WIN32)
-  # This utility is required when installing on Windows
-  set(windeployqt_exe "${Qt6_DIR}/../../../bin/windeployqt.exe")
-endif()
-
-# First-party libraries
+# Discord Game SDK
+include("${SCRIPTS}/FetchDiscord.cmake")
+# PlanetSide 2 API wrapper
 add_subdirectory(arx)
-add_subdirectory(discord-sdk)
+# Game-specific data library
 add_subdirectory(ps2data)
 
 # Process config header; this lets us access project name and version strings
 configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/ps2rpc/config.hpp.in
-  ${CMAKE_CURRENT_BINARY_DIR}/ps2rpc/config.hpp
+  "${CMAKE_CURRENT_SOURCE_DIR}/ps2rpc/config.hpp.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/ps2rpc/config.hpp"
   @ONLY
 )
 # Application icon
@@ -33,7 +42,7 @@ if(WIN32)
   set(APP_ICON_RESOURCE "${PROJECT_SOURCE_DIR}/windows/ps2rpc.rc")
 endif()
 # Main executable
-add_executable(Ps2RichPresence
+add_executable(Ps2RichPresence WIN32
   "ps2rpc/appdata/appid.hpp"
   "ps2rpc/appdata/assets.hpp"
   "ps2rpc/appdata/assets.cpp"
@@ -53,6 +62,10 @@ add_executable(Ps2RichPresence
   "ps2rpc/game/state.cpp"
   "ps2rpc/core.hpp"
   "ps2rpc/core.cpp"
+  "ps2rpc/ess_client.hpp"
+  "ps2rpc/ess_client.cpp"
+  "ps2rpc/persistence.hpp"
+  "ps2rpc/persistence.cpp"
   "ps2rpc/tracker.hpp"
   "ps2rpc/tracker.cpp"
   "ps2rpc/utils.hpp"
@@ -62,8 +75,8 @@ add_executable(Ps2RichPresence
 )
 target_include_directories(Ps2RichPresence
   PRIVATE
-    ${PROJECT_SOURCE_DIR}/ps2rpc
-    ${PROJECT_BINARY_DIR}/ps2rpc # Required for config.hpp.in
+    "${PROJECT_SOURCE_DIR}/ps2rpc"
+    "${PROJECT_BINARY_DIR}/ps2rpc" # Required for config.hpp.in
 )
 target_link_libraries(Ps2RichPresence
   PRIVATE
@@ -71,8 +84,9 @@ target_link_libraries(Ps2RichPresence
     Qt::Gui
     Qt::Network
     Qt::Widgets
+    Qt::WebSockets
     Arx 
-    Discord
+    discord_game_sdk
     Ps2Data
 )
 # Set executable name
@@ -88,21 +102,32 @@ set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/local_install")
 install(TARGETS Ps2RichPresence
   RUNTIME DESTINATION "."
 )
-# Install Discord SDK
-set(DISCORD_LIB_DIR "${PROJECT_SOURCE_DIR}/discord-sdk/lib/x86_64/")
-install(FILES
-  "${DISCORD_LIB_DIR}/discord_game_sdk.dll"
-  DESTINATION "."
-)
+
 # Install Qt
-get_target_property(ps2rpc_bin_name Ps2RichPresence OUTPUT_NAME)
-install(CODE "execute_process(COMMAND 
-    \"${windeployqt_exe}\" \"${CMAKE_INSTALL_PREFIX}/${ps2rpc_bin_name}.exe\"
-  )"
-)
-install(DIRECTORY "${CMAKE_INSTALL_PREFIX}/"
-  DESTINATION "."
-)
+if (WIN32)
+  # Store location of windeployqt for use in dependent scripts
+  set(windeployqt_path_file "${CMAKE_CURRENT_BINARY_DIR}/windeployqt_path.txt")
+  get_target_property(qt_directory Qt6::Core IMPORTED_LOCATION)
+  cmake_path(GET qt_directory PARENT_PATH windeployqt_dir)
+  set(windeployqt_path "${windeployqt_dir}/windeployqt.exe")
+  file(WRITE "${windeployqt_path_file}" "${windeployqt_path}")
+  # Debug
+  install(SCRIPT
+    "${SCRIPTS}/QtInstallDebug.cmake"
+    CONFIGURATIONS Debug
+  )
+  # Release
+  install(SCRIPT
+    "${SCRIPTS}/QtInstallRelease.cmake"
+    CONFIGURATIONS Release
+  )
+  install(DIRECTORY
+    "${CMAKE_CURRENT_BINARY_DIR}/windeployqt_temp/"
+    DESTINATION "."
+  )
+else()
+  message(STATUS "Qt installation is not yet supported on this platform")
+endif()
 
 # CPack Configuration
 
@@ -140,5 +165,4 @@ set(CPACK_WIX_PROGRAM_MENU_FOLDER ".")
 # Project info URL shown in the programs list
 set(CPACK_WIX_PROPERTY_ARPURLINFOABOUT "${CMAKE_PROJECT_HOMEPAGE_URL}")
 
-include(InstallRequiredSystemLibraries)
 include(CPack)

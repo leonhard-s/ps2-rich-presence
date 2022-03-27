@@ -2,15 +2,14 @@
 
 #include "arx/payload.hpp"
 
-#include <QtCore/QDebug>
-#include <QtCore/QJsonArray>
-#include <QtCore/QJsonObject>
-#include <QtCore/QString>
+#include <string>
+
+#include "arx/types.hpp"
 
 namespace
 {
 
-    QString getResultListName(const QString &collection)
+    std::string getResultListName(const std::string &collection)
     {
         return collection + "_list";
     }
@@ -20,56 +19,50 @@ namespace
 namespace arx
 {
 
-    bool isPayloadValid(const QString &collection, const QJsonObject &payload)
+    int validatePayload(const json_string_t &collection, const json_t &payload)
     {
         if (payload.contains("error") || payload.contains("errorCode"))
         {
-            qDebug() << "Payload for collection" << collection
-                     << "contains error message:" << payload;
-            return false;
+            return -1; // Response contains error, not valid
         }
-        // Ensure the given payload contains the required keys.
-        if (!payload.contains("returned"))
+        if (!payload.contains("returned") ||
+            !payload.contains(getResultListName(collection)))
         {
-            qDebug() << "Payload for collection" << collection
-                     << "does not contain required key 'returned'.";
-            return false;
+            return -2; // Payload is missing a required key
         }
-        if (!payload.contains(getResultListName(collection)))
+        if (!payload["returned"].is_array())
         {
-            qDebug() << "Payload for collection" << collection
-                     << "does not contain results list";
-            return false;
+            return -3; // Return list key is not an array
         }
-        return true;
+        return 0;
     }
 
-    bool isPayloadEmpty(const QString &collection, const QJsonObject &payload)
+    bool isPayloadEmpty(const json_string_t &collection, const json_t &payload)
     {
-        if (payload["returned"].toInt() == 0)
+        if (payload["returned"] == "0")
         {
             return true;
         }
         auto key = getResultListName(collection);
         if (payload.contains(key))
         {
-            return payload[key].toArray().isEmpty();
+            return payload[key].empty();
         }
         return false;
     }
 
-    QJsonObject payloadResultAsObject(const QString &collection,
-                                      const QJsonObject &payload)
+    json_t payloadResultAsObject(const json_string_t &collection,
+                                 const json_t &payload)
     {
         auto key = getResultListName(collection);
-        return payload[key].toArray()[0].toObject();
+        return payload[key][0];
     }
 
-    QJsonArray payloadResultsAsArray(const QString &collection,
-                                     const QJsonObject &payload)
+    json_array_t payloadResultsAsArray(const json_string_t &collection,
+                                       const json_t &payload)
     {
         auto key = getResultListName(collection);
-        return payload[key].toArray();
+        return payload[key];
     }
 
 } // namespace arx

@@ -4,12 +4,12 @@
 
 #include <string>
 
-#include "id-types.hpp"
+#include "arx/ps2_types.hpp"
 
 namespace ps2
 {
 
-    int vehicle_from_vehicle_id(VehicleId vehicle_id, Vehicle &vehicle)
+    int vehicle_from_vehicle_id(arx::vehicle_id_t vehicle_id, Vehicle &vehicle)
     {
         switch (vehicle_id)
         {

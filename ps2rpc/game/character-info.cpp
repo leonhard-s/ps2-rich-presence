@@ -26,7 +26,7 @@ namespace ps2rpc
           class_{ps2::Class::LightAssault},
           server{ps2::Server::Connery} {}
 
-    CharacterData::CharacterData(ps2::CharacterId id,
+    CharacterData::CharacterData(arx::character_id_t id,
                                  const QString &name,
                                  ps2::Faction faction,
                                  ps2::Class class_,
@@ -64,13 +64,13 @@ namespace ps2rpc
         manager_.reset(new QNetworkAccessManager(this));
     }
 
-    CharacterInfo::CharacterInfo(ps2::CharacterId id, QObject *parent)
+    CharacterInfo::CharacterInfo(arx::character_id_t id, QObject *parent)
         : CharacterInfo(parent)
     {
         info_.id = id;
     }
 
-    CharacterInfo::CharacterInfo(ps2::CharacterId id,
+    CharacterInfo::CharacterInfo(arx::character_id_t id,
                                  const QString &name,
                                  ps2::Faction faction,
                                  ps2::Class class_,
@@ -84,7 +84,7 @@ namespace ps2rpc
         info_.server = server;
     }
 
-    ps2::CharacterId CharacterInfo::getId() const
+    arx::character_id_t CharacterInfo::getId() const
     {
         return info_.id;
     }
@@ -169,9 +169,10 @@ namespace ps2rpc
         return QNetworkRequest(url);
     }
 
-    void CharacterInfo::handleCharacterInfoPayload(const QJsonObject &payload)
+    void CharacterInfo::handleCharacterInfoPayload(
+        const arx::json_t &payload)
     {
-        if (!arx::isPayloadValid("character", payload))
+        if (!arx::validatePayload("character", payload))
         {
             qWarning() << "CharacterInfo::handleCharacterInfoPayload(): "
                           "Invalid JSON payload";
@@ -180,36 +181,33 @@ namespace ps2rpc
         // Get character object
         auto data = arx::payloadResultAsObject("character", payload);
         // Get new fields from payload
-        auto new_id = data["character_id"].toString().toLongLong();
-        auto new_name = data["name"].toObject()["first"].toString();
-        auto faction_id = data["faction_id"].toString().toInt();
-        auto profile_id = data["profile_id"].toString().toInt();
-        auto world_id = data["world"].toObject()["world_id"].toString().toInt();
-        // Convert ps2-specific IDs
-        ps2::Faction new_faction;
-        if (ps2::faction_from_faction_id(faction_id, new_faction))
+        auto new_id = characterIdFromJson(data);
+        auto new_name = QString::fromStdString(characterNameFromJson(data));
+        auto new_faction = factionFromJson(data);
+        auto new_class = classFromJsonProfile(data);
+        // Resolve characters_world join
+        auto new_server = ps2::Server::Connery;
+        auto world_data = data.find("world");
+        if (world_data == data.end())
         {
-            qWarning() << "Failed to convert faction ID" << faction_id;
-            return;
+            qWarning() << "CharacterInfo::handleCharacterInfoPayload():"
+                       << "No world join data in payload";
         }
-        ps2::Class new_class;
-        if (ps2::class_from_profile_id(profile_id, new_class))
+        else if (!world_data->is_object())
         {
-            qWarning() << "Failed to get class from profile ID" << profile_id;
-            return;
+            qWarning() << "CharacterInfo::handleCharacterInfoPayload():"
+                       << "World join data is not an object";
         }
-        ps2::Server new_server;
-        if (ps2::server_from_world_id(world_id, new_server))
+        else
         {
-            qWarning() << "Failed to get server from world ID" << world_id;
-            return;
+            new_server = serverFromJson(*world_data);
         }
         // Update fields
         updateFieldsIfChanged(
             new_id, new_name, new_faction, new_class, new_server);
     }
 
-    void CharacterInfo::updateFieldsIfChanged(ps2::CharacterId id,
+    void CharacterInfo::updateFieldsIfChanged(arx::character_id_t id,
                                               const QString &name,
                                               ps2::Faction faction,
                                               ps2::Class class_,
