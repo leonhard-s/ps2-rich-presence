@@ -72,8 +72,18 @@ namespace ps2rpc
             qWarning() << "Unable to get class from loadout ID:" << loadout_id;
         }
         // Vehicle
-        arx::vehicle_id_t vehicle_id = are_we_the_baddies ? integerFromApiString<arx::vehicle_id_t>(payload["attacker_vehicle_id"])
-                                                          : integerFromApiString<arx::vehicle_id_t>(payload["vehicle_id"]);
+
+        // NOTE: The "vehicle_id" is not sent anymore as of March 2022. This
+        // code will use it if it returns, but it is treated as optional.
+        arx::vehicle_id_t vehicle_id = 0;
+        if (are_we_the_baddies)
+        {
+            vehicle_id = integerFromApiString<arx::vehicle_id_t>(payload["attacker_vehicle_id"]);
+        }
+        else if (payload.contains("vehicle_id"))
+        {
+            vehicle_id = integerFromApiString<arx::vehicle_id_t>(payload["vehicle_id"]);
+        }
         ps2::Vehicle vehicle = ps2::Vehicle::None;
         ps2::vehicle_from_vehicle_id(vehicle_id, vehicle);
         // Zone
