@@ -9,6 +9,9 @@
 #include <QtCore/QUrl>
 #include <QtWebSockets/QWebSocket>
 
+#include "arx.hpp"
+#include "arx/ess.hpp"
+
 namespace ps2rpc
 {
 
@@ -100,25 +103,24 @@ namespace ps2rpc
 
     void EssClient::parseMessage(const QString &message)
     {
-        qDebug() << message;
-        // Forward raw paylaod to anyone who's asking
         emit messageReceived(message);
         // Convert the text message to a JSON object
         auto json = arx::json_t::parse(message.toStdString());
-        // Ignore messages that are not for us
-        auto it = json.find("service");
-        if (it == json.end() || it->get<arx::json_t::string_t>() != "event")
+        // Ignore anything but event subscription messages
+        if (arx::getMessageType(json) != arx::MessageType::SERVICE_MESSAGE)
         {
             return;
         }
-        // Dispatch
-        if (json["type"] == "serviceMessage")
+        auto payload = arx::getPayload(json);
+        if (payload.empty())
         {
-            arx::json_t payload = json["payload"];
-            auto event_name = QString::fromStdString(
-                payload["event_name"].get<arx::json_t::string_t>());
-            emit payloadReceived(event_name, payload);
+            qWarning() << "Ignoring bad service message:" << message;
+            return;
         }
+        // Dispatch payload
+        auto event_name = QString::fromStdString(
+            payload["event_name"].get<arx::json_string_t>());
+        emit payloadReceived(event_name, payload);
     }
 
 } // namespace ps2rpc

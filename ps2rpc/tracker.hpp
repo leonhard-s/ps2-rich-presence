@@ -32,7 +32,7 @@ namespace ps2rpc
         void ready();
         void stateChanged(GameState state);
         void payloadReceived(const QString &event_name,
-                             const QJsonObject &payload);
+                             const arx::json_t &payload);
 
     private Q_SLOTS:
         void onPayloadReceived(const QString &event_name,

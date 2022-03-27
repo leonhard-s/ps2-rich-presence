@@ -4,12 +4,13 @@
 #define PS2RPC_CORE_HPP
 
 #include <QtCore/QDateTime>
-#include <QtCore/QJsonObject>
 #include <QtCore/QList>
 #include <QtCore/QObject>
 #include <QtCore/QScopedPointer>
 #include <QtCore/QString>
 #include <QtCore/QTimer>
+
+#include "arx.hpp"
 
 #include "game/character-info.hpp"
 #include "presence/factory.hpp"
@@ -45,7 +46,7 @@ namespace ps2rpc
 
     private Q_SLOTS:
         void onEventPayloadReceived(const QString &event_name,
-                                    const QJsonObject &payload);
+                                    const arx::json_t &payload);
         void onGameStateChanged(const GameState &state);
         void onRateLimitTimerExpired();
 

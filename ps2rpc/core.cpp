@@ -4,11 +4,11 @@
 
 #include <QtCore/QDateTime>
 #include <QtCore/QDebug>
-#include <QtCore/QJsonObject>
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QTimer>
 
+#include "arx.hpp"
 #include "discord.h"
 
 #include "game/character-info.hpp"
@@ -119,16 +119,23 @@ namespace ps2rpc
     }
 
     void RichPresenceApp::onEventPayloadReceived(const QString &event_name,
-                                                 const QJsonObject &payload)
+                                                 const arx::json_t &payload)
     {
         // The app only cares about if there are messages coming in. Handling
         // the payloads and dealing with error states is the tracker's problem.
         Q_UNUSED(event_name);
 
         // Get timestamp of the event
-        auto timestamp = payload["timestamp"].toString().toLongLong();
+        auto it = payload.find("timestamp");
+        if (it == payload.end())
+        {
+            qWarning() << "No timestamp found for" << event_name << "payload";
+            return;
+        }
+        auto timestamp = QString::fromStdString(
+            it.value().get<arx::json_string_t>());
         auto event_time = QDateTime::fromSecsSinceEpoch(
-            timestamp, Qt::TimeSpec::UTC);
+            timestamp.toLong(), Qt::TimeSpec::UTC);
         auto now = QDateTime::currentDateTimeUtc();
         event_latency_ = event_time.msecsTo(now);
         // Update recent events list; used for event frequency calculation
