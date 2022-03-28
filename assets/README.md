@@ -51,5 +51,7 @@ Processing notes:
 
 | Asset                     | Source Image              | Processing |
 |---------------------------|---------------------------|------------|
+| large_image/esamir.png    | screenshots/esamir.png    |      1     |
+| large_image/hossin.png    | screenshots/hossin.png    |      1     |
 | large_image/oshur.png     | screenshots/oshur.png     |      1     |
 | large_image/sanctuary.png | screenshots/sanctuary.png |      1     |
