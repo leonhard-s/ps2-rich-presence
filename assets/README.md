@@ -51,6 +51,7 @@ Processing notes:
 
 | Asset                     | Source Image              | Processing |
 |---------------------------|---------------------------|------------|
+| large_image/amerish.png   | screenshots/amerish.png   |      1     |
 | large_image/esamir.png    | screenshots/esamir.png    |      1     |
 | large_image/hossin.png    | screenshots/hossin.png    |      1     |
 | large_image/indar.png     | screenshots/indar.png     |      1     |
