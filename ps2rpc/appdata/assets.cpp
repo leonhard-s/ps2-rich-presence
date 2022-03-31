@@ -117,22 +117,22 @@ namespace assets
         switch (zone)
         {
         case ps2::Zone::Indar:
-            image_key = "zone_indar";
+            image_key = "indar";
             break;
         case ps2::Zone::Hossin:
-            image_key = "zone_hossin";
+            image_key = "hossin";
             break;
         case ps2::Zone::Amerish:
-            image_key = "zone_amerish";
+            image_key = "amerish";
             break;
         case ps2::Zone::Esamir:
-            image_key = "zone_esamir";
+            image_key = "esamir";
             break;
         case ps2::Zone::Oshur:
-            image_key = "zone_oshur";
+            image_key = "oshur";
             break;
         case ps2::Zone::Sanctuary:
-            image_key = "zone_sanctuary";
+            image_key = "sanctuary";
             break;
         default:
             return -1;
