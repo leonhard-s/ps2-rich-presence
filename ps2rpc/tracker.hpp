@@ -3,7 +3,7 @@
 #ifndef PS2RPC_TRACKER_HPP
 #define PS2RPC_TRACKER_HPP
 
-#include <QtCore/QJsonObject>
+#include <QtCore/QList>
 #include <QtCore/QObject>
 #include <QtCore/QScopedPointer>
 #include <QtCore/QString>
@@ -39,7 +39,9 @@ namespace ps2rpc
                                const arx::json_t &payload);
 
     private:
-        arx::Subscription generateSubscription() const;
+        QList<arx::Subscription> generateSubscriptions() const;
+        void handleDeathPayload(const arx::json_t &payload);
+        void handleGainexperiencePayload(const arx::json_t &payload);
 
         CharacterData character_;
         GameStateFactory state_factory_;

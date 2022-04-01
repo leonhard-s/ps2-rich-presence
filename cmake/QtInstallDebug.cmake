@@ -2,7 +2,7 @@
 # "install(SCRIPT ...)" command does not provide an easy way of passing
 # arguments or build configuration info to its script target.
 
-set(project_root "${CMAKE_CURRENT_SOURCE_DIR}/../.")
+set(project_root "${CMAKE_CURRENT_LIST_DIR}/../.")
 set(target_exe_name "Ps2 Rich Presence")
 set(windeployqt_temp "${project_root}/build/windeployqt_temp")
 
@@ -16,7 +16,7 @@ endif()
 
 set(target_exe_path "${project_root}/build/Debug/${target_exe_name}.exe")
 if (NOT EXISTS "${target_exe_path}")
-  message(WARNING "Could not locate built binary, windeployqt not run")
+  message(STATUS "Could not locate debug binary, windeployqt not run")
   return()
 endif()
 

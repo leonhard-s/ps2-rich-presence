@@ -2,12 +2,12 @@
 
 An open source project providing [Rich Presence](https://discord.com/rich-presence) for [PlanetSide 2](https://www.planetside2.com/home).
 
-<!-- TODO: Enable repository shields after release. -->
+<!-- TODO: Enable build info repository shield  -->
+<!-- ![Build Workflow Status](https://img.shields.io/github/workflow/status/leonhard-s/ps2-rich-presence/build) -->
 
-![Build Workflow Status](https://img.shields.io/github/workflow/status/leonhard-s/ps2-rich-presence/build)
 ![License](https://img.shields.io/github/license/leonhard-s/ps2-rich-presence)
 ![Total Downloads](https://img.shields.io/github/downloads/leonhard-s/ps2-rich-presence/total)
-![GitHub Release Date](https://img.shields.io/github/release-date/leonhard-s/ps2-rich-presence)
+![GitHub Release Date](https://img.shields.io/github/release-date/leonhard-s/ps2-rich-presence?label=latest%20version)
 
 [Overview](#overview) • [Features](#features) • [Limitations](#limitations) • [License](#license) • [Installation](#installation) • [Contributing](#contributing)
 
@@ -23,9 +23,13 @@ This application runs independently of the main PlanetSide 2 executable and does
 
 ## Work In Progress
 
-This utility is still in its early stages of development. Many features are missing (see below) and bugs are certain. If you find some, please do not hesitate to [report them](https://github.com/leonhard-s/ps2-rich-presence/issues).
+This utility is still in its early stages of development. Many features are missing (see below) and bugs are next to certain.
+
+If you find some, please do not hesitate to [report them](https://github.com/leonhard-s/ps2-rich-presence/issues).
 
 ### Noteworthy omissions
+
+These are planned features that are in development but not yet available in the current version:
 
 - No start-on-login support
 - No minimizing to tray
@@ -33,11 +37,10 @@ This utility is still in its early stages of development. Many features are miss
 
 ## Features
 
-- **Display your character's status on Discord**
-- **Detection of current continent, class, and vehicle**
-- **Lightweight**
-- **Low bandwidth requirements**
-- ~~**Automatic tracking upon login**~~ (soon)
+- Display your character's status on Discord
+- Detection of current continent, class, and vehicle
+- Lightweight and low bandwidth usage
+- ~~Automatic tracking upon login~~ (soon)
 
 ## Limitations
 
@@ -71,10 +74,49 @@ You are free to use and modify these screenshots for your own projects given com
 
 ## Installation
 
-This project is still under development and must be installed from source. A standalone installer and portable ZIP version will be provided for all releases.
+You can find an installer package for the latest version of PS2RPC in the project [Releases](https://github.com/leonhard-s/ps2-rich-presence/releases).
+
+### Building from Source
+
+The following is a non-exhaustive guide to building this project from source.
+
+1. This application is based on Qt and requires it to be built. You can download Qt from [qt.io](https://www.qt.io/download-open-source/), or via your operating system's package manager.
+
+    The Qt version required is v6.2.0 or later.
+    
+    Additionally, you will need the [Qt WebSockets](https://github.com/qt/qtwebsockets) extension. When using the online installer, you can select it from the "Additional Libraries" section. Refer to your local search engine for information when installing Qt another way.
+
+2.  The project is fully configured through CMake. Note that you may have to configure CMake itself to tell it where Qt has been installed to - adding the Qt installation to `CMAKE_PREFIX_PATH` is a painless way to do so.
+
+3. Clone this repository using Git:
+
+    ```bash
+    git clone https://github.com/leonhard-s/ps2-rich-presence
+    ```
+
+    Set your current working directory to the root of the cloned project:
+
+    ```bash
+    cd ps2-rich-presence
+    ```
+
+4. Run CMake to configure the project:
+
+    ```bash
+    cmake . -B build
+    ```
+
+5. Build the project:
+
+    ```bash
+    cmake --build build --target install
+    ```
+
+    The `--target install` suffix will automatically install the application into the `build/local_install` subdirectory, including any required dependencies.
 
 ## Contributing
 
 If you encounter any issues using PS2RPC or would like to suggest a new feature or change, feel free to get in touch via the repository [issues](https://github.com/leonhard-s/ps2-rich-presence/issues).
 
-Please also consider lack of clarity or undocumented features when creating issues. Using this application should be straightforward for anyone familiar with the game, and any improvement to make the app clearer and more intuitive to use is worth discussing.
+Please also consider lack of clarity or undocumented features when creating issues.  
+Using this application should be straightforward for anyone familiar with the game, and any improvement to make the app clearer and more intuitive to use is worth discussing.

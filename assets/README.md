@@ -40,3 +40,20 @@ Processing notes:
 | small_image/sunderer.png      |    77942 | [Link](https://census.daybreakgames.com/files/ps2/images/static/77942.png) |       1      |
 | small_image/valkyrie.png      |    79813 | [Link](https://census.daybreakgames.com/files/ps2/images/static/79813.png) |       1      |
 | small_image/vanguard.png      |    77943 | [Link](https://census.daybreakgames.com/files/ps2/images/static/77943.png) |       1      |
+
+## In-Game Screenshots
+
+The following assets were created from in-game screenshots taken by project contributors.
+
+Processing notes:
+
+**1:** Cropped and graded for easy distinction at small sizes.
+
+| Asset                     | Source Image              | Processing |
+|---------------------------|---------------------------|------------|
+| large_image/amerish.png   | screenshots/amerish.png   |      1     |
+| large_image/esamir.png    | screenshots/esamir.png    |      1     |
+| large_image/hossin.png    | screenshots/hossin.png    |      1     |
+| large_image/indar.png     | screenshots/indar.png     |      1     |
+| large_image/oshur.png     | screenshots/oshur.png     |      1     |
+| large_image/sanctuary.png | screenshots/sanctuary.png |      1     |

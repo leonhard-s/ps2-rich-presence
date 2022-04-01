@@ -30,7 +30,7 @@ namespace ps2rpc
     }
 
     GameStateFactory::GameStateFactory(arx::character_id_t character_id, ps2::Faction faction, ps2::Server server, ps2::Class class_)
-        : character_id_{character_id}, faction_{faction}, server_{server}, class_{class_}, vehicle_{ps2::Vehicle::None}, team_{ps2::Faction::NS}, zone_{ps2::Zone::Sanctuary} {}
+        : character_id_{character_id}, faction_{faction}, server_{server}, class_{class_}, vehicle_{ps2::Vehicle::None}, team_{faction}, zone_{ps2::Zone::Sanctuary} {}
 
     arx::character_id_t GameStateFactory::getCharacterId() const noexcept
     {
