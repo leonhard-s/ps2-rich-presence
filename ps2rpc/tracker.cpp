@@ -39,6 +39,8 @@ namespace ps2rpc
         : QObject(parent), character_{character}, state_factory_{character.id, character.faction, character.server, character.class_},
           current_state_{}, ess_client_{}
     {
+        // Set initial state via state factory
+        state_factory_.buildState(current_state_);
         // Create WebSocket client for event streaming endpoint
         ess_client_.reset(new EssClient(SERVICE_ID, this));
         auto subs = generateSubscriptions();
