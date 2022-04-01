@@ -40,6 +40,8 @@ namespace ps2rpc
 
     private:
         QList<arx::Subscription> generateSubscriptions() const;
+        void handleDeathPayload(const arx::json_t &payload);
+        void handleGainexperiencePayload(const arx::json_t &payload);
 
         CharacterData character_;
         GameStateFactory state_factory_;
