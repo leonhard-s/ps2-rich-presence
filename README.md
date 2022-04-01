@@ -6,7 +6,7 @@ An open source project providing [Rich Presence](https://discord.com/rich-presen
 <!-- ![Build Workflow Status](https://img.shields.io/github/workflow/status/leonhard-s/ps2-rich-presence/build) -->
 
 ![License](https://img.shields.io/github/license/leonhard-s/ps2-rich-presence)
-![Total Downloads](https://img.shields.io/github/downloads/leonhard-s/ps2-rich-presence/total)
+<!-- ![Total Downloads](https://img.shields.io/github/downloads/leonhard-s/ps2-rich-presence/total) -->
 ![GitHub Release Date](https://img.shields.io/github/release-date/leonhard-s/ps2-rich-presence?label=latest%20version)
 
 [Overview](#overview) • [Features](#features) • [Limitations](#limitations) • [License](#license) • [Installation](#installation) • [Contributing](#contributing)
