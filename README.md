@@ -15,7 +15,7 @@ An open source project providing [Rich Presence](https://discord.com/rich-presen
 
 The PlanetSide 2 Rich Presence Client (PS2RPC) is a project enabling you to display the current status of your PS2 character on [Discord](https://discord.com/).
 
-<!-- TODO: Add example presence screenshots -->
+![Rich Presence Comparison](https://user-images.githubusercontent.com/35902139/161334064-8f45dea9-60c4-489d-9b9f-c8963fea2b6c.png)
 
 This application runs independently of the main PlanetSide 2 executable and does not affect your in-game experience. Instead, it listens to the game's event stream and infers the current status of your character based on kills and experience gain.
 
