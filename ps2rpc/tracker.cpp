@@ -2,8 +2,7 @@
 
 #include "tracker.hpp"
 
-#include <QtCore/QJsonDocument>
-#include <QtCore/QJsonObject>
+#include <QtCore/QList>
 #include <QtCore/QObject>
 #include <QtCore/QScopedPointer>
 #include <QtCore/QString>
@@ -42,7 +41,11 @@ namespace ps2rpc
     {
         // Create WebSocket client for event streaming endpoint
         ess_client_.reset(new EssClient(SERVICE_ID, this));
-        ess_client_->subscribe(generateSubscription());
+        auto subs = generateSubscriptions();
+        for (auto subscription : subs)
+        {
+            ess_client_->subscribe(subscription);
+        }
         ess_client_->connect();
         QObject::connect(ess_client_.get(), &EssClient::payloadReceived,
                          this, &ActivityTracker::onPayloadReceived);
@@ -118,14 +121,14 @@ namespace ps2rpc
         }
     }
 
-    arx::Subscription ActivityTracker::generateSubscription() const
+    QList<arx::Subscription> ActivityTracker::generateSubscriptions() const
     {
-        auto sub = arx::Subscription(
+        auto deaths = arx::Subscription(
             // Event names
             {"Death"},
             // Characters
             {QString::number(character_.id).toStdString()});
-        return sub;
+        return QList{deaths};
     }
 
 } // namespace ps2rpc
