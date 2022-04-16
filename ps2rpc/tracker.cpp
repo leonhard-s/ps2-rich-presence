@@ -143,6 +143,14 @@ namespace ps2rpc
 
     void ActivityTracker::handleGainexperiencePayload(const arx::json_t &payload)
     {
+        bool wonders_of_modern_medicine = integerFromApiString<arx::character_id_t>(payload["character_id"]) == character_.id;
+        if (!wonders_of_modern_medicine)
+        {
+            // The character receiving experience is not the tracked character.
+            // Since we do not discriminate between experience types yet, we
+            // don't really learn anything from this payload.
+            return;
+        }
         // Class
         arx::loadout_id_t loadout_id = integerFromApiString<arx::loadout_id_t>(payload["loadout_id"]);
         ps2::Class class_ = state_factory_.getProfileAsClass();
