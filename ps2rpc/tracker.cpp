@@ -104,6 +104,7 @@ namespace ps2rpc
         if (ps2::class_from_loadout_id(loadout_id, class_))
         {
             qWarning() << "Unable to get class from loadout ID:" << loadout_id;
+            return; // Do not update state if we cannot tell what class we are
         }
         // Vehicle
 
@@ -148,6 +149,7 @@ namespace ps2rpc
         if (ps2::class_from_loadout_id(loadout_id, class_))
         {
             qWarning() << "Unable to get class from loadout ID:" << loadout_id;
+            return; // Do not update state if we cannot tell what class we are
         }
 
         // TODO: We could use the experience type itself to make further
