@@ -2,6 +2,7 @@
 
 #include "ess_client.hpp"
 
+#include <QtCore/QDebug>
 #include <QtCore/QList>
 #include <QtCore/QObject>
 #include <QtCore/QString>

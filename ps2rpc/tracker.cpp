@@ -2,6 +2,7 @@
 
 #include "tracker.hpp"
 
+#include <QtCore/QDebug>
 #include <QtCore/QList>
 #include <QtCore/QObject>
 #include <QtCore/QScopedPointer>
