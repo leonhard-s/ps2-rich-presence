@@ -2,6 +2,7 @@
 
 #include "tracker.hpp"
 
+#include <QtCore/QDebug>
 #include <QtCore/QList>
 #include <QtCore/QObject>
 #include <QtCore/QScopedPointer>
@@ -97,12 +98,13 @@ namespace ps2rpc
         // TODO: Implement team ID once it is implemented on the API side
         ps2::Faction team = state_factory_.getFaction();
         // Class
-        arx::loadout_id_t loadout_id = are_we_the_baddies ? integerFromApiString<arx::loadout_id_t>(payload["attacker_loadout_id"])
-                                                          : integerFromApiString<arx::loadout_id_t>(payload["character_loadout_id"]);
+        arx::loadout_id_t loadout_id = integerFromApiString<arx::loadout_id_t>(
+            payload[are_we_the_baddies ? "attacker_loadout_id" : "character_loadout_id"]);
         ps2::Class class_ = state_factory_.getProfileAsClass();
         if (ps2::class_from_loadout_id(loadout_id, class_))
         {
             qWarning() << "Unable to get class from loadout ID:" << loadout_id;
+            return; // Do not update state if we cannot tell what class we are
         }
         // Vehicle
 
@@ -141,12 +143,21 @@ namespace ps2rpc
 
     void ActivityTracker::handleGainexperiencePayload(const arx::json_t &payload)
     {
+        bool wonders_of_modern_medicine = integerFromApiString<arx::character_id_t>(payload["character_id"]) == character_.id;
+        if (!wonders_of_modern_medicine)
+        {
+            // The character receiving experience is not the tracked character.
+            // Since we do not discriminate between experience types yet, we
+            // don't really learn anything from this payload.
+            return;
+        }
         // Class
         arx::loadout_id_t loadout_id = integerFromApiString<arx::loadout_id_t>(payload["loadout_id"]);
-        ps2::Class class_;
+        ps2::Class class_ = state_factory_.getProfileAsClass();
         if (ps2::class_from_loadout_id(loadout_id, class_))
         {
             qWarning() << "Unable to get class from loadout ID:" << loadout_id;
+            return; // Do not update state if we cannot tell what class we are
         }
 
         // TODO: We could use the experience type itself to make further
