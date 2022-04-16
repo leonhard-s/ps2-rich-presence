@@ -3,7 +3,6 @@
 #ifndef PS2RPC_PERSISTENCE_HPP
 #define PS2RPC_PERSISTENCE_HPP
 
-#include <QtCore/QList>
 #include <QtCore/QVariantMap>
 
 #include "game/character-info.hpp"
