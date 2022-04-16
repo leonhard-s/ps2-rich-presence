@@ -98,8 +98,8 @@ namespace ps2rpc
         // TODO: Implement team ID once it is implemented on the API side
         ps2::Faction team = state_factory_.getFaction();
         // Class
-        arx::loadout_id_t loadout_id = are_we_the_baddies ? integerFromApiString<arx::loadout_id_t>(payload["attacker_loadout_id"])
-                                                          : integerFromApiString<arx::loadout_id_t>(payload["character_loadout_id"]);
+        arx::loadout_id_t loadout_id = integerFromApiString<arx::loadout_id_t>(
+            payload[are_we_the_baddies ? "attacker_loadout_id" : "character_loadout_id"]);
         ps2::Class class_ = state_factory_.getProfileAsClass();
         if (ps2::class_from_loadout_id(loadout_id, class_))
         {
@@ -145,7 +145,7 @@ namespace ps2rpc
     {
         // Class
         arx::loadout_id_t loadout_id = integerFromApiString<arx::loadout_id_t>(payload["loadout_id"]);
-        ps2::Class class_;
+        ps2::Class class_ = state_factory_.getProfileAsClass();
         if (ps2::class_from_loadout_id(loadout_id, class_))
         {
             qWarning() << "Unable to get class from loadout ID:" << loadout_id;
