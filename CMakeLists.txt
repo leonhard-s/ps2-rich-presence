@@ -8,13 +8,6 @@ set(SCRIPTS "${PROJECT_SOURCE_DIR}/cmake")
 
 set(CMAKE_AUTOMOC ON)
 
-# Set pedantic compiler flags
-if(MSVC)
-    add_compile_options(/W4 /WX)
-else()
-    add_compile_options(-Wall -Wextra -pedantic -Werror)
-endif()
-
 # Qt
 find_package(Qt6 6.2.0 CONFIG REQUIRED
   COMPONENTS
@@ -89,6 +82,23 @@ target_link_libraries(Ps2RichPresence
     discord_game_sdk
     Ps2Data
 )
+# Set pedantic compiler flags
+if(MSVC)
+  target_compile_definitions(Ps2RichPresence
+    PRIVATE
+      W4
+      WX
+  )
+else()
+  target_compile_definitions(Ps2RichPresence
+    PRIVATE
+      Wall
+      Wextra
+      pedantic
+      Werror
+  )
+endif()
+
 # Set executable name
 set_target_properties(Ps2RichPresence
   PROPERTIES
