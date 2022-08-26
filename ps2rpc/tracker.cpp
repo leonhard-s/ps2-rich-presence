@@ -95,8 +95,16 @@ namespace ps2rpc
     {
         bool are_we_the_baddies = integerFromApiString<arx::character_id_t>(payload["attacker_character_id"]) == character_.id;
         // Team
-        // TODO: Implement team ID once it is implemented on the API side
         ps2::Faction team = state_factory_.getFaction();
+        // As Team ID is a new addition, we'll check it still exists to be safe
+        if (payload.contains("team_id") && payload.contains("attacker_team_id"))
+        {
+            arx::faction_id_t team_id = integerFromApiString<arx::faction_id_t>(
+                payload[are_we_the_baddies ? "attacker_team_id" : "team_id"]);
+            // Return status not checked as it failing is safe as the "team"
+            // variable will not be updated
+            ps2::faction_from_faction_id(team_id, team);
+        }
         // Class
         arx::loadout_id_t loadout_id = integerFromApiString<arx::loadout_id_t>(
             payload[are_we_the_baddies ? "attacker_loadout_id" : "character_loadout_id"]);
