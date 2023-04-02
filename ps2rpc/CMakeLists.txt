@@ -15,7 +15,7 @@ configure_file(
 # -----------------------------------------------------------------------------
 
 # Discord Game SDK
-include(FetchDiscord)
+find_package(Discord REQUIRED)
 
 # Qt
 find_package(Qt6 6.4 CONFIG REQUIRED
@@ -67,7 +67,7 @@ target_link_libraries(Ps2RichPresence
     Qt::Network
     Qt::Widgets
     Qt::WebSockets
-    discord_game_sdk
+    Discord::GameSDK
     Ps2Data
     Arx
 )
