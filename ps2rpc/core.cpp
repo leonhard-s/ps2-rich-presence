@@ -161,18 +161,13 @@ void RichPresenceApp::onRateLimitTimerExpired()
 void RichPresenceApp::pruneRecentEvents()
 {
     // Remove events older than 30 seconds from the list
+    QList<QDateTime> still_fresh;
     auto now = QDateTime::currentDateTimeUtc();
-    for (auto it = recent_events_.begin(); it != recent_events_.end();)
-    {
-        if (it->msecsTo(now) > 30000)
-        {
-            it = recent_events_.erase(it);
-        }
-        else
-        {
-            ++it;
-        }
-    }
+    std::copy_if(recent_events_.begin(), recent_events_.end(),
+        std::back_inserter(still_fresh),
+        [now](const QDateTime& event_time) {
+            return event_time.msecsTo(now) <= 30000;
+        });
 }
 
 void RichPresenceApp::schedulePresenceUpdate()

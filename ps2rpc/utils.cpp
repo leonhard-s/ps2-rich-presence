@@ -50,10 +50,11 @@ QUrl qUrlFromArxQuery(const arx::Query& query) {
     url.setHost(QString::fromStdString(query.getHost()));
     url.setPath(QString::fromStdString(query.getPath()));
     QUrlQuery q;
-    for (const auto& item : query.getQuery()) {
-        q.addQueryItem(QString::fromStdString(item.first),
+    std::for_each(query.getQuery().begin(), query.getQuery().end(),
+        [&q](const std::pair<std::string, std::string>& item) {
+            q.addQueryItem(QString::fromStdString(item.first),
             QString::fromStdString(item.second));
-    }
+        });
     url.setQuery(q);
     return url;
 }

@@ -2,6 +2,9 @@
 
 #include "arx/support.hpp"
 
+#include <algorithm>
+#include <iterator>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -88,14 +91,16 @@ std::string join(
     const std::vector<std::string>& strings,
     const std::string& delimiter
 ) {
-    std::string result;
-    for (auto it = strings.cbegin(); it != strings.cend(); it++) {
-        if (it != strings.cbegin()) {
-            result += delimiter;
-        }
-        result += *it;
-    }
-    return result;
+    std::stringstream joined;
+    std::transform(strings.cbegin(), strings.cend(),
+        std::ostream_iterator<std::string>(joined),
+        [&strings, &delimiter](const std::string& str) {
+            if (str == strings.front()) {
+                return str;
+            }
+            return delimiter + str;
+        });
+    return joined.str();
 }
 
 } // namespace arx

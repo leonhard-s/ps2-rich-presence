@@ -84,7 +84,9 @@ void MainWindow::saveConfig() {
     // Save known characters
     QVariantList characters;
     for (int i = 0; i < characters_combo_box_->count() - 2; ++i) {
-        characters.append(characters_combo_box_->itemData(i));
+        // TODO: Is this offset correct? Shouldn't we have to start at 2? Or
+        // are all character entries shifted up by 2...?
+        characters.push_back(characters_combo_box_->itemData(i));
     }
     config["characters"] = characters;
     // Save GUI config
@@ -100,12 +102,13 @@ void MainWindow::loadConfig() {
     QVariantMap config = AppConfigManager::load();
     // Load known characters
     QVariantList characters = config["characters"].toList();
-    for (const auto& character : characters) {
-        auto info = character.value<CharacterData>();
-        characters_combo_box_->insertItem(
-            characters_combo_box_->count() - 2,
-            info.name, character);
-    }
+    std::for_each(characters.begin(), characters.end(),
+        [this](const QVariant& character) {
+            auto info = character.value<CharacterData>();
+            characters_combo_box_->insertItem(
+                characters_combo_box_->count() - 2,
+                info.name, character);
+        });
     // TODO: Load GUI config
 }
 
@@ -127,9 +130,9 @@ void MainWindow::onCharacterChanged(int index) {
     if (index == characters_combo_box_->count() - 1) {
         // Get existing characters
         QList<CharacterData> characters;
+        characters.reserve(characters_combo_box_->count() - 2);
         for (int i = 0; i < characters_combo_box_->count() - 2; ++i) {
-            characters.append(
-                characters_combo_box_->itemData(i).value<CharacterData>());
+            characters.push_back(characters_combo_box_->itemData(i).value<CharacterData>());
         }
         openCharacterManager(characters);
     }
@@ -167,9 +170,10 @@ void MainWindow::openCharacterManager(
     const QList<CharacterData>& characters) {
     auto dialog = new CharacterManager(this);
     // Add existing characters
-    for (const auto& character : characters) {
-        dialog->addCharacter(character);
-    }
+    std::for_each(characters.begin(), characters.end(),
+        [dialog](const CharacterData& character) {
+            dialog->addCharacter(character);
+        });
     // Show the dialog
     if (dialog->exec() == QDialog::DialogCode::Accepted) {
         // Update characters dropdown
@@ -185,9 +189,9 @@ void MainWindow::openCharacterManager(
             }
             auto info = item->data(Qt::UserRole).value<CharacterData>();
             // Offset of 2 because of the separator and "Manage" items
-            auto index = characters_combo_box_->count() - 2;
             characters_combo_box_->insertItem(
-                index, info.name, QVariant::fromValue(info));
+                characters_combo_box_->count() - 2,
+                info.name, QVariant::fromValue(info));
         }
         // Select the topmost character if any were added
         if (list->count() > 0) {

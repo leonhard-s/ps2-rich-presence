@@ -82,9 +82,11 @@ void EssClient::onConnected() {
     QObject::connect(timer, &QTimer::timeout, [timer, this]() {
         qDebug() << "Timer expired, subscribing";
         timer->deleteLater();
-        for (const auto& subscription : subscriptions_) {
-            subscribe(subscription);
-        } });
+        std::for_each(subscriptions_.begin(), subscriptions_.end(),
+            [this](const auto& subscription) {
+                subscribe(subscription);
+            });
+        });
     timer->start();
     emit connected();
 }

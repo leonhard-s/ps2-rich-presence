@@ -2,8 +2,11 @@
 
 #include "arx/query.hpp"
 
+#include <algorithm>
+#include <iterator>
 #include <initializer_list>
 #include <memory>
+#include <sstream>
 #include <string>
 #include <utility>
 #include <vector>
@@ -92,9 +95,10 @@ std::string JoinData::serialise() const {
     }
     if (!terms.empty()) {
         std::vector<std::string> terms_strings;
-        for (const auto& term : terms) {
-            terms_strings.push_back(term.serialise());
-        }
+        terms_strings.reserve(terms.size());
+        std::transform(terms.begin(), terms.end(),
+            std::back_inserter(terms_strings),
+            [](const auto& term) { return term.serialise(); });
         str += "^terms:" + arx::join(terms_strings, "'");
     }
     if (!outer) {
@@ -102,9 +106,10 @@ std::string JoinData::serialise() const {
     }
     if (!joins.empty()) {
         std::vector<std::string> joins_strings;
-        for (const auto& join : joins) {
-            joins_strings.push_back(join.serialise());
-        }
+        joins_strings.reserve(joins.size());
+        std::transform(joins.begin(), joins.end(),
+            std::back_inserter(joins_strings),
+            [](const auto& join) { return join.serialise(); });
         str += "(" + arx::join(joins_strings, ",") + ")";
     }
     return str;
@@ -353,18 +358,19 @@ void Query::setRetry(bool retry) {
 }
 
 std::string Query::getUrl() const {
-    std::string url = getScheme() + "://" + getHost() + getPath();
+    std::stringstream url;
+    url << getScheme() << "://" << getHost() << getPath();
     auto query_items = getQuery();
-    for (auto it = query_items.begin(); it != query_items.end(); it++) {
-        if (it == query_items.begin()) {
-            url += "?";
-        }
-        else {
-            url += "&";
-        }
-        url += it->first + "=" + it->second;
-    }
-    return url;
+    std::transform(query_items.begin(), query_items.end(),
+        std::ostream_iterator<std::string>(url),
+        [query_items](const std::pair<std::string, std::string>& item) {
+            char delim = '&';
+            if (item == query_items.front()) {
+                delim = '?';
+            }
+            return delim + item.first + "=" + item.second;
+        });
+    return url.str();
 }
 
 std::string Query::getScheme() const {

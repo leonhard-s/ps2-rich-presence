@@ -48,9 +48,8 @@ ActivityTracker::ActivityTracker(
     // Create WebSocket client for event streaming endpoint
     ess_client_.reset(new EssClient(SERVICE_ID, this));
     auto subs = generateSubscriptions();
-    for (auto subscription : subs) {
-        ess_client_->subscribe(subscription);
-    }
+    std::for_each(subs.begin(), subs.end(),
+        [this](const arx::Subscription& sub) { ess_client_->subscribe(sub); });
     ess_client_->connect();
     QObject::connect(ess_client_.get(), &EssClient::payloadReceived,
         this, &ActivityTracker::onPayloadReceived);
@@ -172,8 +171,7 @@ void ActivityTracker::handleGainexperiencePayload(const arx::json_t& payload) {
     state_factory_.setZone(zone);
 }
 
-QList<arx::Subscription> ActivityTracker::generateSubscriptions() const
-{
+QList<arx::Subscription> ActivityTracker::generateSubscriptions() const {
     auto deaths = arx::Subscription(
         // Event names
         { "Death" },

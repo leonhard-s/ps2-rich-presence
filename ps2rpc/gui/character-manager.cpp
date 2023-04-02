@@ -127,12 +127,13 @@ void CharacterManager::onCharacterSelected() {
 void CharacterManager::onCharacterInfoReceived() {
     // Get reply (cast to ScopedPointer to ensure it is deleted when this
     // function returns)
-    QScopedPointer<QNetworkReply> reply(
-        qobject_cast<QNetworkReply*>(sender()));
+    QScopedPointer<QNetworkReply> reply {
+        qobject_cast<QNetworkReply*>(QObject::sender())
+    };
     // Remove temporary list entry
-    for (int i = 0; i < list_->count(); i++) {
-        if (list_->item(i)->data(Qt::UserRole).value<QNetworkReply*>() ==
-            reply.data()) {
+    for (int i = 0; i < list_->count(); ++i) {
+        auto item_data = list_->item(i)->data(Qt::UserRole);
+        if (item_data.value<QNetworkReply*>() == reply.data()) {
             list_->takeItem(i);
             break;
         }

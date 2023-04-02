@@ -2,6 +2,8 @@
 
 #include "arx/urlgen.hpp"
 
+#include <algorithm>
+#include <iterator>
 #include <string>
 #include <utility>
 #include <vector>
@@ -42,9 +44,8 @@ std::vector<std::pair<std::string, std::string>> getQueryItems(
     std::vector<std::pair<std::string, std::string>> items;
     // Search terms
     auto terms = query->getTerms();
-    for (auto it = terms.begin(); it != terms.end(); it++) {
-        items.push_back(it->asQueryItem());
-    }
+    std::transform(terms.begin(), terms.end(), std::back_inserter(items),
+        [](const SearchTerm& term) { return term.asQueryItem(); });
     // Query commands
     auto show = query->getShow();
     if (!show.empty()) {
@@ -108,9 +109,10 @@ std::vector<std::pair<std::string, std::string>> getQueryItems(
     auto joins = query->getJoins();
     if (!joins.empty()) {
         std::vector<std::string> join_strings;
-        for (const auto& join : joins) {
-            join_strings.push_back(join.serialise());
-        }
+        join_strings.reserve(joins.size());
+        std::transform(joins.begin(), joins.end(),
+            std::back_inserter(join_strings),
+            [](const auto& join) { return join.serialise(); });
         items.emplace_back("c:join", arx::join(join_strings, ","));
     }
     return items;

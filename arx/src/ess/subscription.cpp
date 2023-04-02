@@ -91,25 +91,28 @@ bool Subscription::getLogicalAndFlag() const {
 
 json_array_t Subscription::buildCharacterList() const {
     json_array_t data;
-    for (const auto& character : characters_) {
-        data.push_back(character);
-    }
+    data.reserve(characters_.size());
+    std::transform(characters_.begin(), characters_.end(),
+        std::back_inserter(data),
+        [](const auto& character) { return character; });
     return data;
 }
 
 json_array_t Subscription::buildEventNameList() const {
     json_array_t data;
-    for (const auto& event : event_names_) {
-        data.push_back(event);
-    }
+    data.reserve(event_names_.size());
+    std::transform(event_names_.begin(), event_names_.end(),
+        std::back_inserter(data),
+        [](const auto& event) { return event; });
     return data;
 }
 
 json_array_t Subscription::buildWorldList() const {
     json_array_t data;
-    for (const auto& world : worlds_) {
-        data.push_back(world);
-    }
+    data.reserve(worlds_.size());
+    std::transform(worlds_.begin(), worlds_.end(),
+        std::back_inserter(data),
+        [](const auto& world) { return world; });
     return data;
 }
 

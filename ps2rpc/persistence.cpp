@@ -50,7 +50,7 @@ QVariantMap loadConfigVersion1_0(const QJsonObject& json) {
     QVariantMap config;
 
     // Iterate over json keys
-    for (auto it = json.begin(); it != json.end(); ++it) {
+    for (auto it = json.constBegin(); it != json.constEnd(); ++it) {
         // Ignore invalid keys
         if (!keyIsValid(it.key())) {
             continue;
