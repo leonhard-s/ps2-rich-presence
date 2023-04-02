@@ -2,6 +2,8 @@
 
 #include "game/character-info.hpp"
 
+#include <string>
+
 #include <QtCore/QDebug>
 #include <QtCore/QJsonObject>
 #include <QtCore/QObject>

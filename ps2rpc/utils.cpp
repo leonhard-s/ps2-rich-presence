@@ -3,6 +3,7 @@
 #include "utils.hpp"
 
 #include <string>
+#include <utility>
 
 #include <QtCore/QScopedPointer>
 #include <QtCore/QString>
