@@ -8,6 +8,7 @@
 #include <memory>
 #include <sstream>
 #include <string>
+#include <sstream>
 #include <utility>
 #include <vector>
 
@@ -23,9 +24,8 @@ void SupportsJoin::setJoins(std::initializer_list<JoinData> join_list) {
     this->joins = join_list;
 }
 
-JoinData& SupportsJoin::addJoin(JoinData& join) {
+void SupportsJoin::addJoin(const JoinData& join) {
     joins.push_back(join);
-    return join;
 }
 
 JoinData::JoinData()
@@ -321,7 +321,7 @@ void Query::setTree() {
     tree_.reset();
 }
 
-void Query::setTree(TreeData& tree) {
+void Query::setTree(const TreeData& tree) {
     *tree_ = tree;
 }
 

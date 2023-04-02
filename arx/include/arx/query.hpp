@@ -18,7 +18,7 @@ class SupportsJoin {
 public:
     std::vector<JoinData> getJoins() const;
     void setJoins(std::initializer_list<JoinData> joins);
-    JoinData& addJoin(JoinData& join);
+    void addJoin(const JoinData& join);
 
 protected:
     std::vector<JoinData> joins;
@@ -123,7 +123,7 @@ public:
     // c:join functionality inherited from SupportsJoin parent class
     const TreeData* getTree() const;
     void setTree();
-    void setTree(TreeData& tree);
+    void setTree(const TreeData& tree);
     void setTree(
         const std::string& field,
         bool list = false,
