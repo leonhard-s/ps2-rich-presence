@@ -1,7 +1,6 @@
 // Copyright 2022 Leonhard S.
 
-#ifndef PS2RPC_GAME_CHARACTER_INFO_HPP
-#define PS2RPC_GAME_CHARACTER_INFO_HPP
+#pragma once
 
 #include <QtCore/QDebug>
 #include <QtCore/QMetaType>
@@ -86,5 +85,3 @@ namespace ps2rpc
 } // namespace ps2rpc
 
 Q_DECLARE_METATYPE(ps2rpc::CharacterData)
-
-#endif // PS2RPC_GAME_CHARACTER_INFO_HPP

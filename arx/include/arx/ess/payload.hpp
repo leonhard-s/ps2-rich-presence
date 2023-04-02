@@ -1,7 +1,6 @@
 // Copyright 2022 Leonhard S.
 
-#ifndef ARX_ESS_PAYLOAD_HPP
-#define ARX_ESS_PAYLOAD_HPP
+#pragma once
 
 #include "arx/types.hpp"
 
@@ -52,5 +51,3 @@ namespace arx
     json_t getPayload(const json_t &message);
 
 } // namespace arx
-
-#endif // ARX_ESS_PAYLOAD_HPP

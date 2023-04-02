@@ -1,7 +1,6 @@
 // Copyright 2022 Leonhard S:
 
-#ifndef ARX_ESS_EVENTS_HPP
-#define ARX_ESS_EVENTS_HPP
+#pragma once
 
 #include "arx/types.hpp"
 
@@ -38,5 +37,3 @@ namespace arx
     bool isEventWorldCentric(const Event &event);
 
 } // namespace arx
-
-#endif // ARX_ESS_EVENTS_HPP

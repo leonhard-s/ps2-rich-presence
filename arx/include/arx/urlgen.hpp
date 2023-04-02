@@ -1,7 +1,6 @@
 // Copyright 2022 Leonhard S.
 
-#ifndef ARX_URLGEN_HPP
-#define ARX_URLGEN_HPP
+#pragma once
 
 #include <string>
 #include <utility>
@@ -26,5 +25,3 @@ namespace arx
         const Query *query);
 
 } // namespace arx
-
-#endif // ARX_URLGEN_HPP

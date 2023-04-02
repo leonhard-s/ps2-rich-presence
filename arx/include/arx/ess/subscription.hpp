@@ -1,7 +1,6 @@
 // Copyright 2022 Leonhard S.
 
-#ifndef ARX_SUBSCRIPTION_HPP
-#define ARX_SUBSCRIPTION_HPP
+#pragma once
 
 #include <vector>
 
@@ -41,5 +40,3 @@ namespace arx
     };
 
 } // namespace arx
-
-#endif // ARX_SUBSCRIPTION_HPP

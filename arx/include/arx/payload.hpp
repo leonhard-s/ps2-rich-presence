@@ -1,7 +1,6 @@
 // Copyright 2022 Leonhard S.
 
-#ifndef ARX_PAYLOAD_HPP
-#define ARX_PAYLOAD_HPP
+#pragma once
 
 #include "arx/types.hpp"
 
@@ -59,5 +58,3 @@ namespace arx
                                        const json_t &payload);
 
 } // namespace arx
-
-#endif // ARX_PAYLOAD_HPP

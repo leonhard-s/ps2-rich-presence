@@ -1,7 +1,6 @@
 // Copyright 2022 Leonhard S.
 
-#ifndef ARX_PS2_TYPES_HPP
-#define ARX_PS2_TYPES_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -69,5 +68,3 @@ namespace arx
     using world_id_t = uint_fast8_t;
 
 } // namespace arx
-
-#endif // ARX_PS2_TYPES_HPP

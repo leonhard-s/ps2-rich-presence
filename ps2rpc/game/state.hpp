@@ -1,7 +1,6 @@
 // Copyright 2022 Leonhard S.
 
-#ifndef PS2RPC_GAME_STATE_HPP
-#define PS2RPC_GAME_STATE_HPP
+#pragma once
 
 #include "ps2.hpp"
 
@@ -80,5 +79,3 @@ namespace ps2rpc
     };
 
 } // namespace ps2rpc
-
-#endif // PS2RPC_GAME_STATE_HPP

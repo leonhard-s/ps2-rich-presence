@@ -1,7 +1,6 @@
 // Copyright 2022 Leonhard S.
 
-#ifndef PS2DATA_FACTION_HPP
-#define PS2DATA_FACTION_HPP
+#pragma once
 
 #include <string>
 
@@ -56,5 +55,3 @@ namespace ps2
     arx::faction_id_t faction_to_faction_id(Faction faction);
 
 } // namespace ps2
-
-#endif // PS2DATA_FACTION_HPP

@@ -1,7 +1,6 @@
 // Copyright 2022 Leonhard S.
 
-#ifndef PS2RPC_CORE_HPP
-#define PS2RPC_CORE_HPP
+#pragma once
 
 #include <QtCore/QDateTime>
 #include <QtCore/QList>
@@ -71,5 +70,3 @@ namespace ps2rpc
     };
 
 } // namespace ps2rpc
-
-#endif // PS2RPC_CORE_HPP

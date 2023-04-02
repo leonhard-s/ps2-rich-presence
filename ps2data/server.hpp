@@ -1,7 +1,6 @@
 // Copyright 2022 Leonhard S.
 
-#ifndef PS2DATA_SERVER_HPP
-#define PS2DATA_SERVER_HPP
+#pragma once
 
 #include <string>
 
@@ -48,5 +47,3 @@ namespace ps2
     arx::world_id_t server_to_world_id(Server server);
 
 } // namespace ps2
-
-#endif // PS2DATA_SERVER_HPP

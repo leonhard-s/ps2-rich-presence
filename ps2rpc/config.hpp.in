@@ -1,8 +1,5 @@
 // Copyright 2022 Leonhard S.
 
-#ifndef PS2RPC_CONFIG_HPP
-#define PS2RPC_CONFIG_HPP
+#pragma once
 
 #define PS2RPC_VERSION "@PROJECT_VERSION@"
-
-#endif // PS2RPC_CONFIG_HPP

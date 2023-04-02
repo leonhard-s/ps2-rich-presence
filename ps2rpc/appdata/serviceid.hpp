@@ -1,7 +1,6 @@
 // Copyright 2022 Leonhard S.
 
-#ifndef PS2RPC_APPDATA_SERVICEID_HPP
-#define PS2RPC_APPDATA_SERVICEID_HPP
+#pragma once
 
 /**
  * Used to identify this application to the PlanetSide 2 API. It is tied to
@@ -12,5 +11,3 @@
 #ifndef SERVICE_ID
 #define SERVICE_ID "s:example"
 #endif // SERVICE_ID
-
-#endif // PS2RPC_APPDATA_SERVICEID_HPP

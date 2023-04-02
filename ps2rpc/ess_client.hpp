@@ -1,7 +1,6 @@
 // Copyright 2022 Leonhard S.
 
-#ifndef PS2RPC_ESS_CLIENT_HPP
-#define PS2RPC_ESS_CLIENT_HPP
+#pragma once
 
 #include <QtCore/QList>
 #include <QtCore/QObject>
@@ -56,5 +55,3 @@ namespace ps2rpc
     };
 
 } // namespace ps2rpc
-
-#endif // PS2RPC_ESS_CLIENT_HPP

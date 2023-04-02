@@ -1,7 +1,6 @@
 // Copyright 2022 Leonhard S.
 
-#ifndef PS2RPC_UTILS_HPP
-#define PS2RPC_UTILS_HPP
+#pragma once
 
 #include <string>
 
@@ -31,5 +30,3 @@ namespace ps2rpc
     ps2::Server serverFromJson(const arx::json_t &object);
 
 } // namespace ps2rpc
-
-#endif // PS2RPC_UTILS_HPP

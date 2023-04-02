@@ -1,7 +1,6 @@
 // Copyright 2022 Leonhard S.
 
-#ifndef PS2RPC_APPDATA_ASSETS_HPP
-#define PS2RPC_APPDATA_ASSETS_HPP
+#pragma once
 
 #include <string>
 
@@ -17,5 +16,3 @@ namespace assets
     int imageKeyFromZone(ps2::Zone zone, std::string &image_key);
 
 } // namespace assets
-
-#endif // PS2RPC_APPDATA_ASSETS_HPP

@@ -1,7 +1,6 @@
 // Copyright 2022 Leonhard S.
 
-#ifndef PS2RPC_GUI_MAINWINDOW_HPP
-#define PS2RPC_GUI_MAINWINDOW_HPP
+#pragma once
 
 #include <QtCore/QList>
 #include <QtCore/QObject>
@@ -78,5 +77,3 @@ namespace ps2rpc
     };
 
 } // namespace ps2rpc
-
-#endif // PS2RPC_GUI_MAINWINDOW_HPP

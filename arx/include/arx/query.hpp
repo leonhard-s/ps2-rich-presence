@@ -1,7 +1,6 @@
 // Copyright 2022 Leonhard S.
 
-#ifndef ARX_QUERY_HPP
-#define ARX_QUERY_HPP
+#pragma once
 
 #include <initializer_list>
 #include <memory>
@@ -179,5 +178,3 @@ namespace arx
     };
 
 } // namespace arx
-
-#endif // ARX_QUERY_HPP

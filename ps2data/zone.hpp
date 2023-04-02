@@ -1,7 +1,6 @@
 // Copyright 2022 Leonhard S.
 
-#ifndef PS2DATA_ZONE_HPP
-#define PS2DATA_ZONE_HPP
+#pragma once
 
 #include <string>
 
@@ -42,5 +41,3 @@ namespace ps2
     int zone_to_display_name(Zone zone, std::string &display_name);
 
 } // namespace ps2
-
-#endif // PS2DATA_ZONE_HPP

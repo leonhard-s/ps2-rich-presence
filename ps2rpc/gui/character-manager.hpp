@@ -1,7 +1,6 @@
 // Copyright 2022 Leonhard S.
 
-#ifndef PS2RPC_GUI_CHARACTER_MANAGER_HPP
-#define PS2RPC_GUI_CHARACTER_MANAGER_HPP
+#pragma once
 
 #include <QtCore/QJsonObject>
 #include <QtCore/QObject>
@@ -54,5 +53,3 @@ namespace ps2rpc
     };
 
 } // namespace ps2pc
-
-#endif // PS2RPC_GUI_CHARACTER_MANAGER_HPP

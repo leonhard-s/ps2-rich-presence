@@ -1,7 +1,6 @@
 // Copyright 2022 Leonhard S.
 
-#ifndef PS2DATA_CLASS_HPP
-#define PS2DATA_CLASS_HPP
+#pragma once
 
 #include <string>
 
@@ -60,5 +59,3 @@ namespace ps2
     arx::profile_id_t class_to_profile_id(Class class_, Faction faction);
 
 } // namespace ps2
-
-#endif // PS2DATA_CLASS_HPP

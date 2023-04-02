@@ -1,7 +1,6 @@
 // Copyright 2022 Leonhard S.
 
-#ifndef PS2DATA_VEHICLE_HPP
-#define PS2DATA_VEHICLE_HPP
+#pragma once
 
 #include <string>
 
@@ -62,5 +61,3 @@ namespace ps2
     int vehicle_to_display_name(Vehicle vehicle, std::string &display_name);
 
 } // namespace ps2
-
-#endif // PS2DATA_VEHICLE_HPP

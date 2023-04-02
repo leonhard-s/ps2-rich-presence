@@ -1,7 +1,6 @@
 // Copyright 2022 Leonhard S.
 
-#ifndef ARX_ESS_ENDPOINT_HPP
-#define ARX_ESS_ENDPOINT_HPP
+#pragma once
 
 #include "arx/types.hpp"
 
@@ -29,5 +28,3 @@ namespace arx
                             const Environment &environment = Environment::PS2);
 
 } // namespace arx
-
-#endif // ARX_ESS_ENDPOINT_HPP

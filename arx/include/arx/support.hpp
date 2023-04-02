@@ -1,7 +1,6 @@
 // Copyright 2022 Leonhard S.
 
-#ifndef ARX_SUPPORT_HPP
-#define ARX_SUPPORT_HPP
+#pragma once
 
 #include <string>
 #include <vector>
@@ -48,5 +47,3 @@ namespace arx
                      const std::string &delimiter);
 
 } // namespace arx
-
-#endif // ARX_SUPPORT_HPP

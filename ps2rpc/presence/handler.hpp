@@ -1,7 +1,6 @@
 // Copyright 2022 Leonhard S.
 
-#ifndef PS2RPC_PRESENCE_HANDLER_HPP
-#define PS2RPC_PRESENCE_HANDLER_HPP
+#pragma once
 
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
@@ -30,5 +29,3 @@ namespace ps2rpc
     };
 
 } // namespace ps2rpc
-
-#endif // PS2RPC_PRESENCE_HANDLER_HPP

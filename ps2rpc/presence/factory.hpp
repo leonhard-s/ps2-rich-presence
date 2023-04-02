@@ -1,7 +1,6 @@
 // Copyright 2022 Leonhard S.
 
-#ifndef PS2RPC_PRESENCE_FACTORY_HPP
-#define PS2RPC_PRESENCE_FACTORY_HPP
+#pragma once
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
@@ -38,5 +37,3 @@ namespace ps2rpc
     };
 
 } // namespace ps2rpc
-
-#endif // PS2RPC_PRESENCE_FACTORY_HPP
