@@ -1,9 +1,7 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.25 FATAL_ERROR)
+project(Auraxium VERSION 0.3 LANGUAGES CXX)
 
-project(Auraxium VERSION 0.3)
-
-# JSON
-include("${PROJECT_SOURCE_DIR}/../cmake/FetchJson.cmake")
+include(FetchJson)
 
 add_library(Arx STATIC
   "include/arx/ps2_types.hpp"

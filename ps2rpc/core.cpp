@@ -9,7 +9,7 @@
 #include <QtCore/QTimer>
 
 #include "arx.hpp"
-#include "discord.h"
+#include "discord-game-sdk/cpp/discord.h"
 
 #include "game/character-info.hpp"
 #include "game/state.hpp"

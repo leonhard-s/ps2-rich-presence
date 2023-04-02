@@ -5,7 +5,7 @@
 #include <QtCore/QObject>
 #include <string>
 
-#include "discord.h"
+#include "discord-game-sdk/cpp/discord.h"
 #include "ps2.hpp"
 
 #include "appdata/assets.hpp"

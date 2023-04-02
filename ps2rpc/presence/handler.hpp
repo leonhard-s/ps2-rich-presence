@@ -5,7 +5,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
 
-#include "discord.h"
+#include "discord-game-sdk/cpp/discord.h"
 
 namespace ps2rpc {
 

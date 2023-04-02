@@ -5,7 +5,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
-#include "discord.h"
+#include "discord-game-sdk/cpp/discord.h"
 
 #include "game/state.hpp"
 

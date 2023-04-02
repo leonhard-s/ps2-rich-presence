@@ -3,7 +3,7 @@
 
 # Script Configuration
 set(DISCORD_SDK_URL "https://dl-game-sdk.discordapp.net/2.5.6/discord_game_sdk.zip")
-set(DISCORD_SDK_DIR "${PROJECT_BINARY_DIR}/discord_game_sdk")
+set(DISCORD_SDK_DIR "${PROJECT_BINARY_DIR}/discord-game-sdk")
 set(DISCORD_SDK_ARCHIVE "${PROJECT_BINARY_DIR}/discord_game_sdk.zip")
 
 # Only download the SDK if it is missing
@@ -78,5 +78,5 @@ target_link_libraries(discord_game_sdk
     "${DISCORD_SDK_LIB_DIR}/discord_game_sdk.dll.lib"
 )
 install(FILES "${DISCORD_SDK_LIB_DIR}/discord_game_sdk.dll"
-  DESTINATION "."
+  DESTINATION "bin"
 )

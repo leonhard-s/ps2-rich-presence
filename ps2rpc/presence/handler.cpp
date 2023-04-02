@@ -7,7 +7,7 @@
 #include <QtCore/QString>
 #include <QtCore/QTimer>
 
-#include "discord.h"
+#include "discord-game-sdk/cpp/discord.h"
 
 #include "appdata/appid.hpp"
 

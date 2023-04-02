@@ -19,5 +19,5 @@ endif()
 add_library(nlohmann_json INTERFACE)
 target_include_directories(nlohmann_json
   INTERFACE
-    "${NLOHMANN_JSON_DIR}"
+    "${NLOHMANN_JSON_DIR}/.."
 )
