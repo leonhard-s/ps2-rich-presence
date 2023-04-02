@@ -50,4 +50,4 @@ private:
     QPushButton* button_close_;
 };
 
-} // namespace ps2pc
+} // namespace ps2rpc

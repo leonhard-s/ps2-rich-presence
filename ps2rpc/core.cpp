@@ -37,41 +37,33 @@ RichPresenceApp::RichPresenceApp(QObject* parent)
         this, &RichPresenceApp::onRateLimitTimerExpired);
 }
 
-bool RichPresenceApp::getRichPresenceEnabled() const
-{
+bool RichPresenceApp::getRichPresenceEnabled() const {
     return presence_enabled_;
 }
 
-void RichPresenceApp::setRichPresenceEnabled(bool enabled)
-{
+void RichPresenceApp::setRichPresenceEnabled(bool enabled) {
     // If presence was disabled, queue a presence update
-    if (!presence_enabled_)
-    {
+    if (!presence_enabled_) {
         schedulePresenceUpdate();
     }
     presence_enabled_ = enabled;
 }
 
-CharacterData RichPresenceApp::getCharacter() const
-{
+CharacterData RichPresenceApp::getCharacter() const {
     return character_;
 }
 
-void RichPresenceApp::setCharacter(const CharacterData& character)
-{
-    if (character_ != character)
-    {
+void RichPresenceApp::setCharacter(const CharacterData& character) {
+    if (character_ != character) {
         character_ = character;
-        if (character.id != 0)
-        {
+        if (character.id != 0) {
             tracker_.reset(new ActivityTracker(character, this));
             QObject::connect(tracker_.get(), &ActivityTracker::payloadReceived,
                 this, &RichPresenceApp::onEventPayloadReceived);
             QObject::connect(tracker_.get(), &ActivityTracker::stateChanged,
                 this, &RichPresenceApp::onGameStateChanged);
         }
-        else
-        {
+        else {
             tracker_.reset();
         }
         // Reset timestamps and payload cache
@@ -85,31 +77,25 @@ void RichPresenceApp::setCharacter(const CharacterData& character)
     }
 }
 
-QDateTime RichPresenceApp::getLastEventPayload() const
-{
+QDateTime RichPresenceApp::getLastEventPayload() const {
     return last_event_payload_;
 }
 
-QDateTime RichPresenceApp::getLastGameStateUpdate() const
-{
+QDateTime RichPresenceApp::getLastGameStateUpdate() const {
     return last_game_state_update_;
 }
 
-QDateTime RichPresenceApp::getLastPresenceUpdate() const
-{
+QDateTime RichPresenceApp::getLastPresenceUpdate() const {
     return last_presence_update_;
 }
 
-int RichPresenceApp::getEventLatency() const
-{
+int RichPresenceApp::getEventLatency() const {
     return event_latency_;
 }
 
-double RichPresenceApp::getEventFrequency()
-{
+double RichPresenceApp::getEventFrequency() {
     pruneRecentEvents();
-    if (recent_events_.empty())
-    {
+    if (recent_events_.empty()) {
         return 0.0;
     }
     auto oldest_event = recent_events_.front();
@@ -119,17 +105,17 @@ double RichPresenceApp::getEventFrequency()
     return freq;
 }
 
-void RichPresenceApp::onEventPayloadReceived(const QString& event_name,
-    const arx::json_t& payload)
-{
+void RichPresenceApp::onEventPayloadReceived(
+    const QString& event_name,
+    const arx::json_t& payload
+) {
     // The app only cares about if there are messages coming in. Handling
     // the payloads and dealing with error states is the tracker's problem.
     Q_UNUSED(event_name);
 
     // Get timestamp of the event
     auto it = payload.find("timestamp");
-    if (it == payload.end())
-    {
+    if (it == payload.end()) {
         qWarning() << "No timestamp found for" << event_name << "payload";
         return;
     }
@@ -145,21 +131,18 @@ void RichPresenceApp::onEventPayloadReceived(const QString& event_name,
     emit eventPayloadReceived();
 }
 
-void RichPresenceApp::onGameStateChanged(const GameState& state)
-{
+void RichPresenceApp::onGameStateChanged(const GameState& state) {
     // Update the presence factory with the new game state
     presence_->setActivityFromGameState(state);
     emit gameStateChanged();
     schedulePresenceUpdate();
 }
 
-void RichPresenceApp::onRateLimitTimerExpired()
-{
+void RichPresenceApp::onRateLimitTimerExpired() {
     updatePresence();
 }
 
-void RichPresenceApp::pruneRecentEvents()
-{
+void RichPresenceApp::pruneRecentEvents() {
     // Remove events older than 30 seconds from the list
     QList<QDateTime> still_fresh;
     auto now = QDateTime::currentDateTimeUtc();
@@ -170,14 +153,12 @@ void RichPresenceApp::pruneRecentEvents()
         });
 }
 
-void RichPresenceApp::schedulePresenceUpdate()
-{
+void RichPresenceApp::schedulePresenceUpdate() {
     auto rate_limit = PresenceHandler::PRESENCE_UPDATE_RATE_LIMIT;
     // If it has been longer than the rate limit since the last presence
     // update, update the presence immediately
     auto now = QDateTime::currentDateTimeUtc();
-    if (last_presence_update_.msecsTo(now) > rate_limit)
-    {
+    if (last_presence_update_.msecsTo(now) > rate_limit) {
         qDebug() << "Scheduling immediate presence update";
         updatePresence();
         return;
@@ -186,8 +167,7 @@ void RichPresenceApp::schedulePresenceUpdate()
     // timer running yet, start one counting down to the next update slot.
     // Any game state changes will still be passed on to the factory in the
     // meanwhile, so the next update will be the most up-to-date one.
-    if (rate_limit_timer_->isActive())
-    {
+    if (rate_limit_timer_->isActive()) {
         qDebug() << "Presence update timer is already running";
         return;
     }
@@ -200,27 +180,22 @@ void RichPresenceApp::schedulePresenceUpdate()
     rate_limit_timer_->start(ms_until_next_update);
 }
 
-void RichPresenceApp::updatePresence()
-{
+void RichPresenceApp::updatePresence() {
     last_presence_update_ = QDateTime::currentDateTimeUtc();
-    if (presence_enabled_)
-    {
+    if (presence_enabled_) {
         auto activity = presence_->getPresenceAsActivity();
         discord_->setActivity(activity);
     }
-    if (!presence_enabled_)
-    {
+    if (!presence_enabled_) {
         discord_->clearActivity();
     }
     emit presenceUpdated();
 }
 
-void RichPresenceApp::updateRecentEventsList()
-{
+void RichPresenceApp::updateRecentEventsList() {
     auto now = QDateTime::currentDateTimeUtc();
     // Only keep the 100 most recent events
-    while (recent_events_.size() > 100)
-    {
+    while (recent_events_.size() > 100) {
         recent_events_.pop_front();
     }
     // Add the new event to the list
