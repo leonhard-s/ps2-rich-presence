@@ -116,6 +116,9 @@ foreach(DEP ${DEPENDENCIES_RELEASE})
   install(FILES "${Qt6_DIR}/../../bin/${DEP}" DESTINATION "bin"
     CONFIGURATIONS "Release" "RelWithDebInfo" "MinSizeRel"
   )
+endforeach()
+
+foreach(DEP ${DEPENDENCIES_DEBUG})
   install(FILES "${Qt6_DIR}/../../debug/bin/${DEP}" DESTINATION "bin"
     CONFIGURATIONS "Debug"
   )
