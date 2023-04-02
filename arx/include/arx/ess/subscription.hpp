@@ -32,10 +32,10 @@ private:
     json_array_t buildEventNameList() const;
     json_array_t buildWorldList() const;
 
-    bool logical_and_;
-    std::vector<string_t> characters_;
     std::vector<string_t> event_names_;
+    std::vector<string_t> characters_;
     std::vector<string_t> worlds_;
+    bool logical_and_;
 };
 
 } // namespace arx
