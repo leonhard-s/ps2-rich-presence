@@ -43,9 +43,10 @@ class CharacterInfo: public QObject
     Q_OBJECT
 
 public:
-    CharacterInfo(QObject* parent = nullptr);
-    CharacterInfo(arx::character_id_t id, QObject* parent = nullptr);
-    CharacterInfo(arx::character_id_t id,
+    explicit CharacterInfo(QObject* parent = nullptr);
+    explicit CharacterInfo(arx::character_id_t id, QObject* parent = nullptr);
+    CharacterInfo(
+        arx::character_id_t id,
         const QString& name,
         ps2::Faction faction,
         ps2::Class class_,

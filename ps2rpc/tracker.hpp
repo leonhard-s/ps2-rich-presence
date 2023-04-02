@@ -21,7 +21,8 @@ class ActivityTracker: public QObject
     Q_OBJECT
 
 public:
-    ActivityTracker(const CharacterData& character,
+    explicit ActivityTracker(
+        const CharacterData& character,
         QObject* parent = nullptr);
 
     CharacterData getCharacter() const;

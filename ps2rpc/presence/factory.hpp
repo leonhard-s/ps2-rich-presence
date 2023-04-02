@@ -16,7 +16,7 @@ class PresenceFactory: public QObject
     Q_OBJECT
 
 public:
-    PresenceFactory(QObject* parent = nullptr);
+    explicit PresenceFactory(QObject* parent = nullptr);
 
     discord::Activity getPresenceAsActivity();
 
