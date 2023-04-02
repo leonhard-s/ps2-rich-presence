@@ -1,6 +1,5 @@
-cmake_minimum_required(VERSION 3.0)
-
-project(Ps2GameData VERSION 0.1)
+cmake_minimum_required(VERSION 3.25 FATAL_ERROR)
+project(Ps2GameData VERSION 0.2 LANGUAGES CXX)
 
 add_library(Ps2Data STATIC
   "class.hpp"

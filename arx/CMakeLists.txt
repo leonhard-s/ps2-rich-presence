@@ -1,9 +1,7 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.25 FATAL_ERROR)
+project(Auraxium VERSION 0.3 LANGUAGES CXX)
 
-project(Auraxium VERSION 0.2)
-
-# JSON
-include("${PROJECT_SOURCE_DIR}/../cmake/FetchJson.cmake")
+find_package(nlohmann_json 3.11.2 REQUIRED)
 
 add_library(Arx STATIC
   "include/arx/ps2_types.hpp"
@@ -36,5 +34,5 @@ target_include_directories(Arx
 )
 target_link_libraries(Arx
   PUBLIC
-    nlohmann_json
+    nlohmann_json::nlohmann_json
 )

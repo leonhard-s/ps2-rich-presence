@@ -1,0 +1,31 @@
+{
+    "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+    "name": "ps2-rich-presence",
+    "builtin-baseline": "b81bc3a83fdbdffe80325eeabb2ec735a1f3c29d",
+    "dependencies": [
+        {
+            "name": "nlohmann-json",
+            "version>=": "3.11.2"
+        },
+        {
+            "name": "discord-game-sdk",
+            "version>=": "2.5.6#4"
+        },
+        {
+            "name": "qtbase",
+            "version>=": "6.4.3",
+            "default-features": false,
+            "features": [
+                "brotli",
+                "gui",
+                "network",
+                "widgets"
+            ]
+        },
+        {
+            "name": "qtwebsockets",
+            "version>=": "6.4.3",
+            "default-features": false
+        }
+    ]
+}

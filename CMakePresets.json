@@ -1,0 +1,69 @@
+{
+    "version": 4,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 25,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "windows",
+            "hidden": true,
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        },
+        {
+            "name": "vcpkg",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": {
+                    "type": "PATH",
+                    "value": "${sourceDir}/dist/${presetName}"
+                },
+                "CMAKE_TOOLCHAIN_FILE": {
+                    "type": "PATH",
+                    "value": "$env{VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake"
+                },
+                "VCPKG_INSTALLED_DIR": {
+                    "type": "PATH",
+                    "value": "${sourceDir}/vcpkg_installed"
+                },
+                "VCPKG_INSTALL_OPTIONS": {
+                    "type": "string",
+                    "value": "--no-print-usage"
+                }
+            },
+            "hidden": true
+        },
+        {
+            "name": "vcpkg-x64-windows",
+            "displayName": "Win64 (vcpkg)",
+            "inherits": [
+                "windows",
+                "vcpkg"
+            ],
+            "cacheVariables": {
+                "CMAKE_GENERATOR": {
+                    "type": "string",
+                    "value": "Visual Studio 17 2022"
+                }
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "vcpkg-x64-windows-release",
+            "displayName": "Release",
+            "configuration": "Release",
+            "configurePreset": "vcpkg-x64-windows"
+        },
+        {
+            "name": "vcpkg-x64-windows-debug",
+            "displayName": "Debug",
+            "configuration": "Debug",
+            "configurePreset": "vcpkg-x64-windows"
+        }
+    ]
+}
