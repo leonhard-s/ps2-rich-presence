@@ -80,13 +80,9 @@ You can find an installer package for the latest version of PS2RPC in the projec
 
 The following is a non-exhaustive guide to building this project from source.
 
-1. This application is based on Qt and requires it to be built. You can download Qt from [qt.io](https://www.qt.io/download-open-source/), or via your operating system's package manager.
+1. This project uses [CMake](https://cmake.org/download/) to generate its build system. At least version 3.25 is required.
 
-    The Qt version required is v6.2.0 or later.
-    
-    Additionally, you will need the [Qt WebSockets](https://github.com/qt/qtwebsockets) extension. When using the online installer, you can select it from the "Additional Libraries" section. Refer to your local search engine for information when installing Qt another way.
-
-2.  The project is fully configured through CMake. Note that you may have to configure CMake itself to tell it where Qt has been installed to - adding the Qt installation to `CMAKE_PREFIX_PATH` is a painless way to do so.
+2. Dependencies are provided by [vcpkg](https://vcpkg.io/). See [the vcpkg docs](https://vcpkg.io/en/getting-started.html) for downloading and bootstrapping an installation.
 
 3. Clone this repository using Git:
 
@@ -100,19 +96,23 @@ The following is a non-exhaustive guide to building this project from source.
     cd ps2-rich-presence
     ```
 
+4. The CMake presets for this project expect the environment variable `VCPKG_INSTALLATION_ROOT` to be set to your vcpkg installation. Alternatively, you can create a custom preset inheriting from `vcpkg` and override the `CMAKE_TOOLCHAIN_FILE` cache variable to point to your installation's CMake toolchain script.
+
 4. Run CMake to configure the project:
 
-    ```bash
-    cmake . -B build
+    ```ps1
+    cmake -S . -B ./build/ --preset "vcpkg-x64-windows"
     ```
+
+    > **Note:** During initial configuration, the CMake toolchain will fetch and install the dependencies. Note that this includes building Qt, which may take some time on first configuration.
 
 5. Build the project:
 
-    ```bash
-    cmake --build build --target install
+    ```ps1
+    cmake --build ./build/ --target install
     ```
 
-    The `--target install` suffix will automatically install the application into the `build/local_install` subdirectory, including any required dependencies.
+    The `--target install` suffix will automatically install the application into the `dist/<preset>` subdirectory, including any required dependencies.
 
 ## Contributing
 
