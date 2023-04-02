@@ -26,7 +26,7 @@ protected:
 
 struct JoinData: public SupportsJoin {
     JoinData();
-    JoinData(
+    explicit JoinData(
         const std::string& collection,
         const std::string& on = "",
         const std::string& to = "",
@@ -57,7 +57,7 @@ struct JoinData: public SupportsJoin {
 
 struct TreeData {
     TreeData();
-    TreeData(
+    explicit TreeData(
         const std::string& field,
         bool list = false,
         const std::string& prefix = "",
