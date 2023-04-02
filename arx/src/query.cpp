@@ -8,7 +8,6 @@
 #include <memory>
 #include <sstream>
 #include <string>
-#include <sstream>
 #include <utility>
 #include <vector>
 
@@ -74,24 +73,25 @@ void JoinData::setFieldNames(
 }
 
 std::string JoinData::serialise() const {
-    std::string str = collection;
+    std::stringstream ss;
+    ss << collection;
     if (!on.empty()) {
-        str += "^on:" + on;
+        ss << "^on:" << on;
     }
     if (!to.empty()) {
-        str += "^to:" + to;
+        ss << "^to:" << to;
     }
     if (list) {
-        str += "^list:1";
+        ss << "^list:1";
     }
     if (!show.empty()) {
-        str += "^show:" + arx::join(show, "'");
+        ss << "^show:" << arx::join(show, "'");
     }
     if (!hide.empty()) {
-        str += "^hide:" + arx::join(hide, "'");
+        ss << "^hide:" << arx::join(hide, "'");
     }
     if (!inject_at.empty()) {
-        str += "^inject_at:" + inject_at;
+        ss << "^inject_at:" << inject_at;
     }
     if (!terms.empty()) {
         std::vector<std::string> terms_strings;
@@ -99,10 +99,10 @@ std::string JoinData::serialise() const {
         std::transform(terms.begin(), terms.end(),
             std::back_inserter(terms_strings),
             [](const auto& term) { return term.serialise(); });
-        str += "^terms:" + arx::join(terms_strings, "'");
+        ss << "^terms:" << arx::join(terms_strings, "'");
     }
     if (!outer) {
-        str += "^outer:0";
+        ss << "^outer:0";
     }
     if (!joins.empty()) {
         std::vector<std::string> joins_strings;
@@ -110,9 +110,9 @@ std::string JoinData::serialise() const {
         std::transform(joins.begin(), joins.end(),
             std::back_inserter(joins_strings),
             [](const auto& join) { return join.serialise(); });
-        str += "(" + arx::join(joins_strings, ",") + ")";
+        ss << "(" << arx::join(joins_strings, ",") << ")";
     }
-    return str;
+    return ss.str();
 }
 
 TreeData::TreeData()
@@ -133,17 +133,18 @@ TreeData::TreeData(
     , start{ start } {}
 
 std::string TreeData::serialise() const {
-    std::string str = field;
+    std::stringstream ss;
+    ss << field;
     if (!prefix.empty()) {
-        str += "^prefix:" + prefix;
+        ss << "^prefix:" << prefix;
     }
     if (list) {
-        str += "^list:1";
+        ss << "^list:1";
     }
     if (!start.empty()) {
-        str += "^start:" + start;
+        ss << "^start:" << start;
     }
-    return str;
+    return ss.str();
 }
 
 Query::Query(
@@ -368,7 +369,9 @@ std::string Query::getUrl() const {
             if (item == query_items.front()) {
                 delim = '?';
             }
-            return delim + item.first + "=" + item.second;
+            std::stringstream ss;
+            ss << delim << item.first << "=" << item.second;
+            return ss.str();
         });
     return url.str();
 }

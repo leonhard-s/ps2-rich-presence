@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <sstream>
 #include <string>
 #include <utility>
 #include <vector>
@@ -27,15 +28,16 @@ std::string generateCensusPath(
     const std::string& namespace_,
     const std::string& collection
 ) {
-    std::string path = "/" + service_id;
+    std::stringstream path;
+    path << "/" << service_id;
     if (format != "json") {
-        path += "/" + format;
+        path << "/" << format;
     }
-    path += "/" + verb + "/" + namespace_;
+    path << "/" << verb << "/" << namespace_;
     if (!collection.empty()) {
-        path += "/" + collection;
+        path << "/" << collection;
     }
-    return path;
+    return path.str();
 }
 
 std::vector<std::pair<std::string, std::string>> getQueryItems(

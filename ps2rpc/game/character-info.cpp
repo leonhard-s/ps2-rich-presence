@@ -54,7 +54,7 @@ bool CharacterData::operator!=(const CharacterData& other) const {
 QDebug operator<<(QDebug dbg, const CharacterData& info) {
     std::string tag;
     ps2::faction_to_tag(info.faction, &tag);
-    return dbg << (info.name + "[" + QString::fromStdString(tag) + "]");
+    return dbg << info.name << "[" << QString::fromStdString(tag) << "]";
 }
 
 CharacterInfo::CharacterInfo(QObject* parent)

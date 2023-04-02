@@ -57,10 +57,6 @@ QVariantMap loadConfigVersion1_0(const QJsonObject& json) {
         }
         // Handle the characters list separately
         if (it.key() == "characters") {
-            // Create "characters" key if it does not exist
-            if (!config.contains("characters")) {
-                config["characters"] = QVariantList();
-            }
             // Load all characters
             QVariantList characters_list;
             for (const auto& char_json : it.value().toArray()) {
@@ -99,8 +95,6 @@ void AppConfigManager::save(const QVariantMap& config) {
         }
         // Handle the characters list separately
         if (it.key() == "characters") {
-            // Reset characters list
-            json_object["characters"] = QJsonArray();
             // Load all characters into the JSON list
             QJsonArray characters;
             for (const auto& character : it.value().toList()) {

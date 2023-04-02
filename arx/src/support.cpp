@@ -84,7 +84,9 @@ std::pair<std::string, std::string> SearchTerm::asQueryItem() const {
 }
 
 std::string SearchTerm::serialise() const {
-    return field_ + "=" + serialiseModifier(modifier_) + value_;
+    std::stringstream ss;
+    ss << field_ << "=" << serialiseModifier(modifier_) << value_;
+    return ss.str();
 }
 
 std::string join(
