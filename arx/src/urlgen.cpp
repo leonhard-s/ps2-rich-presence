@@ -8,134 +8,133 @@
 
 #include "arx/query.hpp"
 
-namespace arx
+namespace arx {
+
+std::string getScheme()
 {
+    return "https";
+}
 
-    std::string getScheme()
-    {
-        return "https";
-    }
+std::string getHost()
+{
+    return "census.daybreakgames.com";
+}
 
-    std::string getHost()
+std::string generateCensusPath(const std::string& service_id,
+    const std::string& format,
+    const std::string& verb,
+    const std::string& namespace_,
+    const std::string& collection)
+{
+    std::string path = "/" + service_id;
+    if (format != "json")
     {
-        return "census.daybreakgames.com";
+        path += "/" + format;
     }
+    path += "/" + verb + "/" + namespace_;
+    if (!collection.empty())
+    {
+        path += "/" + collection;
+    }
+    return path;
+}
 
-    std::string generateCensusPath(const std::string &service_id,
-                                   const std::string &format,
-                                   const std::string &verb,
-                                   const std::string &namespace_,
-                                   const std::string &collection)
+std::vector<std::pair<std::string, std::string>> getQueryItems(const Query* query)
+{
+    std::vector<std::pair<std::string, std::string>> items;
+    // Search terms
+    auto terms = query->getTerms();
+    for (auto it = terms.begin(); it != terms.end(); it++)
     {
-        std::string path = "/" + service_id;
-        if (format != "json")
-        {
-            path += "/" + format;
-        }
-        path += "/" + verb + "/" + namespace_;
-        if (!collection.empty())
-        {
-            path += "/" + collection;
-        }
-        return path;
+        items.push_back(it->asQueryItem());
     }
-
-    std::vector<std::pair<std::string, std::string>> getQueryItems(const Query *query)
+    // Query commands
+    auto show = query->getShow();
+    if (!show.empty())
     {
-        std::vector<std::pair<std::string, std::string>> items;
-        // Search terms
-        auto terms = query->getTerms();
-        for (auto it = terms.begin(); it != terms.end(); it++)
-        {
-            items.push_back(it->asQueryItem());
-        }
-        // Query commands
-        auto show = query->getShow();
-        if (!show.empty())
-        {
-            items.emplace_back("c:show", arx::join(show, ","));
-        }
-        auto hide = query->getHide();
-        if (!hide.empty())
-        {
-            items.emplace_back("c:hide", arx::join(hide, ","));
-        }
-        auto sort = query->getSort();
-        if (!sort.empty())
-        {
-            items.emplace_back("c:sort", arx::join(sort, ","));
-        }
-        auto has = query->getHas();
-        if (!has.empty())
-        {
-            items.emplace_back("c:has", arx::join(has, ","));
-        }
-        auto resolve = query->getResolve();
-        if (!resolve.empty())
-        {
-            items.emplace_back("c:resolve", arx::join(resolve, ","));
-        }
-        if (!query->getCase())
-        {
-            items.emplace_back("c:case", "0");
-        }
-        auto limit = query->getLimit();
-        if (limit > 1)
-        {
-            items.emplace_back("c:limit", std::to_string(limit));
-        }
-        auto limit_per_db = query->getLimitPerDb();
-        if (limit_per_db > 1)
-        {
-            items.emplace_back("c:limit_per_db", std::to_string(limit_per_db));
-        }
-        auto start = query->getStart();
-        if (start > 0)
-        {
-            items.emplace_back("c:start", std::to_string(start));
-        }
-        if (query->getIncludeNull())
-        {
-            items.emplace_back("c:include_null", "1");
-        }
-        auto lang = query->getLang();
-        if (!lang.empty())
-        {
-            items.emplace_back("c:lang", lang);
-        }
-        if (query->getTiming())
-        {
-            items.emplace_back("c:timing", "1");
-        }
-        if (query->getExactMatchFirst())
-        {
-            items.emplace_back("c:exact_match_first", "1");
-        }
-        auto distinct = query->getDistinct();
-        if (!distinct.empty())
-        {
-            items.emplace_back("c:distinct", distinct);
-        }
-        if (!query->getRetry())
-        {
-            items.emplace_back("c:retry", "0");
-        }
-        auto tree = query->getTree();
-        if (tree)
-        {
-            items.emplace_back("c:tree", tree->serialise());
-        }
-        auto joins = query->getJoins();
-        if (!joins.empty())
-        {
-            std::vector<std::string> join_strings;
-            for (const auto &join : joins)
-            {
-                join_strings.push_back(join.serialise());
-            }
-            items.emplace_back("c:join", arx::join(join_strings, ","));
-        }
-        return items;
+        items.emplace_back("c:show", arx::join(show, ","));
     }
+    auto hide = query->getHide();
+    if (!hide.empty())
+    {
+        items.emplace_back("c:hide", arx::join(hide, ","));
+    }
+    auto sort = query->getSort();
+    if (!sort.empty())
+    {
+        items.emplace_back("c:sort", arx::join(sort, ","));
+    }
+    auto has = query->getHas();
+    if (!has.empty())
+    {
+        items.emplace_back("c:has", arx::join(has, ","));
+    }
+    auto resolve = query->getResolve();
+    if (!resolve.empty())
+    {
+        items.emplace_back("c:resolve", arx::join(resolve, ","));
+    }
+    if (!query->getCase())
+    {
+        items.emplace_back("c:case", "0");
+    }
+    auto limit = query->getLimit();
+    if (limit > 1)
+    {
+        items.emplace_back("c:limit", std::to_string(limit));
+    }
+    auto limit_per_db = query->getLimitPerDb();
+    if (limit_per_db > 1)
+    {
+        items.emplace_back("c:limit_per_db", std::to_string(limit_per_db));
+    }
+    auto start = query->getStart();
+    if (start > 0)
+    {
+        items.emplace_back("c:start", std::to_string(start));
+    }
+    if (query->getIncludeNull())
+    {
+        items.emplace_back("c:include_null", "1");
+    }
+    auto lang = query->getLang();
+    if (!lang.empty())
+    {
+        items.emplace_back("c:lang", lang);
+    }
+    if (query->getTiming())
+    {
+        items.emplace_back("c:timing", "1");
+    }
+    if (query->getExactMatchFirst())
+    {
+        items.emplace_back("c:exact_match_first", "1");
+    }
+    auto distinct = query->getDistinct();
+    if (!distinct.empty())
+    {
+        items.emplace_back("c:distinct", distinct);
+    }
+    if (!query->getRetry())
+    {
+        items.emplace_back("c:retry", "0");
+    }
+    auto tree = query->getTree();
+    if (tree)
+    {
+        items.emplace_back("c:tree", tree->serialise());
+    }
+    auto joins = query->getJoins();
+    if (!joins.empty())
+    {
+        std::vector<std::string> join_strings;
+        for (const auto& join : joins)
+        {
+            join_strings.push_back(join.serialise());
+        }
+        items.emplace_back("c:join", arx::join(join_strings, ","));
+    }
+    return items;
+}
 
 } // namespace arx

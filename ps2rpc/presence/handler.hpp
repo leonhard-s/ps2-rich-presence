@@ -7,25 +7,24 @@
 
 #include "discord.h"
 
-namespace ps2rpc
+namespace ps2rpc {
+
+class PresenceHandler: public QObject
 {
+    Q_OBJECT
 
-    class PresenceHandler : public QObject
-    {
-        Q_OBJECT
+public:
+    static constexpr qint16 PRESENCE_UPDATE_RATE_LIMIT = 15000;
 
-    public:
-        static constexpr qint16 PRESENCE_UPDATE_RATE_LIMIT = 15000;
+    explicit PresenceHandler(QObject* parent = nullptr);
 
-        explicit PresenceHandler(QObject *parent = nullptr);
+public Q_SLOTS:
+    void clearActivity();
+    void setActivity(discord::Activity activity);
 
-    public Q_SLOTS:
-        void clearActivity();
-        void setActivity(discord::Activity activity);
-
-    private:
-        discord::Core *discord_core_;
-        QTimer *timer_;
-    };
+private:
+    discord::Core* discord_core_;
+    QTimer* timer_;
+};
 
 } // namespace ps2rpc

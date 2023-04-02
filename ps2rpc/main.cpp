@@ -8,7 +8,7 @@
 
 using namespace ps2rpc;
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     QApplication app(argc, argv);
     QCoreApplication::setOrganizationName("Leonhard S.");
