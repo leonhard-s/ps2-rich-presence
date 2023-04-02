@@ -84,30 +84,47 @@ install(TARGETS Ps2RichPresence
 # Install
 # -----------------------------------------------------------------------------
 
-# TODO: Deployment for non-Windows platforms
-if(WIN32)
-  # Store location of windeployqt for use in dependent scripts
-  set(windeployqt_path_file "${CMAKE_BINARY_DIR}/windeployqt_path.txt")
-  get_target_property(qt_directory Qt6::Core IMPORTED_LOCATION)
-  cmake_path(GET qt_directory PARENT_PATH windeployqt_dir)
-  set(windeployqt_path "${windeployqt_dir}/windeployqt.exe")
-  file(WRITE "${windeployqt_path_file}" "${windeployqt_path}")
+# Install Qt
+qt6_generate_deploy_app_script(
+  TARGET Ps2RichPresence
+  FILENAME_VARIABLE QT_DEPLOY_SCRIPT
+  NO_UNSUPPORTED_PLATFORM_ERROR
+)
+install(SCRIPT ${QT_DEPLOY_SCRIPT})
+set(DEPENDENCIES_RELEASE
+  libpng16.dll
+  zlib1.dll
+  freetype.dll
+  double-conversion.dll
+  pcre2-16.dll
+  brotlidec.dll
+  bz2.dll
+  brotlicommon.dll
+)
+set(DEPENDENCIES_DEBUG
+  libpng16d.dll
+  zlibd1.dll
+  freetyped.dll
+  double-conversion.dll
+  pcre2-16d.dll
+  brotlidec.dll
+  bz2d.dll
+  brotlicommon.dll
+)
 
-  # Debug
-  install(SCRIPT
-    "${CMAKE_SOURCE_DIR}/cmake/QtInstallDebug.cmake"
-    CONFIGURATIONS Debug
+foreach(DEP ${DEPENDENCIES_RELEASE})
+  install(FILES "${Qt6_DIR}/../../bin/${DEP}" DESTINATION "bin"
+    CONFIGURATIONS "Release" "RelWithDebInfo" "MinSizeRel"
   )
+  install(FILES "${Qt6_DIR}/../../debug/bin/${DEP}" DESTINATION "bin"
+    CONFIGURATIONS "Debug"
+  )
+endforeach()
 
-  # Release
-  install(SCRIPT
-    "${CMAKE_SOURCE_DIR}/cmake/QtInstallRelease.cmake"
-    CONFIGURATIONS Release
-  )
-  install(DIRECTORY
-    "${CMAKE_BINARY_DIR}/windeployqt_temp/"
-    DESTINATION "bin"
-  )
-else()
-  message(STATUS "Qt installation is not yet supported on this platform")
-endif()
+# Discord SDK
+install(FILES "${Discord_DLL_RELEASE}" DESTINATION "bin"
+  CONFIGURATIONS "Release" "RelWithDebInfo" "MinSizeRel"
+)
+install(FILES "${Discord_DLL_DEBUG}" DESTINATION "bin"
+  CONFIGURATIONS "Debug"
+)
