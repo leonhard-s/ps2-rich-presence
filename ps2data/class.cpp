@@ -10,10 +10,8 @@
 
 namespace ps2 {
 
-int class_from_loadout_id(arx::loadout_id_t loadout_id, Class& class_)
-{
-    switch (loadout_id)
-    {
+int class_from_loadout_id(arx::loadout_id_t loadout_id, Class& class_) {
+    switch (loadout_id) {
         // Infiltrator
     case 1:  // NC
     case 8:  // TR
@@ -62,10 +60,8 @@ int class_from_loadout_id(arx::loadout_id_t loadout_id, Class& class_)
     return 0;
 }
 
-int class_from_profile_id(arx::profile_id_t profile_id, Class& class_)
-{
-    switch (profile_id)
-    {
+int class_from_profile_id(arx::profile_id_t profile_id, Class& class_) {
+    switch (profile_id) {
         // Infiltrator
     case 2:   // NC
     case 10:  // TR
@@ -114,10 +110,8 @@ int class_from_profile_id(arx::profile_id_t profile_id, Class& class_)
     return 0;
 }
 
-int class_to_display_name(Class class_, std::string& display_name)
-{
-    switch (class_)
-    {
+int class_to_display_name(Class class_, std::string& display_name) {
+    switch (class_) {
     case Class::Infiltrator:
         display_name = "Infiltrator";
         break;
@@ -142,13 +136,10 @@ int class_to_display_name(Class class_, std::string& display_name)
     return 0;
 }
 
-arx::profile_id_t class_to_profile_id(Class class_, Faction faction)
-{
-    switch (class_)
-    {
+arx::profile_id_t class_to_profile_id(Class class_, Faction faction) {
+    switch (class_) {
     case Class::Infiltrator:
-        switch (faction)
-        {
+        switch (faction) {
         case Faction::NC:
             return 2;
         case Faction::TR:
@@ -161,8 +152,7 @@ arx::profile_id_t class_to_profile_id(Class class_, Faction faction)
             return 0;
         }
     case Class::LightAssault:
-        switch (faction)
-        {
+        switch (faction) {
         case Faction::NC:
             return 4;
         case Faction::TR:
@@ -175,8 +165,7 @@ arx::profile_id_t class_to_profile_id(Class class_, Faction faction)
             return 0;
         }
     case Class::CombatMedic:
-        switch (faction)
-        {
+        switch (faction) {
         case Faction::NC:
             return 5;
         case Faction::TR:
@@ -189,8 +178,7 @@ arx::profile_id_t class_to_profile_id(Class class_, Faction faction)
             return 0;
         }
     case Class::Engineer:
-        switch (faction)
-        {
+        switch (faction) {
         case Faction::NC:
             return 6;
         case Faction::TR:
@@ -203,8 +191,7 @@ arx::profile_id_t class_to_profile_id(Class class_, Faction faction)
             return 0;
         }
     case Class::HeavyAssault:
-        switch (faction)
-        {
+        switch (faction) {
         case Faction::NC:
             return 7;
         case Faction::TR:
@@ -217,8 +204,7 @@ arx::profile_id_t class_to_profile_id(Class class_, Faction faction)
             return 0;
         }
     case Class::MAX:
-        switch (faction)
-        {
+        switch (faction) {
         case Faction::NC:
             return 8;
         case Faction::TR:

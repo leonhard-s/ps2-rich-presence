@@ -16,8 +16,7 @@
 
 namespace ps2rpc {
 
-class ActivityTracker: public QObject
-{
+class ActivityTracker: public QObject {
     Q_OBJECT
 
 public:

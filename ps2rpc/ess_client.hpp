@@ -15,8 +15,7 @@ namespace ps2rpc {
 /**
  * WebSocket client for the PS2 event streaming service.
  */
-class EssClient: public QObject
-{
+class EssClient: public QObject {
     Q_OBJECT
 
 public:

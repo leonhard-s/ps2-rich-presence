@@ -8,10 +8,8 @@
 
 namespace ps2 {
 
-int zone_from_zone_id(arx::zone_id_t zone_id, Zone& zone)
-{
-    switch (zone_id)
-    {
+int zone_from_zone_id(arx::zone_id_t zone_id, Zone& zone) {
+    switch (zone_id) {
     case 2:
         zone = Zone::Indar;
         break;
@@ -50,10 +48,8 @@ int zone_from_zone_id(arx::zone_id_t zone_id, Zone& zone)
     return 0;
 }
 
-int zone_to_display_name(Zone zone, std::string& display_name)
-{
-    switch (zone)
-    {
+int zone_to_display_name(Zone zone, std::string& display_name) {
+    switch (zone) {
     case Zone::Indar:
         display_name = "Indar";
         break;

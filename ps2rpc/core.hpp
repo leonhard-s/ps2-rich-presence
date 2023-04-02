@@ -18,8 +18,7 @@
 
 namespace ps2rpc {
 
-class RichPresenceApp: public QObject
-{
+class RichPresenceApp: public QObject {
     Q_OBJECT
 
 public:

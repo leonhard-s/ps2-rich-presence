@@ -19,7 +19,9 @@
 namespace ps2rpc {
 
 RichPresenceApp::RichPresenceApp(QObject* parent)
-    : QObject(parent), presence_enabled_{ true }, event_latency_{ -1.0 }
+    : QObject(parent)
+    , presence_enabled_{ true }
+    , event_latency_{ -1.0 }
 {
     presence_.reset(new PresenceFactory(this));
     discord_.reset(new PresenceHandler(this));

@@ -7,8 +7,7 @@
 
 namespace arx {
 
-enum class SearchModifier
-{
+enum class SearchModifier {
     EQUAL_TO,
     NOT_EQUAL_TO,
     GREATER_THAN,
@@ -23,14 +22,16 @@ SearchModifier modifierFromData(const std::string& data);
 
 std::string serialiseModifier(SearchModifier modifier);
 
-class SearchTerm
-{
+class SearchTerm {
 public:
     SearchTerm();
-    SearchTerm(const std::string& field, const std::string& value,
+    SearchTerm(
+        const std::string& field,
+        const std::string& value,
         SearchModifier modifier = SearchModifier::EQUAL_TO);
 
-    SearchTerm static createFromValue(const std::string& field,
+    SearchTerm static createFromValue(
+        const std::string& field,
         const std::string& value);
 
     std::pair<std::string, std::string> asQueryItem() const;
@@ -42,7 +43,8 @@ private:
     SearchModifier modifier_;
 };
 
-std::string join(const std::vector<std::string>& strings,
+std::string join(
+    const std::vector<std::string>& strings,
     const std::string& delimiter);
 
 } // namespace arx

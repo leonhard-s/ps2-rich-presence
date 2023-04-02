@@ -8,10 +8,8 @@
 
 namespace ps2 {
 
-int vehicle_from_vehicle_id(arx::vehicle_id_t vehicle_id, Vehicle& vehicle)
-{
-    switch (vehicle_id)
-    {
+int vehicle_from_vehicle_id(arx::vehicle_id_t vehicle_id, Vehicle& vehicle) {
+    switch (vehicle_id) {
     case 0:
         vehicle = Vehicle::None;
         break;
@@ -91,10 +89,8 @@ int vehicle_from_vehicle_id(arx::vehicle_id_t vehicle_id, Vehicle& vehicle)
     return 0;
 }
 
-int vehicle_to_display_name(Vehicle vehicle, std::string& display_name)
-{
-    switch (vehicle)
-    {
+int vehicle_to_display_name(Vehicle vehicle, std::string& display_name) {
+    switch (vehicle) {
     case Vehicle::Flash:
         display_name = "Flash";
         break;

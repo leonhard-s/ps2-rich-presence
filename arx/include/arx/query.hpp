@@ -14,8 +14,7 @@ namespace arx {
 
 struct JoinData;
 
-class SupportsJoin
-{
+class SupportsJoin {
 public:
     std::vector<JoinData> getJoins() const;
     void setJoins(std::initializer_list<JoinData> joins);
@@ -25,10 +24,10 @@ protected:
     std::vector<JoinData> joins;
 };
 
-struct JoinData: public SupportsJoin
-{
+struct JoinData: public SupportsJoin {
     JoinData();
-    JoinData(const std::string& collection,
+    JoinData(
+        const std::string& collection,
         const std::string& on = "",
         const std::string& to = "",
         bool list = false,
@@ -39,7 +38,8 @@ struct JoinData: public SupportsJoin
         bool outer = true);
 
     void setFieldNames(const std::string& field);
-    void setFieldNames(const std::string& parent_field,
+    void setFieldNames(
+        const std::string& parent_field,
         const std::string& child_field);
 
     std::string serialise() const;
@@ -55,10 +55,10 @@ struct JoinData: public SupportsJoin
     bool outer;
 };
 
-struct TreeData
-{
+struct TreeData {
     TreeData();
-    TreeData(const std::string& field,
+    TreeData(
+        const std::string& field,
         bool list = false,
         const std::string& prefix = "",
         const std::string& start = "");
@@ -71,10 +71,10 @@ struct TreeData
     std::string start;
 };
 
-class Query: public SupportsJoin
-{
+class Query: public SupportsJoin {
 public:
-    explicit Query(const std::string& collection = "",
+    explicit Query(
+        const std::string& collection = "",
         const std::string& service_id = "s:example");
 
     // Request format / path configuration
@@ -124,7 +124,8 @@ public:
     const TreeData* getTree() const;
     void setTree();
     void setTree(TreeData& tree);
-    void setTree(const std::string& field,
+    void setTree(
+        const std::string& field,
         bool list = false,
         const std::string& prefix = "",
         const std::string& start = "");

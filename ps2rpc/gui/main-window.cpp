@@ -70,24 +70,20 @@ MainWindow::MainWindow()
     last_seen_timer_->start();
 }
 
-bool MainWindow::isPresenceEnabled() const
-{
+bool MainWindow::isPresenceEnabled() const {
     // TODO: Hook up enable/disable switch
     return true;
 }
 
-bool MainWindow::isTrackerRunning() const
-{
+bool MainWindow::isTrackerRunning() const {
     return app_->getCharacter().id != 0;
 }
 
-void MainWindow::saveConfig()
-{
+void MainWindow::saveConfig() {
     QVariantMap config;
     // Save known characters
     QVariantList characters;
-    for (int i = 0; i < characters_combo_box_->count() - 2; ++i)
-    {
+    for (int i = 0; i < characters_combo_box_->count() - 2; ++i) {
         characters.append(characters_combo_box_->itemData(i));
     }
     config["characters"] = characters;
@@ -100,13 +96,11 @@ void MainWindow::saveConfig()
     AppConfigManager::save(config);
 }
 
-void MainWindow::loadConfig()
-{
+void MainWindow::loadConfig() {
     QVariantMap config = AppConfigManager::load();
     // Load known characters
     QVariantList characters = config["characters"].toList();
-    for (const auto& character : characters)
-    {
+    for (const auto& character : characters) {
         auto info = character.value<CharacterData>();
         characters_combo_box_->insertItem(
             characters_combo_box_->count() - 2,
@@ -115,31 +109,25 @@ void MainWindow::loadConfig()
     // TODO: Load GUI config
 }
 
-void MainWindow::startTracking(const CharacterData& character)
-{
+void MainWindow::startTracking(const CharacterData& character) {
     app_->setCharacter(character);
     status_->setText(tr("Tracking active for %1").arg(character.name));
 }
 
-void MainWindow::stopTracking()
-{
+void MainWindow::stopTracking() {
     app_->setCharacter(CharacterData());
     status_->setText(tr("Tracking stopped"));
 }
 
-void MainWindow::onCharacterChanged(int index)
-{
-    if (index < 0)
-    {
+void MainWindow::onCharacterChanged(int index) {
+    if (index < 0) {
         return;
     }
     // Is last item (manage button)
-    if (index == characters_combo_box_->count() - 1)
-    {
+    if (index == characters_combo_box_->count() - 1) {
         // Get existing characters
         QList<CharacterData> characters;
-        for (int i = 0; i < characters_combo_box_->count() - 2; ++i)
-        {
+        for (int i = 0; i < characters_combo_box_->count() - 2; ++i) {
             characters.append(
                 characters_combo_box_->itemData(i).value<CharacterData>());
         }
@@ -148,16 +136,13 @@ void MainWindow::onCharacterChanged(int index)
     // A character was selected
     auto info = characters_combo_box_->itemData(index).value<CharacterData>();
     // Ignore non-character selections
-    if (info.id == 0)
-    {
+    if (info.id == 0) {
         return;
     }
     // If the tracker is already running for another character, stop it
-    if (isTrackerRunning())
-    {
+    if (isTrackerRunning()) {
         auto current = app_->getCharacter();
-        if (current == info)
-        {
+        if (current == info) {
             // We are already tracking this character, nothing to be done
             return;
         }
@@ -169,40 +154,33 @@ void MainWindow::onCharacterChanged(int index)
     startTracking(info);
 }
 
-void MainWindow::onEventPayloadReceived()
-{
+void MainWindow::onEventPayloadReceived() {
     updateEventLatency();
     updateEventFrequency();
 }
 
-void MainWindow::onLastSeenTimerExpired()
-{
+void MainWindow::onLastSeenTimerExpired() {
     updateLastSeenLabels();
 }
 
 void MainWindow::openCharacterManager(
-    const QList<CharacterData>& characters)
-{
+    const QList<CharacterData>& characters) {
     auto dialog = new CharacterManager(this);
     // Add existing characters
-    for (const auto& character : characters)
-    {
+    for (const auto& character : characters) {
         dialog->addCharacter(character);
     }
     // Show the dialog
-    if (dialog->exec() == QDialog::DialogCode::Accepted)
-    {
+    if (dialog->exec() == QDialog::DialogCode::Accepted) {
         // Update characters dropdown
         auto list = dialog->findChild<QListWidget*>();
         // Reset the dropdown
         resetCharacterComboBox();
         // Add characters from manager
-        for (int i = 0; i < list->count(); ++i)
-        {
+        for (int i = 0; i < list->count(); ++i) {
             auto item = list->item(i);
             // Only consider selectable entries (ignores pending items)
-            if (!(item->flags() & Qt::ItemFlag::ItemIsSelectable))
-            {
+            if (!(item->flags() & Qt::ItemFlag::ItemIsSelectable)) {
                 continue;
             }
             auto info = item->data(Qt::UserRole).value<CharacterData>();
@@ -212,100 +190,80 @@ void MainWindow::openCharacterManager(
                 index, info.name, QVariant::fromValue(info));
         }
         // Select the topmost character if any were added
-        if (list->count() > 0)
-        {
+        if (list->count() > 0) {
             characters_combo_box_->setCurrentIndex(0);
         }
         // Save application config
         saveConfig();
     }
-    else
-    {
+    else {
         // Dialog was cancelled - if we had characters, select the first
-        if (characters_combo_box_->count() > 2)
-        {
+        if (characters_combo_box_->count() > 2) {
             characters_combo_box_->setCurrentIndex(0);
         }
-        else
-        {
+        else {
             // Otherwise, select nothing
             characters_combo_box_->setCurrentIndex(-1);
         }
     }
 }
 
-void MainWindow::updateEventLatency()
-{
+void MainWindow::updateEventLatency() {
     setEventLatency(app_->getEventLatency());
 }
 
-void MainWindow::updateEventFrequency()
-{
+void MainWindow::updateEventFrequency() {
     setEventFrequency(app_->getEventFrequency());
 }
 
-void MainWindow::updateLastSeenLabels()
-{
+void MainWindow::updateLastSeenLabels() {
     setLastPresence(app_->getLastPresenceUpdate());
     setLastPayload(app_->getLastEventPayload());
 }
 
-QString MainWindow::getProjectLink() const
-{
+QString MainWindow::getProjectLink() const {
     return "https://github.com/leonhard-s/ps2-rich-presence/";
 }
 
-void MainWindow::setEventFrequency(double events_per_second)
-{
-    if (events_per_second <= 0.0 || std::isinf(events_per_second))
-    {
+void MainWindow::setEventFrequency(double events_per_second) {
+    if (events_per_second <= 0.0 || std::isinf(events_per_second)) {
         event_frequency_->setText(tr("not enough events"));
     }
-    else
-    {
+    else {
         event_frequency_->setText(
             QString::number(events_per_second, 'f', 2));
     }
 }
 
-void MainWindow::setEventLatency(int latency_ms)
-{
-    if (latency_ms < 0)
-    {
+void MainWindow::setEventLatency(int latency_ms) {
+    if (latency_ms < 0) {
         latency_->setText(tr("n/a"));
     }
-    else
-    {
+    else {
         latency_->setText(tr("%1 ms").arg(latency_ms));
     }
 }
 
 void MainWindow::setLastPayload(
-    QDateTime timestamp = QDateTime::fromSecsSinceEpoch(0))
-{
+    QDateTime timestamp = QDateTime::fromSecsSinceEpoch(0)) {
     payload_ago_->setText(getTimeAgo(timestamp));
 }
 
 void MainWindow::setLastPresence(
-    QDateTime timestamp = QDateTime::fromSecsSinceEpoch(0))
-{
+    QDateTime timestamp = QDateTime::fromSecsSinceEpoch(0)) {
     presence_ago_->setText(getTimeAgo(timestamp));
 }
 
-void MainWindow::setStatus(const QString& status)
-{
+void MainWindow::setStatus(const QString& status) {
     status_->setText(tr("Status: ") + status);
 }
 
-void MainWindow::setTrackingEnabled(bool enabled)
-{
+void MainWindow::setTrackingEnabled(bool enabled) {
     enable_button_->setText(enabled ? tr("Disable") : tr("Enable"));
 }
 
-void MainWindow::resetCharacterComboBox()
-{
-    if (characters_combo_box_ == nullptr)
-    {
+void MainWindow::resetCharacterComboBox() {
+    if (characters_combo_box_ == nullptr) {
         return;
     }
     characters_combo_box_->clear();
@@ -315,13 +273,10 @@ void MainWindow::resetCharacterComboBox()
     characters_combo_box_->setCurrentIndex(-1);
 }
 
-void MainWindow::setupUi()
-{
-
+void MainWindow::setupUi() {
     auto layout = new QVBoxLayout(this);
 
     // Characters label and combo box
-
     auto characters_layout = new QHBoxLayout();
     layout->addLayout(characters_layout);
     auto character_label = new QLabel(tr("Character:"), this);
@@ -333,7 +288,6 @@ void MainWindow::setupUi()
     characters_layout->setStretch(1, 2);
 
     // Status label
-
     layout->addSpacerItem(new QSpacerItem(20, 10, QSizePolicy::Minimum,
         QSizePolicy::Expanding));
     status_ = new QLabel("", this);
@@ -343,7 +297,6 @@ void MainWindow::setupUi()
         QSizePolicy::Expanding));
 
     // Statistics group
-
     auto statistics_group = new QGroupBox(tr("Statistics"), this);
     layout->addWidget(statistics_group);
     auto statistics_layout = new QGridLayout(statistics_group);
@@ -379,7 +332,6 @@ void MainWindow::setupUi()
     statistics_layout->setColumnMinimumWidth(0, 120);
 
     // Settings group
-
     auto settings_group = new QGroupBox(tr("Settings"), this);
     layout->addWidget(settings_group);
     auto settings_layout = new QVBoxLayout(settings_group);
@@ -395,7 +347,6 @@ void MainWindow::setupUi()
     settings_layout->addWidget(minimise_to_tray_);
 
     // Footer
-
     layout->addSpacerItem(new QSpacerItem(20, 10, QSizePolicy::Minimum,
         QSizePolicy::Expanding));
 

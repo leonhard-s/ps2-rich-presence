@@ -9,10 +9,8 @@
 
 namespace {
 
-arx::string_t environmentToString(const arx::Environment& environment)
-{
-    switch (environment)
-    {
+arx::string_t environmentToString(const arx::Environment& environment) {
+    switch (environment) {
     case arx::Environment::PS2:
         return "ps2";
     case arx::Environment::PS2PS4EU:
@@ -27,9 +25,10 @@ arx::string_t environmentToString(const arx::Environment& environment)
 
 namespace arx {
 
-string_t getEndpointUrl(const string_t& service_id,
-    const Environment& environment)
-{
+string_t getEndpointUrl(
+    const string_t& service_id,
+    const Environment& environment
+) {
     std::stringstream ss;
     ss << "wss://push.planetside2.com/streaming?environment="
         << environmentToString(environment)

@@ -22,8 +22,7 @@ namespace arx {
  * message, and any "echo" command responses that do not mirror any of the
  * previous message types.
  */
-enum class MessageType
-{
+enum class MessageType {
     HEARTBEAT,         // Regular heartbeat message
     SERVICE_MESSAGE,   // Event subscriptions and other service messages
     SUBSCRIPTION_ECHO, // Subscription confirmation echo

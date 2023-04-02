@@ -14,8 +14,7 @@ namespace ps2 {
  * The "None" member is a special value used to represent that the player
  * is not in a vehicle.
  */
-enum class Vehicle
-{
+enum class Vehicle {
     None,
     Flash,
     Sunderer,

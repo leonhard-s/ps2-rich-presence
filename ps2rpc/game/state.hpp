@@ -9,10 +9,10 @@ namespace ps2rpc {
 /**
  * Mutable representation of the current state of a player in PS2.
  */
-struct GameState
-{
+struct GameState {
     GameState();
-    GameState(arx::character_id_t character_id,
+    GameState(
+        arx::character_id_t character_id,
         ps2::Faction faction,
         ps2::Faction team,
         ps2::Server server,
@@ -43,10 +43,10 @@ struct GameState
  * character to allow incremental updates, since not all service payloads
  * contain all data necessary to generate a valid state.
  */
-class GameStateFactory
-{
+class GameStateFactory {
 public:
-    GameStateFactory(arx::character_id_t character_id,
+    GameStateFactory(
+        arx::character_id_t character_id,
         ps2::Faction faction,
         ps2::Server server,
         ps2::Class initial_class = ps2::Class::LightAssault);

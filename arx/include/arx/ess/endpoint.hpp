@@ -9,8 +9,7 @@ namespace arx {
 /**
  * Enumeration of the available event streaming environments.
  */
-enum class Environment
-{
+enum class Environment {
     PS2,
     PS2PS4EU,
     PS2PS4US
@@ -23,7 +22,8 @@ enum class Environment
  * @param environment Event streaming environment to connect to.
  * @return URL to connect to the ESS.
  */
-string_t getEndpointUrl(const string_t& service_id = "s:example",
+string_t getEndpointUrl(
+    const string_t& service_id = "s:example",
     const Environment& environment = Environment::PS2);
 
 } // namespace arx

@@ -8,10 +8,8 @@
 
 namespace ps2 {
 
-int server_from_world_id(arx::world_id_t world_id, Server& server)
-{
-    switch (world_id)
-    {
+int server_from_world_id(arx::world_id_t world_id, Server& server) {
+    switch (world_id) {
     case 1:
         server = Server::Connery;
         break;
@@ -36,10 +34,8 @@ int server_from_world_id(arx::world_id_t world_id, Server& server)
     return 0;
 }
 
-int server_to_display_name(Server server, std::string& display_name)
-{
-    switch (server)
-    {
+int server_to_display_name(Server server, std::string& display_name) {
+    switch (server) {
     case Server::Cobalt:
         display_name = "Cobalt";
         break;
@@ -64,10 +60,8 @@ int server_to_display_name(Server server, std::string& display_name)
     return 0;
 }
 
-arx::world_id_t server_to_world_id(Server server)
-{
-    switch (server)
-    {
+arx::world_id_t server_to_world_id(Server server) {
+    switch (server) {
     case Server::Connery:
         return 1;
     case Server::Miller:

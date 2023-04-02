@@ -9,8 +9,7 @@
 namespace ps2 {
 
 /** Enumeration of factions in PlanetSide 2. */
-enum class Faction
-{
+enum class Faction {
     NS,
     NC,
     TR,

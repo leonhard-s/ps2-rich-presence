@@ -14,7 +14,8 @@ std::string getScheme();
 
 std::string getHost();
 
-std::string generateCensusPath(const std::string& service_id,
+std::string generateCensusPath(
+    const std::string& service_id,
     const std::string& format = "json",
     const std::string& verb = "get",
     const std::string& namespace_ = "ps2",

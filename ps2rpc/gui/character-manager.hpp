@@ -18,8 +18,7 @@
 
 namespace ps2rpc {
 
-class CharacterManager: public QDialog
-{
+class CharacterManager: public QDialog {
     Q_OBJECT
 
 public:

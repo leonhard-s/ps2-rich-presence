@@ -13,48 +13,41 @@
 
 namespace ps2rpc {
 PresenceFactory::PresenceFactory(QObject* parent)
-    : QObject{ parent }, is_idle_{ true }
+    : QObject{ parent }
+    , is_idle_{ true }
 {
     // Emit initial idle activity
     setActivityIdle();
     emit activityChanged(getPresenceAsActivity());
 }
 
-discord::Activity PresenceFactory::getPresenceAsActivity()
-{
+discord::Activity PresenceFactory::getPresenceAsActivity() {
     discord::Activity activity{};
-    if (is_idle_)
-    {
+    if (is_idle_) {
         activity = buildIdleActivity();
     }
-    else
-    {
+    else {
         activity = buildGameActivity(state_);
     }
     return activity;
 }
 
-void PresenceFactory::setActivityIdle()
-{
-    if (!is_idle_)
-    {
+void PresenceFactory::setActivityIdle() {
+    if (!is_idle_) {
         is_idle_ = true;
         emit activityChanged(getPresenceAsActivity());
     }
 }
 
-void PresenceFactory::setActivityFromGameState(const GameState& state)
-{
-    if (state_ != state || is_idle_)
-    {
+void PresenceFactory::setActivityFromGameState(const GameState& state) {
+    if (state_ != state || is_idle_) {
         state_ = state;
         is_idle_ = false;
         emit activityChanged(getPresenceAsActivity());
     }
 }
 
-discord::Activity PresenceFactory::buildIdleActivity()
-{
+discord::Activity PresenceFactory::buildIdleActivity() {
     discord::Activity activity{};
     activity.SetState("Idling");
     activity.SetType(discord::ActivityType::Playing);
@@ -67,19 +60,16 @@ discord::Activity PresenceFactory::buildIdleActivity()
     return activity;
 }
 
-discord::Activity PresenceFactory::buildGameActivity(const GameState& state)
-{
+discord::Activity PresenceFactory::buildGameActivity(const GameState& state) {
     discord::Activity activity{};
     std::string temp;
     // Details
     ps2::faction_to_display_name(state.faction, temp);
     QString details;
-    if (state.faction == state.team)
-    {
+    if (state.faction == state.team) {
         details = QString::fromStdString(temp);
     }
-    else
-    {
+    else {
         ps2::faction_to_display_name(state.team, temp);
         details = "Freelancing for " + QString::fromStdString(temp);
     }
@@ -95,15 +85,13 @@ discord::Activity PresenceFactory::buildGameActivity(const GameState& state)
     assets.SetLargeText(temp.c_str());
     // Small image
     std::string key, text;
-    if (state.vehicle != ps2::Vehicle::None)
-    {
+    if (state.vehicle != ps2::Vehicle::None) {
         assets::imageKeyFromVehicle(state.vehicle, temp);
         key = temp;
         ps2::vehicle_to_display_name(state.vehicle, temp);
         text = temp;
     }
-    else
-    {
+    else {
         assets::imageKeyFromClass(state.class_, temp);
         key = temp;
         ps2::class_to_display_name(state.class_, temp);

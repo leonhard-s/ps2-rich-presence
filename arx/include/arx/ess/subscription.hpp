@@ -8,10 +8,10 @@
 
 namespace arx {
 
-class Subscription
-{
+class Subscription {
 public:
-    Subscription(std::vector<string_t> event_names,
+    Subscription(
+        std::vector<string_t> event_names,
         std::vector<string_t> characters = {},
         std::vector<string_t> worlds = {},
         bool logical_and = false);

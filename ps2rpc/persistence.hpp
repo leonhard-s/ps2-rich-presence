@@ -8,8 +8,7 @@
 
 namespace ps2rpc {
 
-class AppConfigManager
-{
+class AppConfigManager {
 public:
     AppConfigManager() = default;
 

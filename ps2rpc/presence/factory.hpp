@@ -11,8 +11,7 @@
 
 namespace ps2rpc {
 
-class PresenceFactory: public QObject
-{
+class PresenceFactory: public QObject {
     Q_OBJECT
 
 public:

@@ -19,25 +19,26 @@
 namespace ps2rpc {
 
 CharacterData::CharacterData()
-    : id{ 0 },
-    name{ "" },
-    faction{ ps2::Faction::NS },
-    class_{ ps2::Class::LightAssault },
-    server{ ps2::Server::Connery } {}
+    : id{ 0 }
+    , name{ "" }
+    , faction{ ps2::Faction::NS }
+    , class_{ ps2::Class::LightAssault }
+    , server{ ps2::Server::Connery } {}
 
-CharacterData::CharacterData(arx::character_id_t id,
+CharacterData::CharacterData(
+    arx::character_id_t id,
     const QString& name,
     ps2::Faction faction,
     ps2::Class class_,
-    ps2::Server server)
+    ps2::Server server
+)
     : id{ id },
     name{ name },
     faction{ faction },
     class_{ class_ },
     server{ server } {}
 
-bool CharacterData::operator==(const CharacterData& other) const
-{
+bool CharacterData::operator==(const CharacterData& other) const {
     return id == other.id &&
         name == other.name &&
         faction == other.faction &&
@@ -45,20 +46,19 @@ bool CharacterData::operator==(const CharacterData& other) const
         server == other.server;
 }
 
-bool CharacterData::operator!=(const CharacterData& other) const
-{
+bool CharacterData::operator!=(const CharacterData& other) const {
     return !(*this == other);
 }
 
-QDebug operator<<(QDebug dbg, const CharacterData& info)
-{
+QDebug operator<<(QDebug dbg, const CharacterData& info) {
     std::string tag;
     ps2::faction_to_tag(info.faction, tag);
     return dbg << (info.name + "[" + QString::fromStdString(tag) + "]");
 }
 
 CharacterInfo::CharacterInfo(QObject* parent)
-    : QObject(parent), info_{}
+    : QObject(parent)
+    , info_{}
 {
     manager_.reset(new QNetworkAccessManager(this));
 }
@@ -74,7 +74,8 @@ CharacterInfo::CharacterInfo(arx::character_id_t id,
     ps2::Faction faction,
     ps2::Class class_,
     ps2::Server server,
-    QObject* parent)
+    QObject* parent
+)
     : CharacterInfo(id, parent)
 {
     info_.name = name;
@@ -83,37 +84,30 @@ CharacterInfo::CharacterInfo(arx::character_id_t id,
     info_.server = server;
 }
 
-arx::character_id_t CharacterInfo::getId() const
-{
+arx::character_id_t CharacterInfo::getId() const {
     return info_.id;
 }
 
-QString CharacterInfo::getName() const
-{
+QString CharacterInfo::getName() const {
     return info_.name;
 }
 
-ps2::Faction CharacterInfo::getFaction() const
-{
+ps2::Faction CharacterInfo::getFaction() const {
     return info_.faction;
 }
 
-ps2::Class CharacterInfo::getClass() const
-{
+ps2::Class CharacterInfo::getClass() const {
     return info_.class_;
 }
 
-ps2::Server CharacterInfo::getServer() const
-{
+ps2::Server CharacterInfo::getServer() const {
     return info_.server;
 }
 
-void CharacterInfo::populate()
-{
+void CharacterInfo::populate() {
     // Only look up sensible character IDs
     auto id = info_.id;
-    if (id <= 0)
-    {
+    if (id <= 0) {
         qWarning() << "Call to CharacterInfo::populate() ignored due to "
             "invalid character ID:"
             << id;
@@ -127,20 +121,17 @@ void CharacterInfo::populate()
         this, &CharacterInfo::onCharacterInfoRequestFinished);
 }
 
-void CharacterInfo::onCharacterInfoRequestFinished()
-{
+void CharacterInfo::onCharacterInfoRequestFinished() {
     // Get reply object from caller
     auto reply = qobject_cast<QNetworkReply*>(QObject::sender());
-    if (!reply)
-    {
+    if (!reply) {
         qWarning() << "CharacterInfo::onCharacterInfoRequestFinished()"
             << "Signal sender is not a QNetworkReply object.";
     }
     // Delete reply once control is returned to the event loop
     reply->deleteLater();
     // Check for network errors
-    if (reply->error() != QNetworkReply::NoError)
-    {
+    if (reply->error() != QNetworkReply::NoError) {
         qWarning() << "CharacterInfo::onCharacterInfoRequestFinished()"
             << "Network error:" << reply->errorString();
         return;
@@ -151,14 +142,12 @@ void CharacterInfo::onCharacterInfoRequestFinished()
     handleCharacterInfoPayload(payload);
 }
 
-QNetworkRequest CharacterInfo::getCharacterInfoRequest()
-{
+QNetworkRequest CharacterInfo::getCharacterInfoRequest() {
     // Create Query via ARX
     arx::Query query("character", SERVICE_ID);
     query.addTerm(
         arx::SearchTerm("character_id", std::to_string(info_.id)));
-    query.setShow(
-        { "character_id", "name.first", "faction_id", "profile_id" });
+    query.setShow({ "character_id", "name.first", "faction_id", "profile_id" });
     auto join = arx::JoinData("characters_world");
     join.show.push_back("world_id");
     query.addJoin(join);
@@ -168,11 +157,8 @@ QNetworkRequest CharacterInfo::getCharacterInfoRequest()
     return QNetworkRequest(url);
 }
 
-void CharacterInfo::handleCharacterInfoPayload(
-    const arx::json_t& payload)
-{
-    if (!arx::validatePayload("character", payload))
-    {
+void CharacterInfo::handleCharacterInfoPayload(const arx::json_t& payload) {
+    if (!arx::validatePayload("character", payload)) {
         qWarning() << "CharacterInfo::handleCharacterInfoPayload(): "
             "Invalid JSON payload";
         return;
@@ -187,18 +173,15 @@ void CharacterInfo::handleCharacterInfoPayload(
     // Resolve characters_world join
     auto new_server = ps2::Server::Connery;
     auto world_data = data.find("world");
-    if (world_data == data.end())
-    {
+    if (world_data == data.end()) {
         qWarning() << "CharacterInfo::handleCharacterInfoPayload():"
             << "No world join data in payload";
     }
-    else if (!world_data->is_object())
-    {
+    else if (!world_data->is_object()) {
         qWarning() << "CharacterInfo::handleCharacterInfoPayload():"
             << "World join data is not an object";
     }
-    else
-    {
+    else {
         new_server = serverFromJson(*world_data);
     }
     // Update fields
@@ -206,41 +189,36 @@ void CharacterInfo::handleCharacterInfoPayload(
         new_id, new_name, new_faction, new_class, new_server);
 }
 
-void CharacterInfo::updateFieldsIfChanged(arx::character_id_t id,
+void CharacterInfo::updateFieldsIfChanged(
+    arx::character_id_t id,
     const QString& name,
     ps2::Faction faction,
     ps2::Class class_,
-    ps2::Server server)
-{
+    ps2::Server server
+) {
     bool changed = false;
-    if (id != info_.id)
-    {
+    if (id != info_.id) {
         info_.id = id;
         changed = true;
     }
-    if (name != info_.name)
-    {
+    if (name != info_.name) {
         info_.name = name;
         changed = true;
     }
-    if (faction != info_.faction)
-    {
+    if (faction != info_.faction) {
         info_.faction = faction;
         changed = true;
     }
-    if (class_ != info_.class_)
-    {
+    if (class_ != info_.class_) {
         info_.class_ = class_;
         changed = true;
     }
-    if (server != info_.server)
-    {
+    if (server != info_.server) {
         info_.server = server;
         changed = true;
     }
     // Emit signal if any fields changed
-    if (changed)
-    {
+    if (changed) {
         emit infoChanged();
     }
 }

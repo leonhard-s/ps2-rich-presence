@@ -9,8 +9,7 @@
 
 namespace ps2rpc {
 
-class PresenceHandler: public QObject
-{
+class PresenceHandler: public QObject {
     Q_OBJECT
 
 public:

@@ -15,10 +15,10 @@
 
 namespace ps2rpc {
 
-struct CharacterData
-{
+struct CharacterData {
     CharacterData();
-    CharacterData(arx::character_id_t id,
+    CharacterData(
+        arx::character_id_t id,
         const QString& name,
         ps2::Faction faction,
         ps2::Class class_,
@@ -38,8 +38,7 @@ struct CharacterData
 
 QDebug operator<<(QDebug dbg, const CharacterData& info);
 
-class CharacterInfo: public QObject
-{
+class CharacterInfo: public QObject {
     Q_OBJECT
 
 public:

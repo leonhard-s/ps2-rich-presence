@@ -8,10 +8,8 @@
 
 namespace ps2 {
 
-int faction_from_faction_id(arx::faction_id_t faction_id, Faction& faction)
-{
-    switch (faction_id)
-    {
+int faction_from_faction_id(arx::faction_id_t faction_id, Faction& faction) {
+    switch (faction_id) {
     case 0:
         faction = Faction::NS;
         break;
@@ -33,10 +31,8 @@ int faction_from_faction_id(arx::faction_id_t faction_id, Faction& faction)
     return 0;
 }
 
-int faction_to_display_name(Faction faction, std::string& display_name)
-{
-    switch (faction)
-    {
+int faction_to_display_name(Faction faction, std::string& display_name) {
+    switch (faction) {
     case Faction::NS:
         display_name = "Nanite Systems";
         break;
@@ -58,10 +54,8 @@ int faction_to_display_name(Faction faction, std::string& display_name)
     return 0;
 }
 
-int faction_to_tag(Faction faction, std::string& tag)
-{
-    switch (faction)
-    {
+int faction_to_tag(Faction faction, std::string& tag) {
+    switch (faction) {
     case Faction::NS:
         tag = "NS";
         break;
@@ -83,10 +77,8 @@ int faction_to_tag(Faction faction, std::string& tag)
     return 0;
 }
 
-arx::faction_id_t faction_to_faction_id(Faction faction)
-{
-    switch (faction)
-    {
+arx::faction_id_t faction_to_faction_id(Faction faction) {
+    switch (faction) {
     case Faction::VS:
         return 1;
     case Faction::NC:

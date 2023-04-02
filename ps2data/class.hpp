@@ -11,8 +11,7 @@
 namespace ps2 {
 
 /** Enumeration of infantry classes in PlanetSide 2. */
-enum class Class
-{
+enum class Class {
     Infiltrator,
     LightAssault,
     CombatMedic,

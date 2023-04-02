@@ -17,8 +17,7 @@
 
 namespace {
 
-QJsonObject characterToJson(const ps2rpc::CharacterData& character)
-{
+QJsonObject characterToJson(const ps2rpc::CharacterData& character) {
     QJsonObject json;
     json["id"] = QString::number(character.id);
     json["name"] = character.name;
@@ -29,8 +28,7 @@ QJsonObject characterToJson(const ps2rpc::CharacterData& character)
     return json;
 }
 
-ps2rpc::CharacterData characterFromJson(const QJsonObject& json)
-{
+ps2rpc::CharacterData characterFromJson(const QJsonObject& json) {
     ps2rpc::CharacterData char_;
     char_.id = json["id"].toString().toULongLong();
     char_.name = json["name"].toString();
@@ -40,8 +38,7 @@ ps2rpc::CharacterData characterFromJson(const QJsonObject& json)
     return char_;
 }
 
-static bool keyIsValid(const QString& key)
-{
+static bool keyIsValid(const QString& key) {
     return (key == "characters" ||
         key == "auto_track" ||
         key == "start_with_os" ||
@@ -49,37 +46,30 @@ static bool keyIsValid(const QString& key)
         key == "presence_enabled");
 }
 
-QVariantMap loadConfigVersion1_0(const QJsonObject& json)
-{
+QVariantMap loadConfigVersion1_0(const QJsonObject& json) {
     QVariantMap config;
 
     // Iterate over json keys
-    for (auto it = json.begin(); it != json.end(); ++it)
-    {
+    for (auto it = json.begin(); it != json.end(); ++it) {
         // Ignore invalid keys
-        if (!keyIsValid(it.key()))
-        {
+        if (!keyIsValid(it.key())) {
             continue;
         }
         // Handle the characters list separately
-        if (it.key() == "characters")
-        {
+        if (it.key() == "characters") {
             // Create "characters" key if it does not exist
-            if (!config.contains("characters"))
-            {
+            if (!config.contains("characters")) {
                 config["characters"] = QVariantList();
             }
             // Load all characters
             QVariantList characters_list;
-            for (const auto& char_json : it.value().toArray())
-            {
+            for (const auto& char_json : it.value().toArray()) {
                 auto char_data = characterFromJson(char_json.toObject());
                 characters_list.append(QVariant::fromValue(char_data));
             }
             config["characters"] = characters_list;
         }
-        else
-        {
+        else {
             // Copy other keys without change
             config[it.key()] = it.value().toVariant();
         }
@@ -87,8 +77,7 @@ QVariantMap loadConfigVersion1_0(const QJsonObject& json)
     return config;
 }
 
-QString getConfigFilePath()
-{
+QString getConfigFilePath() {
     QString dir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     // Create config directory if it does not exist
     QDir().mkpath(dir);
@@ -100,33 +89,27 @@ QString getConfigFilePath()
 
 namespace ps2rpc {
 
-void AppConfigManager::save(const QVariantMap& config)
-{
+void AppConfigManager::save(const QVariantMap& config) {
     QJsonObject json_object;
 
-    for (auto it = config.cbegin(); it != config.cend(); ++it)
-    {
+    for (auto it = config.cbegin(); it != config.cend(); ++it) {
         // Ignore invalid keys
-        if (!keyIsValid(it.key()))
-        {
+        if (!keyIsValid(it.key())) {
             continue;
         }
         // Handle the characters list separately
-        if (it.key() == "characters")
-        {
+        if (it.key() == "characters") {
             // Reset characters list
             json_object["characters"] = QJsonArray();
             // Load all characters into the JSON list
             QJsonArray characters;
-            for (const auto& character : it.value().toList())
-            {
+            for (const auto& character : it.value().toList()) {
                 characters.append(
                     characterToJson(character.value<CharacterData>()));
             }
             json_object["characters"] = characters;
         }
-        else
-        {
+        else {
             // Copy other keys without change
             json_object.insert(
                 it.key(), QJsonValue::fromVariant(it.value()));
@@ -145,13 +128,11 @@ void AppConfigManager::save(const QVariantMap& config)
     file.close();
 }
 
-QVariantMap AppConfigManager::load()
-{
+QVariantMap AppConfigManager::load() {
     QVariantMap config;
     // See if the config file exists
     QString path = getConfigFilePath();
-    if (QFile::exists(path))
-    {
+    if (QFile::exists(path)) {
         // Load config file from disk
         QFile file(path);
         file.open(QIODevice::ReadOnly);
@@ -159,18 +140,15 @@ QVariantMap AppConfigManager::load()
         file.close();
         // Check version
         if (json_document.object().contains("version") &&
-            json_document.object()["version"].toString() == "1.0")
-        {
+            json_document.object()["version"].toString() == "1.0") {
             config = loadConfigVersion1_0(json_document.object());
         }
-        else
-        {
+        else {
             qWarning() << "Unsupported config file version, initialising with defaults";
             config = defaults();
         }
     }
-    else
-    {
+    else {
         // If not, create it with default values
         config = defaults();
         save(config);
@@ -178,8 +156,7 @@ QVariantMap AppConfigManager::load()
     return config;
 }
 
-QVariantMap AppConfigManager::defaults()
-{
+QVariantMap AppConfigManager::defaults() {
     QVariantMap config;
     config["characters"] = QVariantList();
     config["auto_track"] = false;

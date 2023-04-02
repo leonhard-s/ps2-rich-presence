@@ -33,8 +33,10 @@
 
 namespace ps2rpc {
 
-CharacterManager::CharacterManager(QWidget* parent)
-    : QDialog{ parent }, manager_{ new QNetworkAccessManager() }
+CharacterManager::CharacterManager(QWidget* parent
+)
+    : QDialog{ parent }
+    , manager_{ new QNetworkAccessManager() }
 {
     // Configure the modal dialog
     setWindowTitle(tr("Manage Characters"));
@@ -58,35 +60,29 @@ CharacterManager::CharacterManager(QWidget* parent)
         this, &CharacterManager::onCharacterSelected);
 }
 
-void CharacterManager::addCharacter(const CharacterData& character)
-{
-    if (list_ != nullptr)
-    {
+void CharacterManager::addCharacter(const CharacterData& character) {
+    if (list_ != nullptr) {
         auto item = new QListWidgetItem(character.name);
         item->setData(Qt::UserRole, QVariant::fromValue(character));
         list_->addItem(item);
     }
 }
 
-void CharacterManager::onAddButtonClicked()
-{
+void CharacterManager::onAddButtonClicked() {
     QScopedPointer<QDialog> dialog(createCharacterNameInputDialog());
-    if (dialog->exec() == QDialog::DialogCode::Rejected)
-    {
+    if (dialog->exec() == QDialog::DialogCode::Rejected) {
         return;
     }
     auto name = dialog->findChild<QLineEdit*>()->text();
     // Ignore empty string
-    if (name.isEmpty())
-    {
+    if (name.isEmpty()) {
         return;
     }
     // Ignore duplicates
-    for (int i = 0; i < list_->count(); ++i)
-    {
-        if (list_->item(i)->text() == name)
-        {
-            QMessageBox::information(this,
+    for (int i = 0; i < list_->count(); ++i) {
+        if (list_->item(i)->text() == name) {
+            QMessageBox::information(
+                this,
                 tr("Character Manager"),
                 tr("Character already exists."),
                 QMessageBox::Ok);
@@ -105,10 +101,8 @@ void CharacterManager::onAddButtonClicked()
     list_->addItem(item);
 }
 
-void CharacterManager::onRemoveButtonClicked()
-{
-    if (list_->currentRow() == -1 || list_->count() == 0)
-    {
+void CharacterManager::onRemoveButtonClicked() {
+    if (list_->currentRow() == -1 || list_->count() == 0) {
         // This button should already be disabled; this is just fallback
         button_remove_->setEnabled(false);
         return;
@@ -118,39 +112,33 @@ void CharacterManager::onRemoveButtonClicked()
         .arg(list_->currentItem()->text());
     if (QMessageBox::question(
         this, tr("Remove Character"),
-        msg, QMessageBox::Yes | QMessageBox::No) == QMessageBox::No)
-    {
+        msg, QMessageBox::Yes | QMessageBox::No) == QMessageBox::No) {
         return;
     }
     // User has confirmed their intentions, remove the character
     list_->takeItem(list_->currentRow());
 }
 
-void CharacterManager::onCharacterSelected()
-{
+void CharacterManager::onCharacterSelected() {
     // Enable the remove button if a character is selected
     button_remove_->setEnabled(list_->currentRow() != -1);
 }
 
-void CharacterManager::onCharacterInfoReceived()
-{
+void CharacterManager::onCharacterInfoReceived() {
     // Get reply (cast to ScopedPointer to ensure it is deleted when this
     // function returns)
     QScopedPointer<QNetworkReply> reply(
         qobject_cast<QNetworkReply*>(sender()));
     // Remove temporary list entry
-    for (int i = 0; i < list_->count(); i++)
-    {
+    for (int i = 0; i < list_->count(); i++) {
         if (list_->item(i)->data(Qt::UserRole).value<QNetworkReply*>() ==
-            reply.data())
-        {
+            reply.data()) {
             list_->takeItem(i);
             break;
         }
     }
     // Check for errors
-    if (reply->error() != QNetworkReply::NetworkError::NoError)
-    {
+    if (reply->error() != QNetworkReply::NetworkError::NoError) {
         QMessageBox::critical(this,
             tr("Character Manager"),
             tr("Failed to retrieve character info."),
@@ -160,16 +148,14 @@ void CharacterManager::onCharacterInfoReceived()
     // Validate payload
     const std::string collection = "character";
     auto payload = getJsonPayload(*reply);
-    if (!arx::validatePayload(collection, payload))
-    {
+    if (!arx::validatePayload(collection, payload)) {
         QMessageBox::critical(this,
             tr("Character Manager"),
             tr("Invalid character info payload."),
             QMessageBox::Ok);
         return;
     }
-    if (arx::isPayloadEmpty(collection, payload))
-    {
+    if (arx::isPayloadEmpty(collection, payload)) {
         QMessageBox::critical(this,
             tr("Character Manager"),
             tr("Character does not exist."),
@@ -187,8 +173,7 @@ void CharacterManager::onCharacterInfoReceived()
     list_->addItem(item);
 }
 
-QUrl CharacterManager::getCharacterInfoUrl(const QString& character) const
-{
+QUrl CharacterManager::getCharacterInfoUrl(const QString& character) const {
     auto name = character.toLower().toStdString();
     // Create API query
     arx::Query query("character", SERVICE_ID);
@@ -197,15 +182,13 @@ QUrl CharacterManager::getCharacterInfoUrl(const QString& character) const
     join.show.push_back("world_id");
     join.inject_at = "world";
     query.addJoin(join);
-    query.setShow(
-        { "character_id", "name.first", "faction_id", "profile_id" });
+    query.setShow({ "character_id", "name.first", "faction_id", "profile_id" });
     // Build QUrl object
     return qUrlFromArxQuery(query);
 }
 
 CharacterData CharacterManager::parseCharacterPayload(
-    const arx::json_t& payload)
-{
+    const arx::json_t& payload) {
     // Set default/fallback values
     QString name = "N/A";
     arx::character_id_t id = 0;
@@ -217,83 +200,67 @@ CharacterData CharacterManager::parseCharacterPayload(
     ps2::Server server = ps2::Server::Connery;
     // Get name object
     auto name_obj = payload["name"];
-    if (name_obj.is_object())
-    {
+    if (name_obj.is_object()) {
         // Get name.first value
         auto name_val = name_obj["first"];
-        if (name_val.is_string())
-        {
+        if (name_val.is_string()) {
             name = QString::fromStdString(name_val.get<std::string>());
         }
-        else
-        {
+        else {
             qWarning() << "Invalid type: \"name.first\" must be a string";
         }
     }
-    else
-    {
+    else {
         qWarning() << "Invalid type: key \"name\" must be an object";
     }
     // Get character ID
     auto id_val = payload["character_id"];
-    if (id_val.is_string())
-    {
+    if (id_val.is_string()) {
         id = std::stoull(id_val.get<std::string>());
     }
-    else
-    {
+    else {
         qWarning() << "Invalid type: \"character_id\" must be a string";
     }
     // Get faction
     auto faction_val = payload["faction_id"];
-    if (faction_val.is_number_integer())
-    {
+    if (faction_val.is_number_integer()) {
         faction_id = faction_val.get<arx::faction_id_t>();
     }
-    else
-    {
+    else {
         qWarning() << "Invalid type: \"faction_id\" must be a number";
     }
     // Get profile
     auto profile_val = payload["profile_id"];
-    if (profile_val.is_number_integer())
-    {
+    if (profile_val.is_number_integer()) {
         profile_id = profile_val.get<arx::profile_id_t>();
     }
-    else
-    {
+    else {
         qWarning() << "Invalid type: \"profile_id\" must be a number";
     }
     // Get world
     auto world_val = payload["world_id"];
-    if (world_val.is_number_integer())
-    {
+    if (world_val.is_number_integer()) {
         world_id = world_val.get<arx::world_id_t>();
     }
-    else
-    {
+    else {
         qWarning() << "Invalid type: \"world_id\" must be a number";
     }
     // Convert IDs to enum values
-    if (ps2::faction_from_faction_id(faction_id, faction))
-    {
+    if (ps2::faction_from_faction_id(faction_id, faction)) {
         qWarning() << "Unable to convert faction ID:" << faction_id;
     }
-    if (ps2::class_from_profile_id(profile_id, class_))
-    {
+    if (ps2::class_from_profile_id(profile_id, class_)) {
         qWarning() << "Unable to create class from profile ID:"
             << profile_id;
     }
-    if (ps2::server_from_world_id(world_id, server))
-    {
+    if (ps2::server_from_world_id(world_id, server)) {
         qWarning() << "Unable to create server from world ID:" << world_id;
     }
     // Create character info
     return CharacterData(id, name, faction, class_, server);
 }
 
-QDialog* CharacterManager::createCharacterNameInputDialog()
-{
+QDialog* CharacterManager::createCharacterNameInputDialog() {
     auto dialog = new QDialog(this);
     dialog->setWindowTitle(tr("Add Character"));
     dialog->setMinimumSize(120, 80);
@@ -328,8 +295,7 @@ QDialog* CharacterManager::createCharacterNameInputDialog()
     return dialog;
 }
 
-void CharacterManager::setupUi()
-{
+void CharacterManager::setupUi() {
     auto layout = new QVBoxLayout(this);
 
     // Instruction text

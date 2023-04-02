@@ -9,8 +9,7 @@
 namespace ps2 {
 
 /** Enumeration of playable zones in PlanetSide 2. */
-enum class Zone
-{
+enum class Zone {
     Indar,
     Hossin,
     Amerish,

@@ -9,8 +9,7 @@
 namespace ps2 {
 
 /** Enumeration of game servers in PlanetSide 2. */
-enum class Server
-{
+enum class Server {
     Cobalt,
     Connery,
     Emerald,

@@ -15,7 +15,8 @@ namespace arx {
  * -2 if the payload is missing a required key, and -3 if the return list
  * key is not a JSON array.
  */
-int validatePayload(const json_string_t& collection,
+int validatePayload(
+    const json_string_t& collection,
     const json_t& payload);
 
 /**
@@ -25,7 +26,8 @@ int validatePayload(const json_string_t& collection,
  * @param payload The payload to check.
  * @return True if the payload return list is empty, false otherwise.
  */
-bool isPayloadEmpty(const json_string_t& collection,
+bool isPayloadEmpty(
+    const json_string_t& collection,
     const json_t& payload);
 
 /**
@@ -43,7 +45,8 @@ json_t parseJson(const json_string_t& data);
  * @param payload The payload to retrieve the first result from.
  * @return The first result list entry from the given payload.
  */
-json_t payloadResultAsObject(const json_string_t& collection,
+json_t payloadResultAsObject(
+    const json_string_t& collection,
     const json_t& payload);
 
 /**
@@ -53,7 +56,8 @@ json_t payloadResultAsObject(const json_string_t& collection,
  * @param payload The payload to retrieve the result list from.
  * @return The result list from the given payload.
  */
-json_array_t payloadResultsAsArray(const json_string_t& collection,
+json_array_t payloadResultsAsArray(
+    const json_string_t& collection,
     const json_t& payload);
 
 } // namespace arx

@@ -6,8 +6,7 @@
 
 namespace arx {
 
-enum class Event
-{
+enum class Event {
     Unknown, // Fallback value, not used by ESS
 
     AchievementEarned,

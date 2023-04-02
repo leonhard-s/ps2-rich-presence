@@ -6,75 +6,57 @@
 
 namespace arx {
 
-Event eventFromEventName(const string_t& event_name)
-{
-    if (event_name == "AchievementEarned")
-    {
+Event eventFromEventName(const string_t& event_name) {
+    if (event_name == "AchievementEarned") {
         return Event::AchievementEarned;
     }
-    if (event_name == "BattleRankUp")
-    {
+    if (event_name == "BattleRankUp") {
         return Event::BattleRankUp;
     }
-    if (event_name == "ContinentLock")
-    {
+    if (event_name == "ContinentLock") {
         return Event::ContinentLock;
     }
-    if (event_name == "ContinentUnlock")
-    {
+    if (event_name == "ContinentUnlock") {
         return Event::ContinentUnlock;
     }
-    if (event_name == "Death")
-    {
+    if (event_name == "Death") {
         return Event::Death;
     }
-    if (event_name == "FacilityControl")
-    {
+    if (event_name == "FacilityControl") {
         return Event::FacilityControl;
     }
-    if (event_name == "GainExperience")
-    {
+    if (event_name == "GainExperience") {
         return Event::GainExperience;
     }
-    if (event_name == "ItemAdded")
-    {
+    if (event_name == "ItemAdded") {
         return Event::ItemAdded;
     }
-    if (event_name == "MetagameEvent")
-    {
+    if (event_name == "MetagameEvent") {
         return Event::MetagameEvent;
     }
-    if (event_name == "PlayerFacilityCapture")
-    {
+    if (event_name == "PlayerFacilityCapture") {
         return Event::PlayerFacilityCapture;
     }
-    if (event_name == "PlayerFacilityDefend")
-    {
+    if (event_name == "PlayerFacilityDefend") {
         return Event::PlayerFacilityDefend;
     }
-    if (event_name == "PlayerLogin")
-    {
+    if (event_name == "PlayerLogin") {
         return Event::PlayerLogin;
     }
-    if (event_name == "PlayerLogout")
-    {
+    if (event_name == "PlayerLogout") {
         return Event::PlayerLogout;
     }
-    if (event_name == "SkillAdded")
-    {
+    if (event_name == "SkillAdded") {
         return Event::SkillAdded;
     }
-    if (event_name == "VehicleDestroy")
-    {
+    if (event_name == "VehicleDestroy") {
         return Event::VehicleDestroy;
     }
     return Event::Unknown;
 }
 
-string_t eventToEventName(const Event& event)
-{
-    switch (event)
-    {
+string_t eventToEventName(const Event& event) {
+    switch (event) {
     case Event::AchievementEarned:
         return "AchievementEarned";
     case Event::BattleRankUp:
@@ -110,10 +92,8 @@ string_t eventToEventName(const Event& event)
     }
 }
 
-bool isEventCharacterCentric(const Event& event)
-{
-    switch (event)
-    {
+bool isEventCharacterCentric(const Event& event) {
+    switch (event) {
     case Event::AchievementEarned:
     case Event::BattleRankUp:
     case Event::Death:
@@ -131,10 +111,8 @@ bool isEventCharacterCentric(const Event& event)
     }
 }
 
-bool isEventWorldCentric(const Event& event)
-{
-    switch (event)
-    {
+bool isEventWorldCentric(const Event& event) {
+    switch (event) {
     case Event::ContinentLock:
     case Event::ContinentUnlock:
     case Event::FacilityControl:

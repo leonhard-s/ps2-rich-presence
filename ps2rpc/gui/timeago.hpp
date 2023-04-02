@@ -13,37 +13,29 @@ namespace ps2rpc {
  *
  * This is limited to between "just now" and "over an hour ago".
  */
-QString getTimeAgo(const QDateTime& timestamp)
-{
+QString getTimeAgo(const QDateTime& timestamp) {
     // Get time diference in seconds
     const auto time_ago = timestamp.secsTo(QDateTime::currentDateTime());
     // Return time ago in a human readable format
-    if (time_ago < 5)
-    {
+    if (time_ago < 5) {
         return QCoreApplication::translate("TimeAgo", "just now");
     }
-    else if (time_ago < 60)
-    {
+    else if (time_ago < 60) {
         return QCoreApplication::translate("TimeAgo", "%1 seconds ago").arg(time_ago);
     }
-    else if (time_ago < 3600)
-    {
-        if (time_ago / 60 == 1)
-        {
+    else if (time_ago < 3600) {
+        if (time_ago / 60 == 1) {
             return QCoreApplication::translate("TimeAgo", "1 minute ago");
         }
-        else
-        {
+        else {
             return QCoreApplication::translate("TimeAgo", "%1 minutes ago")
                 .arg(time_ago / 60);
         }
     }
-    else if (timestamp == QDateTime::fromSecsSinceEpoch(0))
-    {
+    else if (timestamp == QDateTime::fromSecsSinceEpoch(0)) {
         return QCoreApplication::translate("TimeAgo", "never");
     }
-    else
-    {
+    else {
         return QCoreApplication::translate("TimeAgo", "over an hour ago");
     }
 }

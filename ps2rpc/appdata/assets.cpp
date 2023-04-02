@@ -7,10 +7,8 @@
 #include "ps2.hpp"
 
 namespace assets {
-int imageKeyFromClass(ps2::Class class_, std::string& image_key)
-{
-    switch (class_)
-    {
+int imageKeyFromClass(ps2::Class class_, std::string& image_key) {
+    switch (class_) {
     case ps2::Class::Infiltrator:
         image_key = "infiltrator";
         break;
@@ -35,10 +33,8 @@ int imageKeyFromClass(ps2::Class class_, std::string& image_key)
     return 0;
 }
 
-int imageKeyFromVehicle(ps2::Vehicle vehicle, std::string& image_key)
-{
-    switch (vehicle)
-    {
+int imageKeyFromVehicle(ps2::Vehicle vehicle, std::string& image_key) {
+    switch (vehicle) {
     case ps2::Vehicle::Flash:
         image_key = "flash";
         break;
@@ -111,10 +107,8 @@ int imageKeyFromVehicle(ps2::Vehicle vehicle, std::string& image_key)
     return 0;
 }
 
-int imageKeyFromZone(ps2::Zone zone, std::string& image_key)
-{
-    switch (zone)
-    {
+int imageKeyFromZone(ps2::Zone zone, std::string& image_key) {
+    switch (zone) {
     case ps2::Zone::Indar:
         image_key = "indar";
         break;
