@@ -44,7 +44,7 @@ ActivityTracker::ActivityTracker(
     , ess_client_{}
 {
     // Set initial state via state factory
-    state_factory_.buildState(current_state_);
+    state_factory_.buildState(&current_state_);
     // Create WebSocket client for event streaming endpoint
     ess_client_.reset(new EssClient(SERVICE_ID, this));
     auto subs = generateSubscriptions();
@@ -75,7 +75,7 @@ void ActivityTracker::onPayloadReceived(const QString& event_name,
     }
     // Check if the new state is different from the old state
     GameState state;
-    if (state_factory_.buildState(state)) {
+    if (state_factory_.buildState(&state)) {
         qWarning() << "Unable to build state from factory";
         return;
     }

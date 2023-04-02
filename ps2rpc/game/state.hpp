@@ -65,7 +65,7 @@ public:
     ps2::Zone getZone() const noexcept;
     void setZone(ps2::Zone zone) noexcept;
 
-    int buildState(GameState& game_state) const;
+    int buildState(GameState* game_state) const;
 
 private:
     arx::character_id_t character_id_;

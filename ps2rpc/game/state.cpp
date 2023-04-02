@@ -113,8 +113,9 @@ void GameStateFactory::setZone(ps2::Zone zone) noexcept {
     zone_ = zone;
 }
 
-int GameStateFactory::buildState(GameState& game_state) const {
-    game_state = GameState{ character_id_, faction_, team_, server_, class_, vehicle_, zone_ };
+int GameStateFactory::buildState(GameState* game_state) const {
+    *game_state = GameState{
+        character_id_, faction_, team_, server_, class_, vehicle_, zone_ };
     return 0;
 }
 
