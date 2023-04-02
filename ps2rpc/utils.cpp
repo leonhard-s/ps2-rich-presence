@@ -4,6 +4,7 @@
 
 #include <string>
 
+#include <QtCore/QScopedPointer>
 #include <QtCore/QString>
 #include <QtCore/QUrl>
 #include <QtCore/QUrlQuery>
@@ -59,8 +60,8 @@ QUrl qUrlFromArxQuery(const arx::Query& query) {
     return url;
 }
 
-arx::json_t getJsonPayload(QNetworkReply& reply) {
-    return arx::json_t::parse(reply.readAll().toStdString());
+arx::json_t getJsonPayload(const QScopedPointer<QNetworkReply>& reply) {
+    return arx::json_t::parse(reply->readAll().toStdString());
 }
 
 arx::character_id_t characterIdFromJson(const arx::json_t& object) {

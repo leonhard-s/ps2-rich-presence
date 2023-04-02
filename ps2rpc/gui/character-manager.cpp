@@ -148,7 +148,7 @@ void CharacterManager::onCharacterInfoReceived() {
     }
     // Validate payload
     const std::string collection = "character";
-    auto payload = getJsonPayload(*reply);
+    auto payload = getJsonPayload(reply);
     if (!arx::validatePayload(collection, payload)) {
         QMessageBox::critical(this,
             tr("Character Manager"),

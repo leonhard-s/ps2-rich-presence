@@ -5,6 +5,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QJsonObject>
 #include <QtCore/QObject>
+#include <QtCore/QScopedPointer>
 #include <QtCore/QString>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkRequest>
@@ -123,13 +124,13 @@ void CharacterInfo::populate() {
 
 void CharacterInfo::onCharacterInfoRequestFinished() {
     // Get reply object from caller
-    auto reply = qobject_cast<QNetworkReply*>(QObject::sender());
+    QScopedPointer<QNetworkReply> reply {
+        qobject_cast<QNetworkReply*>(QObject::sender())
+    };
     if (!reply) {
         qWarning() << "CharacterInfo::onCharacterInfoRequestFinished()"
             << "Signal sender is not a QNetworkReply object.";
     }
-    // Delete reply once control is returned to the event loop
-    reply->deleteLater();
     // Check for network errors
     if (reply->error() != QNetworkReply::NoError) {
         qWarning() << "CharacterInfo::onCharacterInfoRequestFinished()"
@@ -137,7 +138,7 @@ void CharacterInfo::onCharacterInfoRequestFinished() {
         return;
     }
     // Get payload from reply
-    auto payload = getJsonPayload(*reply);
+    auto payload = getJsonPayload(reply);
     // Handle payload
     handleCharacterInfoPayload(payload);
 }

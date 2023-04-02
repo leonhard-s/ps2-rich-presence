@@ -4,6 +4,7 @@
 
 #include <string>
 
+#include <QtCore/QScopedPointer>
 #include <QtCore/QUrl>
 #include <QtNetwork/QNetworkReply>
 
@@ -14,7 +15,7 @@ namespace ps2rpc {
 
 QUrl qUrlFromArxQuery(const arx::Query& query);
 
-arx::json_t getJsonPayload(QNetworkReply& reply);
+arx::json_t getJsonPayload(const QScopedPointer<QNetworkReply>& reply);
 
 arx::character_id_t characterIdFromJson(const arx::json_t& object);
 
