@@ -47,7 +47,7 @@ enum class Vehicle {
  * @param vehicle The vehicle enum value to be populated.
  * @return 0 on success, -1 on failure.
  */
-int vehicle_from_vehicle_id(arx::vehicle_id_t vehicle_id, Vehicle& vehicle);
+int vehicle_from_vehicle_id(arx::vehicle_id_t vehicle_id, Vehicle* vehicle);
 
 /**
  * Return the display name for a given vehicle enum value.
@@ -56,6 +56,6 @@ int vehicle_from_vehicle_id(arx::vehicle_id_t vehicle_id, Vehicle& vehicle);
  * @param display_name The display name to be populated.
  * @return 0 on success, -1 on failure.
  */
-int vehicle_to_display_name(Vehicle vehicle, std::string& display_name);
+int vehicle_to_display_name(Vehicle vehicle, std::string* display_name);
 
 } // namespace ps2

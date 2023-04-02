@@ -8,25 +8,25 @@
 
 namespace ps2 {
 
-int server_from_world_id(arx::world_id_t world_id, Server& server) {
+int server_from_world_id(arx::world_id_t world_id, Server* server) {
     switch (world_id) {
     case 1:
-        server = Server::Connery;
+        *server = Server::Connery;
         break;
     case 10:
-        server = Server::Miller;
+        *server = Server::Miller;
         break;
     case 13:
-        server = Server::Cobalt;
+        *server = Server::Cobalt;
         break;
     case 17:
-        server = Server::Emerald;
+        *server = Server::Emerald;
         break;
     case 19:
-        server = Server::Jaeger;
+        *server = Server::Jaeger;
         break;
     case 40:
-        server = Server::SolTech;
+        *server = Server::SolTech;
         break;
     default:
         return -1;
@@ -34,25 +34,25 @@ int server_from_world_id(arx::world_id_t world_id, Server& server) {
     return 0;
 }
 
-int server_to_display_name(Server server, std::string& display_name) {
+int server_to_display_name(Server server, std::string* display_name) {
     switch (server) {
     case Server::Cobalt:
-        display_name = "Cobalt";
+        *display_name = "Cobalt";
         break;
     case Server::Connery:
-        display_name = "Connery";
+        *display_name = "Connery";
         break;
     case Server::Emerald:
-        display_name = "Emerald";
+        *display_name = "Emerald";
         break;
     case Server::Jaeger:
-        display_name = "Jaeger";
+        *display_name = "Jaeger";
         break;
     case Server::Miller:
-        display_name = "Miller";
+        *display_name = "Miller";
         break;
     case Server::SolTech:
-        display_name = "SolTech";
+        *display_name = "SolTech";
         break;
     default:
         return -1;

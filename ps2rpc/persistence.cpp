@@ -32,9 +32,9 @@ ps2rpc::CharacterData characterFromJson(const QJsonObject& json) {
     ps2rpc::CharacterData char_;
     char_.id = json["id"].toString().toULongLong();
     char_.name = json["name"].toString();
-    ps2::faction_from_faction_id(json["faction"].toInt(), char_.faction);
-    ps2::class_from_profile_id(json["last_profile"].toInt(), char_.class_);
-    ps2::server_from_world_id(json["world"].toInt(), char_.server);
+    ps2::faction_from_faction_id(json["faction"].toInt(), &char_.faction);
+    ps2::class_from_profile_id(json["last_profile"].toInt(), &char_.class_);
+    ps2::server_from_world_id(json["world"].toInt(), &char_.server);
     return char_;
 }
 

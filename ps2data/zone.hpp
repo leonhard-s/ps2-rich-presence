@@ -28,7 +28,7 @@ enum class Zone {
  * @param zone The zone enum value to be populated.
  * @return 0 on success, -1 on failure.
  */
-int zone_from_zone_id(arx::zone_id_t zone_id, Zone& zone);
+int zone_from_zone_id(arx::zone_id_t zone_id, Zone* zone);
 /**
  * Return the display name for a given zone enum value.
  *
@@ -36,6 +36,6 @@ int zone_from_zone_id(arx::zone_id_t zone_id, Zone& zone);
  * @param display_name The display name to be populated.
  * @return 0 on success, -1 on failure.
  */
-int zone_to_display_name(Zone zone, std::string& display_name);
+int zone_to_display_name(Zone zone, std::string* display_name);
 
 } // namespace ps2

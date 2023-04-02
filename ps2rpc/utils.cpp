@@ -90,7 +90,7 @@ std::string characterNameFromJson(const arx::json_t& object) {
 ps2::Faction factionFromJson(const arx::json_t& object) {
     auto id = quotedIntegerViaJsonKey<arx::faction_id_t>(object, "faction_id");
     ps2::Faction faction = ps2::Faction::NS;
-    if (ps2::faction_from_faction_id(id, faction)) {
+    if (ps2::faction_from_faction_id(id, &faction)) {
         qWarning() << "Invalid faction_id" << id;
     }
     return faction;
@@ -99,7 +99,7 @@ ps2::Faction factionFromJson(const arx::json_t& object) {
 ps2::Class classFromJsonLoadout(const arx::json_t& payload) {
     auto id = quotedIntegerViaJsonKey<arx::loadout_id_t>(payload, "loadout_id");
     ps2::Class class_ = ps2::Class::LightAssault;
-    if (ps2::class_from_loadout_id(id, class_)) {
+    if (ps2::class_from_loadout_id(id, &class_)) {
         qWarning() << "Invalid loadout_id" << id;
     }
     return class_;
@@ -108,7 +108,7 @@ ps2::Class classFromJsonLoadout(const arx::json_t& payload) {
 ps2::Class classFromJsonProfile(const arx::json_t& payload) {
     auto id = quotedIntegerViaJsonKey<arx::profile_id_t>(payload, "profile_id");
     ps2::Class class_ = ps2::Class::LightAssault;
-    if (ps2::class_from_profile_id(id, class_)) {
+    if (ps2::class_from_profile_id(id, &class_)) {
         qWarning() << "Invalid profile_id" << id;
     }
     return class_;
@@ -117,7 +117,7 @@ ps2::Class classFromJsonProfile(const arx::json_t& payload) {
 ps2::Server serverFromJson(const arx::json_t& object) {
     auto id = quotedIntegerViaJsonKey<arx::world_id_t>(object, "world_id");
     ps2::Server server = ps2::Server::Connery;
-    if (ps2::server_from_world_id(id, server)) {
+    if (ps2::server_from_world_id(id, &server)) {
         qWarning() << "Invalid world" << id;
     }
     return server;

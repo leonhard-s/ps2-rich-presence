@@ -95,13 +95,13 @@ void ActivityTracker::handleDeathPayload(const arx::json_t& payload) {
             payload[are_we_the_baddies ? "attacker_team_id" : "team_id"]);
         // Return status not checked as it failing is safe as the "team"
         // variable will not be updated
-        ps2::faction_from_faction_id(team_id, team);
+        ps2::faction_from_faction_id(team_id, &team);
     }
     // Class
     arx::loadout_id_t loadout_id = integerFromApiString<arx::loadout_id_t>(
         payload[are_we_the_baddies ? "attacker_loadout_id" : "character_loadout_id"]);
     ps2::Class class_ = state_factory_.getProfileAsClass();
-    if (ps2::class_from_loadout_id(loadout_id, class_)) {
+    if (ps2::class_from_loadout_id(loadout_id, &class_)) {
         qWarning() << "Unable to get class from loadout ID:" << loadout_id;
         return; // Do not update state if we cannot tell what class we are
     }
@@ -117,11 +117,11 @@ void ActivityTracker::handleDeathPayload(const arx::json_t& payload) {
         vehicle_id = integerFromApiString<arx::vehicle_id_t>(payload["vehicle_id"]);
     }
     ps2::Vehicle vehicle = ps2::Vehicle::None;
-    ps2::vehicle_from_vehicle_id(vehicle_id, vehicle);
+    ps2::vehicle_from_vehicle_id(vehicle_id, &vehicle);
     // Zone
     arx::zone_id_t zone_id = integerFromApiString<arx::zone_id_t>(payload["zone_id"]);
     ps2::Zone zone = state_factory_.getZone();
-    if (ps2::zone_from_zone_id(zone_id, zone)) {
+    if (ps2::zone_from_zone_id(zone_id, &zone)) {
         qWarning() << "Unable to get zone from zone ID:" << zone_id;
     }
     // Update state factory
@@ -146,7 +146,7 @@ void ActivityTracker::handleGainexperiencePayload(const arx::json_t& payload) {
     // Class
     arx::loadout_id_t loadout_id = integerFromApiString<arx::loadout_id_t>(payload["loadout_id"]);
     ps2::Class class_ = state_factory_.getProfileAsClass();
-    if (ps2::class_from_loadout_id(loadout_id, class_)) {
+    if (ps2::class_from_loadout_id(loadout_id, &class_)) {
         qWarning() << "Unable to get class from loadout ID:" << loadout_id;
         return; // Do not update state if we cannot tell what class we are
     }
@@ -158,7 +158,7 @@ void ActivityTracker::handleGainexperiencePayload(const arx::json_t& payload) {
     // Zone
     arx::zone_id_t zone_id = integerFromApiString<arx::zone_id_t>(payload["zone_id"]);
     ps2::Zone zone = state_factory_.getZone();
-    if (ps2::zone_from_zone_id(zone_id, zone)) {
+    if (ps2::zone_from_zone_id(zone_id, &zone)) {
         qWarning() << "Unable to get zone from zone ID:" << zone_id;
     }
     // Update state factory

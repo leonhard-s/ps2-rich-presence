@@ -247,14 +247,14 @@ CharacterData CharacterManager::parseCharacterPayload(
         qWarning() << "Invalid type: \"world_id\" must be a number";
     }
     // Convert IDs to enum values
-    if (ps2::faction_from_faction_id(faction_id, faction)) {
+    if (ps2::faction_from_faction_id(faction_id, &faction)) {
         qWarning() << "Unable to convert faction ID:" << faction_id;
     }
-    if (ps2::class_from_profile_id(profile_id, class_)) {
+    if (ps2::class_from_profile_id(profile_id, &class_)) {
         qWarning() << "Unable to create class from profile ID:"
             << profile_id;
     }
-    if (ps2::server_from_world_id(world_id, server)) {
+    if (ps2::server_from_world_id(world_id, &server)) {
         qWarning() << "Unable to create server from world ID:" << world_id;
     }
     // Create character info
