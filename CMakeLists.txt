@@ -13,18 +13,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 if(MSVC)
-  add_compile_definitions(
-    PRIVATE
-      W4
-      WX
+  add_compile_options(
+    /W4
   )
+
+  if(MSVC_VERSION GREATER_EQUAL 1920)
+    add_compile_options(
+      /analyze
+    )
+  endif()
 else()
-  add_compile_definitions(
-    PRIVATE
-      Wall
-      Wextra
-      pedantic
-      Werror
+  add_compile_options(
+    -Wall
+    -Wextra
+    -pedantic
   )
 endif()
 
