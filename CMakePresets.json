@@ -16,6 +16,15 @@
             }
         },
         {
+            "name": "linux",
+            "hidden": true,
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            }
+        },
+        {
             "name": "vcpkg",
             "cacheVariables": {
                 "CMAKE_INSTALL_PREFIX": {
@@ -50,6 +59,47 @@
                     "value": "Visual Studio 17 2022"
                 }
             }
+        },
+        {
+            "name": "vcpkg-x64-linux",
+            "displayName": "Linux64 (vcpkg)",
+            "inherits": [
+                "linux",
+                "vcpkg"
+            ],
+            "cacheVariables": {
+                "CMAKE_GENERATOR": {
+                    "type": "string",
+                    "value": "Unix Makefiles"
+                }
+            },
+            "hidden": true
+        },
+        {
+            "name": "vcpkg-x64-linux-release",
+            "displayName": "Release",
+            "inherits": [
+                "vcpkg-x64-linux"
+            ],
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": {
+                    "type": "string",
+                    "value": "Release"
+                }
+            }
+        },
+        {
+            "name": "vcpkg-x64-linux-debug",
+            "displayName": "Debug",
+            "inherits": [
+                "vcpkg-x64-linux"
+            ],
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": {
+                    "type": "string",
+                    "value": "Debug"
+                }
+            }
         }
     ],
     "buildPresets": [
@@ -64,6 +114,18 @@
             "displayName": "Debug",
             "configuration": "Debug",
             "configurePreset": "vcpkg-x64-windows"
+        },
+        {
+            "name": "vcpkg-x64-linux-release",
+            "displayName": "Release",
+            "configuration": "Release",
+            "configurePreset": "vcpkg-x64-linux-release"
+        },
+        {
+            "name": "vcpkg-x64-linux-debug",
+            "displayName": "Debug",
+            "configuration": "Debug",
+            "configurePreset": "vcpkg-x64-linux-debug"
         }
     ]
 }

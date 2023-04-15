@@ -1,0 +1,111 @@
+name: Build
+
+on:
+  - push
+  - workflow_dispatch
+
+env:
+  VCPKG_CACHE: ${{ github.workspace }}/vcpkg_installed
+
+jobs:
+  setup_vcpkg:
+    runs-on: windows-2022
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Restore vcpkg cache
+        id: cache-vcpkg-restore
+        uses: actions/cache/restore@v3
+        with:
+          path: ${{ env.VCPKG_CACHE }}
+          key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
+          restore-keys: ${{ runner.os }}-vcpkg-
+
+      - name: Install dependencies
+        if: steps.cache-vcpkg-restore.outputs.cache-hit != 'true'
+        run: vcpkg install --triplet x64-windows --x-install-root ${{ env.VCPKG_CACHE }} --no-print-usage
+
+      - name: Save updated vcpkg cache
+        id: cache-vcpkg-save
+        if: steps.cache-vcpkg-restore.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v3
+        with:
+          path: ${{ env.VCPKG_CACHE }}
+          key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
+
+  build_win64:
+    runs-on: windows-2022
+    needs: setup_vcpkg
+
+    strategy:
+      matrix:
+        build_type: [Debug, Release, RelWithDebInfo, MinSizeRel]
+        toolset: [v143, ClangCL]
+
+    env:
+      BUILD_DIR: ${{ github.workspace }}\build
+      DIST_DIR: ${{ github.workspace }}\dist
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Restore vcpkg cache
+        uses: actions/cache/restore@v3
+        with:
+          path: ${{ env.VCPKG_CACHE }}
+          key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
+          restore-keys: ${{ runner.os }}-vcpkg-
+          fail-on-cache-miss: true
+
+      - name: Configure CMake
+        run: cmake -S . -B ${{ env.BUILD_DIR }} --preset vcpkg-x64-windows -T ${{ matrix.toolset }} -DVCPKG_MANIFEST_INSTALL=OFF
+
+      - name: Build
+        run: cmake --build ${{ env.BUILD_DIR }} --config ${{ matrix.build_type }}
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: win64-${{ matrix.toolset }}-${{ matrix.build_type }}
+          path: ${{ env.BUILD_DIR }}
+
+  package_win64:
+    runs-on: windows-2022
+    needs: build_win64
+
+    strategy:
+      matrix:
+        build_type: [Debug, Release, RelWithDebInfo, MinSizeRel]
+        toolset: [v143, ClangCL]
+
+    env:
+      BUILD_DIR: ${{ github.workspace }}/build
+      DIST_DIR: ${{ github.workspace }}/dist
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Restore vcpkg cache
+        id: cache-vcpkg-restore
+        uses: actions/cache/restore@v3
+        with:
+          path: ${{ env.VCPKG_CACHE }}
+          key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
+          restore-keys: ${{ runner.os }}-vcpkg-
+          fail-on-cache-miss: true
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: win64-${{ matrix.toolset }}-${{ matrix.build_type }}
+          path: ${{ env.BUILD_DIR }}
+
+      - name: Install to dist directory
+        run: cmake --install ${{ env.BUILD_DIR }} --config ${{ matrix.build_type }} --prefix ${{ env.DIST_DIR }}-${{ matrix.toolset }}-${{ matrix.build_type }}
+
+      - name: Upload archive
+        uses: actions/upload-artifact@v3
+        with:
+          name: win64-${{ matrix.toolset }}-${{ matrix.build_type }}
+          path: ${{ env.DIST_DIR }}-${{ matrix.toolset }}-${{ matrix.build_type }}
