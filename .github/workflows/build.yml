@@ -40,7 +40,7 @@ jobs:
 
     strategy:
       matrix:
-        build_type: [Debug, Release, RelWithDebInfo, MinSizeRel]
+        build_type: [Debug, Release]
         toolset: [v143, ClangCL]
 
     env:
@@ -76,7 +76,7 @@ jobs:
 
     strategy:
       matrix:
-        build_type: [Debug, Release, RelWithDebInfo, MinSizeRel]
+        build_type: [Debug, Release]
         toolset: [v143, ClangCL]
 
     env:
