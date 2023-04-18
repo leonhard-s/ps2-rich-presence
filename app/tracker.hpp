@@ -14,7 +14,7 @@
 #include "game/character-info.hpp"
 #include "game/state.hpp"
 
-namespace ps2rpc {
+namespace PresenceApp {
 
 class ActivityTracker: public QObject {
     Q_OBJECT
@@ -47,4 +47,4 @@ private:
     QScopedPointer<EssClient> ess_client_;
 };
 
-} // namespace ps2rpc
+} // namespace PresenceApp

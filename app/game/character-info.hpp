@@ -13,7 +13,7 @@
 #include "arx.hpp"
 #include "ps2.hpp"
 
-namespace ps2rpc {
+namespace PresenceApp {
 
 struct CharacterData {
     CharacterData();
@@ -81,6 +81,6 @@ private:
     QScopedPointer<QNetworkAccessManager> manager_;
 };
 
-} // namespace ps2rpc
+} // namespace PresenceApp
 
-Q_DECLARE_METATYPE(ps2rpc::CharacterData)
+Q_DECLARE_METATYPE(PresenceApp::CharacterData)

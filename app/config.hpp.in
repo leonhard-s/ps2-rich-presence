@@ -1,0 +1,5 @@
+// Copyright 2022 Leonhard S.
+
+#pragma once
+
+#define PRESENCE_APP_VERSION "@PROJECT_VERSION@"

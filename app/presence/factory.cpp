@@ -11,7 +11,7 @@
 #include "appdata/assets.hpp"
 #include "game/state.hpp"
 
-namespace ps2rpc {
+namespace PresenceApp {
 PresenceFactory::PresenceFactory(QObject* parent)
     : QObject{ parent }
     , is_idle_{ true }
@@ -102,4 +102,4 @@ discord::Activity PresenceFactory::buildGameActivity(const GameState& state) {
     return activity;
 }
 
-} // namespace ps2rpc
+} // namespace PresenceApp

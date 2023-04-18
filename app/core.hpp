@@ -16,7 +16,7 @@
 #include "presence/handler.hpp"
 #include "tracker.hpp"
 
-namespace ps2rpc {
+namespace PresenceApp {
 
 class RichPresenceApp: public QObject {
     Q_OBJECT
@@ -68,4 +68,4 @@ private:
     QList<QDateTime> recent_events_;
 };
 
-} // namespace ps2rpc
+} // namespace PresenceApp

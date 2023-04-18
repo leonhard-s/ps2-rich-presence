@@ -13,13 +13,13 @@ An open source project providing [Rich Presence](https://discord.com/rich-presen
 
 ## Overview
 
-The PlanetSide 2 Rich Presence Client (PS2RPC) is a project enabling you to display the current status of your PS2 character on [Discord](https://discord.com/).
+The PlanetSide 2 Rich Presence Client is a project enabling you to display the current status of your PS2 character on [Discord](https://discord.com/).
 
 ![Rich Presence Comparison](https://user-images.githubusercontent.com/35902139/161334064-8f45dea9-60c4-489d-9b9f-c8963fea2b6c.png)
 
 This application runs independently of the main PlanetSide 2 executable and does not affect your in-game experience. Instead, it listens to the game's event stream and infers the current status of your character based on kills and experience gain.
 
-***Note:** PS2RPC is a third-party tool and not affiliated with [Rogue Planet Games](https://www.rogueplanetgaming.com/home) or the PlanetSide 2 development team in any way.*
+***Note:** This is a third-party tool and not affiliated with [Rogue Planet Games](https://www.rogueplanetgaming.com/home) or the PlanetSide 2 development team in any way.*
 
 ## Work In Progress
 
@@ -46,9 +46,9 @@ These are planned features that are in development but not yet available in the 
 
 This application is not tied to the game executable or your player account. Its only way to detect your character's status is to listen to the game's event stream, and it is limited to the events and activities it can detect.
 
-This means that there are things that PS2RPC cannot detect, such as:
+This means that there are things that it cannot detect, such as:
 
-- Whether the player is currently in a squad or platoon
+- Whether the player is currently in a squad or platoon (at least with any accuracy)
 - Where on the map they are
 - Any situation where you are not gaining any experience for an extended period of time
 
@@ -74,7 +74,7 @@ You are free to use and modify these screenshots for your own projects given com
 
 ## Installation
 
-You can find an installer package for the latest version of PS2RPC in the project [Releases](https://github.com/leonhard-s/ps2-rich-presence/releases).
+You can find an installer package for the latest version in the project [Releases](https://github.com/leonhard-s/ps2-rich-presence/releases).
 
 ### Building from Source
 
@@ -116,7 +116,7 @@ The following is a non-exhaustive guide to building this project from source.
 
 ## Contributing
 
-If you encounter any issues using PS2RPC or would like to suggest a new feature or change, feel free to get in touch via the repository [issues](https://github.com/leonhard-s/ps2-rich-presence/issues).
+If you encounter any issues using the app or would like to suggest a new feature or change, feel free to get in touch via the repository [issues](https://github.com/leonhard-s/ps2-rich-presence/issues).
 
 Please also consider lack of clarity or undocumented features when creating issues.  
 Using this application should be straightforward for anyone familiar with the game, and any improvement to make the app clearer and more intuitive to use is worth discussing.

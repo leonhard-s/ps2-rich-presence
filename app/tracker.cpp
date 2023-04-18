@@ -31,7 +31,7 @@ T integerFromApiString(const arx::json_string_t& value) {
 
 } // namespace
 
-namespace ps2rpc {
+namespace PresenceApp {
 
 ActivityTracker::ActivityTracker(
     const CharacterData& character,
@@ -185,4 +185,4 @@ QList<arx::Subscription> ActivityTracker::generateSubscriptions() const {
     return QList{ deaths, experience };
 }
 
-} // namespace ps2rpc
+} // namespace PresenceApp

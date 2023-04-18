@@ -11,7 +11,7 @@
 
 #include "appdata/appid.hpp"
 
-namespace ps2rpc {
+namespace PresenceApp {
 
 PresenceHandler::PresenceHandler(QObject* parent)
     : QObject{ parent }
@@ -47,4 +47,4 @@ void PresenceHandler::setActivity(discord::Activity activity) {
                 << "updating activity!"; });
 }
 
-} // namespace ps2rpc
+} // namespace PresenceApp

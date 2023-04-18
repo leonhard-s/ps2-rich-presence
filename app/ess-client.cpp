@@ -13,7 +13,7 @@
 #include "arx.hpp"
 #include "arx/ess.hpp"
 
-namespace ps2rpc {
+namespace PresenceApp {
 
 EssClient::EssClient(const QString& service_id, QObject* parent)
     : QObject{ parent }
@@ -114,4 +114,4 @@ void EssClient::parseMessage(const QString& message) {
     emit payloadReceived(event_name, payload);
 }
 
-} // namespace ps2rpc
+} // namespace PresenceApp

@@ -19,7 +19,7 @@
 #include "appdata/service-id.hpp"
 #include "utils.hpp"
 
-namespace ps2rpc {
+namespace PresenceApp {
 
 CharacterData::CharacterData()
     : id{ 0 }
@@ -226,4 +226,4 @@ void CharacterInfo::updateFieldsIfChanged(
     }
 }
 
-} // namespace ps2rpc
+} // namespace PresenceApp

@@ -17,7 +17,7 @@
 
 namespace {
 
-QJsonObject characterToJson(const ps2rpc::CharacterData& character) {
+QJsonObject characterToJson(const PresenceApp::CharacterData& character) {
     QJsonObject json;
     json["id"] = QString::number(character.id);
     json["name"] = character.name;
@@ -28,8 +28,8 @@ QJsonObject characterToJson(const ps2rpc::CharacterData& character) {
     return json;
 }
 
-ps2rpc::CharacterData characterFromJson(const QJsonObject& json) {
-    ps2rpc::CharacterData char_;
+PresenceApp::CharacterData characterFromJson(const QJsonObject& json) {
+    PresenceApp::CharacterData char_;
     char_.id = json["id"].toString().toULongLong();
     char_.name = json["name"].toString();
     ps2::faction_from_faction_id(json["faction"].toInt(), &char_.faction);
@@ -83,7 +83,7 @@ QString getConfigFilePath() {
 
 } // namespace
 
-namespace ps2rpc {
+namespace PresenceApp {
 
 void AppConfigManager::save(const QVariantMap& config) {
     QJsonObject json_object;
@@ -160,4 +160,4 @@ QVariantMap AppConfigManager::defaults() {
     return config;
 }
 
-} // namespace ps2rpc
+} // namespace PresenceApp

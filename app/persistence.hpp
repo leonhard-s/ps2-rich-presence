@@ -6,7 +6,7 @@
 
 #include "game/character-info.hpp"
 
-namespace ps2rpc {
+namespace PresenceApp {
 
 class AppConfigManager {
 public:
@@ -17,4 +17,4 @@ public:
     static QVariantMap defaults();
 };
 
-} // namespace ps2rpc
+} // namespace PresenceApp

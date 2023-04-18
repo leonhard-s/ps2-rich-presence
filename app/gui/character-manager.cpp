@@ -31,7 +31,7 @@
 #include "game/character-info.hpp"
 #include "utils.hpp"
 
-namespace ps2rpc {
+namespace PresenceApp {
 
 CharacterManager::CharacterManager(QWidget* parent
 )
@@ -332,4 +332,4 @@ void CharacterManager::setupUi() {
     button_layout->addWidget(button_close_);
 }
 
-} // namespace ps2rpc
+} // namespace PresenceApp

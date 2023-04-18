@@ -4,7 +4,7 @@
 
 #include "ps2.hpp"
 
-namespace ps2rpc {
+namespace PresenceApp {
 
 /**
  * Mutable representation of the current state of a player in PS2.
@@ -77,4 +77,4 @@ private:
     ps2::Zone zone_;
 };
 
-} // namespace ps2rpc
+} // namespace PresenceApp

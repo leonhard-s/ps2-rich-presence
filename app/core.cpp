@@ -16,7 +16,7 @@
 #include "presence/handler.hpp"
 #include "tracker.hpp"
 
-namespace ps2rpc {
+namespace PresenceApp {
 
 RichPresenceApp::RichPresenceApp(QObject* parent)
     : QObject(parent)
@@ -202,4 +202,4 @@ void RichPresenceApp::updateRecentEventsList() {
     recent_events_.push_back(now);
 }
 
-} // namespace ps2rpc
+} // namespace PresenceApp

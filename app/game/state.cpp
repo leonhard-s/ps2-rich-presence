@@ -4,7 +4,7 @@
 
 #include "ps2.hpp"
 
-namespace ps2rpc {
+namespace PresenceApp {
 
 GameState::GameState()
     : character_id{ 0 }
@@ -119,4 +119,4 @@ int GameStateFactory::buildState(GameState* game_state) const {
     return 0;
 }
 
-} // namespace ps2rpc
+} // namespace PresenceApp

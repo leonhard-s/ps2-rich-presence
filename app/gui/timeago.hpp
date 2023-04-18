@@ -6,7 +6,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
-namespace ps2rpc {
+namespace PresenceApp {
 
 /**
  * Returns a string describing the time since the given timestamp.
@@ -40,4 +40,4 @@ QString getTimeAgo(const QDateTime& timestamp) {
     }
 }
 
-} // namespace ps2rpc
+} // namespace PresenceApp

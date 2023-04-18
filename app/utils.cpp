@@ -44,7 +44,7 @@ T quotedIntegerViaJsonKey(const arx::json_t& object,
 
 } // namespace
 
-namespace ps2rpc {
+namespace PresenceApp {
 
 QUrl qUrlFromArxQuery(const arx::Query& query) {
     QUrl url;
@@ -126,4 +126,4 @@ ps2::Server serverFromJson(const arx::json_t& object) {
     return server;
 }
 
-} // namespace ps2rpc
+} // namespace PresenceApp

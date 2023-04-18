@@ -16,7 +16,7 @@
 
 #include "game/character-info.hpp"
 
-namespace ps2rpc {
+namespace PresenceApp {
 
 class CharacterManager: public QDialog {
     Q_OBJECT
@@ -50,4 +50,4 @@ private:
     QPushButton* button_close_;
 };
 
-} // namespace ps2rpc
+} // namespace PresenceApp

@@ -10,7 +10,7 @@
 #include "arx.hpp"
 #include "arx/ess.hpp"
 
-namespace ps2rpc {
+namespace PresenceApp {
 
 /**
  * WebSocket client for the PS2 event streaming service.
@@ -52,4 +52,4 @@ private:
     QWebSocket ws_;
 };
 
-} // namespace ps2rpc
+} // namespace PresenceApp

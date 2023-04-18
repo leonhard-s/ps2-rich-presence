@@ -15,7 +15,7 @@
 #include "game/character-info.hpp"
 #include "core.hpp"
 
-namespace ps2rpc {
+namespace PresenceApp {
 
 class MainWindow: public QWidget {
     Q_OBJECT
@@ -74,4 +74,4 @@ private:
     QPushButton* minimise_button_;
 };
 
-} // namespace ps2rpc
+} // namespace PresenceApp

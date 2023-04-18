@@ -7,7 +7,7 @@
 
 #include "discord-game-sdk/discord.h"
 
-namespace ps2rpc {
+namespace PresenceApp {
 
 class PresenceHandler: public QObject {
     Q_OBJECT
@@ -26,4 +26,4 @@ private:
     QTimer* timer_;
 };
 
-} // namespace ps2rpc
+} // namespace PresenceApp

@@ -9,7 +9,7 @@
 
 #include "game/state.hpp"
 
-namespace ps2rpc {
+namespace PresenceApp {
 
 class PresenceFactory: public QObject {
     Q_OBJECT
@@ -34,4 +34,4 @@ private:
     bool is_idle_;
 };
 
-} // namespace ps2rpc
+} // namespace PresenceApp

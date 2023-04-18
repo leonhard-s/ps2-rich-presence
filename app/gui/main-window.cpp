@@ -25,7 +25,7 @@
 #include "gui/timeago.hpp"
 #include "persistence.hpp"
 
-namespace ps2rpc {
+namespace PresenceApp {
 
 MainWindow::MainWindow()
     : QWidget(nullptr)
@@ -381,4 +381,4 @@ void MainWindow::setupUi() {
     footer_buttons_layout->addWidget(minimise_button_);
 }
 
-} // namespace ps2rpc
+} // namespace PresenceApp

@@ -11,7 +11,7 @@
 #include "arx.hpp"
 #include "ps2.hpp"
 
-namespace ps2rpc {
+namespace PresenceApp {
 
 QUrl qUrlFromArxQuery(const arx::Query& query);
 
@@ -29,4 +29,4 @@ ps2::Class classFromJsonProfile(const arx::json_t& object);
 
 ps2::Server serverFromJson(const arx::json_t& object);
 
-} // namespace ps2rpc
+} // namespace PresenceApp

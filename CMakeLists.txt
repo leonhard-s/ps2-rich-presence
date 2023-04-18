@@ -44,7 +44,7 @@ add_subdirectory(arx)
 add_subdirectory(ps2data)
 
 # Main executable
-add_subdirectory(ps2rpc)
+add_subdirectory(app)
 
 # Install
 # -----------------------------------------------------------------------------
