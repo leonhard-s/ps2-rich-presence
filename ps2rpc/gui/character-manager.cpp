@@ -27,7 +27,7 @@
 #include "arx.hpp"
 #include "ps2.hpp"
 
-#include "appdata/serviceid.hpp"
+#include "appdata/service-id.hpp"
 #include "game/character-info.hpp"
 #include "utils.hpp"
 

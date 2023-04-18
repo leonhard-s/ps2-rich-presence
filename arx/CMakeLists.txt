@@ -4,7 +4,7 @@ project(Auraxium VERSION 0.3 LANGUAGES CXX)
 find_package(nlohmann_json 3.11.2 REQUIRED)
 
 add_library(Arx STATIC
-  "include/arx/ps2_types.hpp"
+  "include/arx/ps2-types.hpp"
   "include/arx/query.hpp"
   "include/arx/payload.hpp"
   "include/arx/support.hpp"

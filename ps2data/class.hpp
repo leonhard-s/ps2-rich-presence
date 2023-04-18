@@ -4,7 +4,7 @@
 
 #include <string>
 
-#include "arx/ps2_types.hpp"
+#include "arx/ps2-types.hpp"
 
 #include "faction.hpp"
 

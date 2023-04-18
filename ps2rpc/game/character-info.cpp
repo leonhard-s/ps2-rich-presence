@@ -16,7 +16,7 @@
 #include "arx.hpp"
 #include "ps2.hpp"
 
-#include "appdata/serviceid.hpp"
+#include "appdata/service-id.hpp"
 #include "utils.hpp"
 
 namespace ps2rpc {

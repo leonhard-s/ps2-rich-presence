@@ -10,7 +10,7 @@
 #include "arx.hpp"
 #include "ps2.hpp"
 
-#include "ess_client.hpp"
+#include "ess-client.hpp"
 #include "game/character-info.hpp"
 #include "game/state.hpp"
 

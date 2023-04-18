@@ -16,8 +16,8 @@
 #include "arx.hpp"
 #include "arx/ess.hpp"
 
-#include "appdata/serviceid.hpp"
-#include "ess_client.hpp"
+#include "appdata/service-id.hpp"
+#include "ess-client.hpp"
 #include "game/character-info.hpp"
 #include "game/state.hpp"
 #include "utils.hpp"
