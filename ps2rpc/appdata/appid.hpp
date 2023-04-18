@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <cstdint>
+
 /**
  * This informs Discord what application we are using and which assets are
  * available.
