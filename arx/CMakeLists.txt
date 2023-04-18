@@ -36,3 +36,8 @@ target_link_libraries(Arx
   PUBLIC
     nlohmann_json::nlohmann_json
 )
+set_target_properties(Arx PROPERTIES
+  CXX_STANDARD 20
+  CXX_STANDARD_REQUIRED ON
+  CXX_EXTENSIONS OFF
+)

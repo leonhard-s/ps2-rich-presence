@@ -58,7 +58,7 @@ add_executable(Ps2RichPresence WIN32
 target_include_directories(Ps2RichPresence
   PRIVATE
     "${PROJECT_SOURCE_DIR}"
-    "${PROJECT_BINARY_DIR}" # Required for config.hpp.in
+    "${PROJECT_BINARY_DIR}"
 )
 target_link_libraries(Ps2RichPresence
   PRIVATE
@@ -71,10 +71,13 @@ target_link_libraries(Ps2RichPresence
     Ps2Data
     Arx
 )
-set_target_properties(Ps2RichPresence
-  PROPERTIES
-    OUTPUT_NAME "ps2-rich-presence"
-    AUTOMOC ON
+set_target_properties(Ps2RichPresence PROPERTIES
+  CXX_STANDARD 20
+  CXX_STANDARD_REQUIRED ON
+  CXX_EXTENSIONS OFF
+
+  AUTOMOC ON
+  OUTPUT_NAME "ps2-rich-presence"
 )
 
 install(TARGETS Ps2RichPresence
