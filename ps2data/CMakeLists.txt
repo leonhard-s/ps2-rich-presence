@@ -26,4 +26,7 @@ set_target_properties(Ps2Data PROPERTIES
   CXX_STANDARD 20
   CXX_STANDARD_REQUIRED ON
   CXX_EXTENSIONS OFF
+
+  OUTPUT_NAME "libps2data"
+  PREFIX ""
 )
