@@ -14,19 +14,14 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 if(MSVC)
   add_compile_options(
-    /W4
+    /MP # Multi-processor compilation
+    /W4 # Warning level 4
   )
-
-  if(MSVC_VERSION GREATER_EQUAL 1920)
-    add_compile_options(
-      /analyze
-    )
-  endif()
 else()
   add_compile_options(
-    -Wall
-    -Wextra
-    -pedantic
+    -Wall # All warnings
+    -Wextra # Extra warnings
+    -pedantic # Pedantic warnings
   )
 endif()
 

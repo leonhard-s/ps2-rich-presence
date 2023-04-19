@@ -61,6 +61,32 @@
             }
         },
         {
+            "name": "vcpkg-x64-windows-codeanalysis",
+            "displayName": "Win64 (vcpkg, Code Analysis)",
+            "inherits": [
+                "vcpkg-x64-windows"
+            ],
+            "cacheVariables": {
+                "CMAKE_CXX_FLAGS": {
+                    "type": "string",
+                    "value": "/analyze"
+                }
+            }
+        },
+        {
+            "name": "vcpkg-x64-windows-asan",
+            "displayName": "Win64 (vcpkg, ASAN)",
+            "inherits": [
+                "vcpkg-x64-windows"
+            ],
+            "cacheVariables": {
+                "CMAKE_CXX_FLAGS": {
+                    "type": "string",
+                    "value": "/fsanitize=address /EHsc /D_DISABLE_VECTOR_ANNOTATION"
+                }
+            }
+        },
+        {
             "name": "vcpkg-x64-linux",
             "displayName": "Linux64 (vcpkg)",
             "inherits": [
