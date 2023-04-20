@@ -57,6 +57,10 @@
                 "CMAKE_GENERATOR": {
                     "type": "string",
                     "value": "Visual Studio 17 2022"
+                },
+                "CMAKE_CXX_FLAGS": {
+                    "type": "string",
+                    "value": "/EHsc"
                 }
             }
         },
@@ -69,7 +73,7 @@
             "cacheVariables": {
                 "CMAKE_CXX_FLAGS": {
                     "type": "string",
-                    "value": "/analyze"
+                    "value": "/analyze /EHsc"
                 }
             }
         },

@@ -15,7 +15,11 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 if(MSVC)
   add_compile_options(
     /MP # Multi-processor compilation
-    /W4 # Warning level 4
+    /Wall # All warnings
+
+    # Disable warnings
+    /wd4820 # Padding bytes added
+    /wd5045 # Spectre mitigation
   )
 else()
   add_compile_options(
