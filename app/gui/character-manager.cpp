@@ -333,3 +333,5 @@ void CharacterManager::setupUi() {
 }
 
 } // namespace PresenceApp
+
+#include "moc_character-manager.cpp"

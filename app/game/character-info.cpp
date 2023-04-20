@@ -227,3 +227,5 @@ void CharacterInfo::updateFieldsIfChanged(
 }
 
 } // namespace PresenceApp
+
+#include "moc_character-info.cpp"

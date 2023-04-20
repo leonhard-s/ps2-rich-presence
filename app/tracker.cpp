@@ -186,3 +186,5 @@ QList<arx::Subscription> ActivityTracker::generateSubscriptions() const {
 }
 
 } // namespace PresenceApp
+
+#include "moc_tracker.cpp"

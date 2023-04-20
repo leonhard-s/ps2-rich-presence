@@ -115,3 +115,5 @@ void EssClient::parseMessage(const QString& message) {
 }
 
 } // namespace PresenceApp
+
+#include "moc_ess-client.cpp"

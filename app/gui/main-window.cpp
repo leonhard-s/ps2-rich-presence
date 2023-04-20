@@ -382,3 +382,5 @@ void MainWindow::setupUi() {
 }
 
 } // namespace PresenceApp
+
+#include "moc_main-window.cpp"

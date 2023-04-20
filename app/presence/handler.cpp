@@ -48,3 +48,5 @@ void PresenceHandler::setActivity(discord::Activity activity) {
 }
 
 } // namespace PresenceApp
+
+#include "moc_handler.cpp"

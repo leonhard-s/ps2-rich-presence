@@ -103,3 +103,5 @@ discord::Activity PresenceFactory::buildGameActivity(const GameState& state) {
 }
 
 } // namespace PresenceApp
+
+#include "moc_factory.cpp"

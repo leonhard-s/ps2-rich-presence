@@ -203,3 +203,5 @@ void RichPresenceApp::updateRecentEventsList() {
 }
 
 } // namespace PresenceApp
+
+#include "moc_core.cpp"
