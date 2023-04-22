@@ -87,10 +87,16 @@ string_t eventToEventName(const Event& event) {
         return "SkillAdded";
     case Event::VehicleDestroy:
         return "VehicleDestroy";
+    case Event::Unknown:
     default:
         return "Unknown";
     }
 }
+
+#ifdef _MSC_VER
+#   pragma warning(push)
+#   pragma warning(disable : 4061)
+#endif
 
 bool isEventCharacterCentric(const Event& event) {
     switch (event) {
@@ -124,5 +130,9 @@ bool isEventWorldCentric(const Event& event) {
         return false;
     }
 }
+
+#ifdef _MSC_VER
+#   pragma warning(pop)
+#endif
 
 } // namespace arx

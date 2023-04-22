@@ -157,6 +157,7 @@ int vehicle_to_display_name(Vehicle vehicle, std::string* display_name) {
     case Vehicle::Dervish:
         *display_name = "Dervish";
         break;
+    case Vehicle::None:
     default:
         return -1;
     }

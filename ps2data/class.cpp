@@ -148,6 +148,7 @@ arx::profile_id_t class_to_profile_id(Class class_, Faction faction) {
             return 17;
         case Faction::NSO:
             return 190;
+        case Faction::NS:
         default:
             return 0;
         }
@@ -161,6 +162,7 @@ arx::profile_id_t class_to_profile_id(Class class_, Faction faction) {
             return 19;
         case Faction::NSO:
             return 191;
+        case Faction::NS:
         default:
             return 0;
         }
@@ -174,6 +176,7 @@ arx::profile_id_t class_to_profile_id(Class class_, Faction faction) {
             return 20;
         case Faction::NSO:
             return 192;
+        case Faction::NS:
         default:
             return 0;
         }
@@ -187,6 +190,7 @@ arx::profile_id_t class_to_profile_id(Class class_, Faction faction) {
             return 21;
         case Faction::NSO:
             return 193;
+        case Faction::NS:
         default:
             return 0;
         }
@@ -200,6 +204,7 @@ arx::profile_id_t class_to_profile_id(Class class_, Faction faction) {
             return 22;
         case Faction::NSO:
             return 194;
+        case Faction::NS:
         default:
             return 0;
         }
@@ -213,6 +218,7 @@ arx::profile_id_t class_to_profile_id(Class class_, Faction faction) {
             return 23;
         case Faction::NSO:
             return 252;
+        case Faction::NS:
         default:
             return 0;
         }

@@ -101,6 +101,7 @@ int imageKeyFromVehicle(ps2::Vehicle vehicle, std::string* image_key) {
     case ps2::Vehicle::Dervish:
         *image_key = "dervish";
         break;
+    case ps2::Vehicle::None:
     default:
         return -1;
     }
