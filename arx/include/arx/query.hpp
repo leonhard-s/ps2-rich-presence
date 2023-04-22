@@ -76,6 +76,11 @@ public:
     explicit Query(
         const std::string& collection = "",
         const std::string& service_id = "s:example");
+    Query(const Query& other);
+    Query(Query&& other) noexcept = default;
+
+    Query& operator=(const Query& other);
+    Query& operator=(Query&& other) noexcept = default;
 
     // Request format / path configuration
 

@@ -174,6 +174,63 @@ Query::Query(
     , distinct_{ "" },
     retry_{ true } {}
 
+Query::Query(const Query& other)
+    : SupportsJoin(other)
+    , service_id_{ other.service_id_ }
+    , format_{ other.format_ }
+    , verb_{ other.verb_ }
+    , namespace_{ other.namespace_ }
+    , collection_{ other.collection_ }
+    , show_{ other.show_ }
+    , hide_{ other.hide_ }
+    , sort_{ other.sort_ }
+    , has_{ other.has_ }
+    , resolve_{ other.resolve_ }
+    , case_{ other.case_ }
+    , limit_{ other.limit_ }
+    , limit_per_db_{ other.limit_per_db_ }
+    , start_{ other.start_ }
+    , include_null_{ other.include_null_ }
+    , lang_{ other.lang_ }
+    , timing_{ other.timing_ }
+    , exact_match_first_{ other.exact_match_first_ }
+    , distinct_{ other.distinct_ }
+    , retry_{ other.retry_ } {
+    if (other.tree_) {
+        tree_ = std::make_unique<TreeData>(*other.tree_);
+    }
+}
+
+Query& Query::operator=(const Query& other) {
+    if (this != &other) {
+        SupportsJoin::operator=(other);
+        service_id_ = other.service_id_;
+        format_ = other.format_;
+        verb_ = other.verb_;
+        namespace_ = other.namespace_;
+        collection_ = other.collection_;
+        show_ = other.show_;
+        hide_ = other.hide_;
+        sort_ = other.sort_;
+        has_ = other.has_;
+        resolve_ = other.resolve_;
+        case_ = other.case_;
+        limit_ = other.limit_;
+        limit_per_db_ = other.limit_per_db_;
+        start_ = other.start_;
+        include_null_ = other.include_null_;
+        lang_ = other.lang_;
+        timing_ = other.timing_;
+        exact_match_first_ = other.exact_match_first_;
+        distinct_ = other.distinct_;
+        retry_ = other.retry_;
+        if (other.tree_) {
+            tree_ = std::make_unique<TreeData>(*other.tree_);
+        }
+    }
+    return *this;
+}
+
 std::string Query::getServiceId() const {
     return service_id_;
 }

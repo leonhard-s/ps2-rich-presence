@@ -23,8 +23,13 @@ struct CharacterData {
         ps2::Faction faction,
         ps2::Class class_,
         ps2::Server server);
+    CharacterData(const CharacterData&) = default;
+    CharacterData(CharacterData&&) = default;
+
     ~CharacterData() = default;
+
     CharacterData& operator=(const CharacterData&) = default;
+    CharacterData& operator=(CharacterData&&) = default;
 
     bool operator==(const CharacterData& other) const;
     bool operator!=(const CharacterData& other) const;
