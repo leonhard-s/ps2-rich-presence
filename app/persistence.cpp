@@ -66,7 +66,7 @@ QVariantMap loadConfigVersion1_0(const QJsonObject& json) {
         if (it.key() == "characters") {
             // Load all characters
             QVariantList characters_list;
-            for (const auto& char_json : it.value().toArray()) {
+            for (auto&& char_json : it.value().toArray()) {
                 auto char_data = characterFromJson(char_json.toObject());
                 characters_list.append(QVariant::fromValue(char_data));
             }
