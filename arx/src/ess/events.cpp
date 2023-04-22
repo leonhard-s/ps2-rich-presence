@@ -93,7 +93,7 @@ string_t eventToEventName(const Event& event) {
     }
 }
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && !defined(__clang__)
 #   pragma warning(push)
 #   pragma warning(disable : 4061)
 #endif
@@ -131,7 +131,7 @@ bool isEventWorldCentric(const Event& event) {
     }
 }
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && !defined(__clang__)
 #   pragma warning(pop)
 #endif
 

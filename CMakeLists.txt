@@ -8,11 +8,11 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 # -----------------------------------------------------------------------------
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-if(MSVC)
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC") # MSVC compiler
   add_compile_options(
     /MP # Multi-processor compilation
     /Wall # All warnings
@@ -21,6 +21,15 @@ if(MSVC)
     /wd4820 # Padding bytes added
     /wd5045 # Spectre mitigation
     /wd4866 # Evaluation order nonconformance in operator<< (compiler issue)
+  )
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND MSVC) # Clang compiler with MSVC frontend
+  add_compile_options(
+    /Wall # All warnings
+
+    # Disable warnings
+    -Wno-c++98-compat -Wno-c++98-compat-pedantic # C++98 compatibility
+    -Wno-c++20-compat # pre-C++20 compatibility
+    -Wno-covered-switch-default # Switch statement with unreachable default case
   )
 else()
   add_compile_options(

@@ -383,13 +383,13 @@ void MainWindow::setupUi() {
 
 } // namespace PresenceApp
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && !defined(__clang__)
 #   pragma warning(push)
 #   pragma warning(disable : 4464)
 #endif
 
 #include "moc_main-window.cpp"
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && !defined(__clang__)
 #   pragma warning(pop)
 #endif

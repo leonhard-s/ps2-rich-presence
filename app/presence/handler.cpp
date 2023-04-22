@@ -49,13 +49,13 @@ void PresenceHandler::setActivity(discord::Activity activity) {
 
 } // namespace PresenceApp
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && !defined(__clang__)
 #   pragma warning(push)
 #   pragma warning(disable : 4464)
 #endif
 
 #include "moc_handler.cpp"
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && !defined(__clang__)
 #   pragma warning(pop)
 #endif
