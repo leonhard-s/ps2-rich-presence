@@ -334,4 +334,13 @@ void CharacterManager::setupUi() {
 
 } // namespace PresenceApp
 
+#ifdef _MSC_VER
+#   pragma warning(push)
+#   pragma warning(disable : 4464)
+#endif
+
 #include "moc_character-manager.cpp"
+
+#ifdef _MSC_VER
+#   pragma warning(pop)
+#endif

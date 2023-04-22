@@ -116,4 +116,13 @@ void EssClient::parseMessage(const QString& message) {
 
 } // namespace PresenceApp
 
+#ifdef _MSC_VER
+#   pragma warning(push)
+#   pragma warning(disable : 4464)
+#endif
+
 #include "moc_ess-client.cpp"
+
+#ifdef _MSC_VER
+#   pragma warning(pop)
+#endif

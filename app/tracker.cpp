@@ -187,4 +187,13 @@ QList<arx::Subscription> ActivityTracker::generateSubscriptions() const {
 
 } // namespace PresenceApp
 
+#ifdef _MSC_VER
+#   pragma warning(push)
+#   pragma warning(disable : 4464)
+#endif
+
 #include "moc_tracker.cpp"
+
+#ifdef _MSC_VER
+#   pragma warning(pop)
+#endif
