@@ -16,6 +16,11 @@ class PresenceFactory: public QObject {
 
 public:
     explicit PresenceFactory(QObject* parent = nullptr);
+    PresenceFactory(const PresenceFactory& other) = delete;
+    PresenceFactory(PresenceFactory&& other) noexcept = delete;
+
+    PresenceFactory& operator=(const PresenceFactory& other) = delete;
+    PresenceFactory& operator=(PresenceFactory&& other) noexcept = delete;
 
     discord::Activity getPresenceAsActivity();
 

@@ -56,6 +56,11 @@ public:
         ps2::Class class_,
         ps2::Server server,
         QObject* parent = nullptr);
+    CharacterInfo(const CharacterInfo&) = delete;
+    CharacterInfo(CharacterInfo&&) = delete;
+
+    CharacterInfo& operator=(const CharacterInfo&) = delete;
+    CharacterInfo& operator=(CharacterInfo&&) = delete;
 
     arx::character_id_t getId() const;
     QString getName() const;

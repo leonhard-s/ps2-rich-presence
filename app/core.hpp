@@ -23,6 +23,11 @@ class RichPresenceApp: public QObject {
 
 public:
     explicit RichPresenceApp(QObject* parent = nullptr);
+    RichPresenceApp(const RichPresenceApp&) = delete;
+    RichPresenceApp(RichPresenceApp&&) = delete;
+
+    RichPresenceApp& operator=(const RichPresenceApp&) = delete;
+    RichPresenceApp& operator=(RichPresenceApp&&) = delete;
 
     bool getRichPresenceEnabled() const;
     void setRichPresenceEnabled(bool enabled);

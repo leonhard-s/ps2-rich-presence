@@ -16,6 +16,11 @@ public:
     static constexpr qint16 PRESENCE_UPDATE_RATE_LIMIT = 15000;
 
     explicit PresenceHandler(QObject* parent = nullptr);
+    PresenceHandler(const PresenceHandler& other) = delete;
+    PresenceHandler(PresenceHandler&& other) noexcept = delete;
+
+    PresenceHandler& operator=(const PresenceHandler& other) = delete;
+    PresenceHandler& operator=(PresenceHandler&& other) noexcept = delete;
 
 public Q_SLOTS:
     void clearActivity();

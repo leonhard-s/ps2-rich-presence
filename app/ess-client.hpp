@@ -21,6 +21,11 @@ class EssClient: public QObject {
 public:
     explicit EssClient(const QString& service_id,
         QObject* parent = nullptr);
+    EssClient(const EssClient& other) = delete;
+    EssClient(EssClient&& other) noexcept = delete;
+
+    EssClient& operator=(const EssClient& other) = delete;
+    EssClient& operator=(EssClient&& other) noexcept = delete;
 
     bool isConnected() const;
     const QList<arx::Subscription>& getSubscriptions() const;

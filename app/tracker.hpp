@@ -23,6 +23,11 @@ public:
     explicit ActivityTracker(
         const CharacterData& character,
         QObject* parent = nullptr);
+    ActivityTracker(const ActivityTracker& other) = delete;
+    ActivityTracker(ActivityTracker&& other) noexcept = delete;
+
+    ActivityTracker& operator=(const ActivityTracker& other) = delete;
+    ActivityTracker& operator=(ActivityTracker&& other) noexcept = delete;
 
     CharacterData getCharacter() const;
 

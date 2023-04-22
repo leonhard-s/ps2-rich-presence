@@ -22,6 +22,11 @@ class MainWindow: public QWidget {
 
 public:
     MainWindow();
+    MainWindow(const MainWindow& other) = delete;
+    MainWindow(MainWindow&& other) noexcept = delete;
+
+    MainWindow& operator=(const MainWindow& other) = delete;
+    MainWindow& operator=(MainWindow&& other) noexcept = delete;
 
     bool isPresenceEnabled() const;
     bool isTrackerRunning() const;

@@ -23,6 +23,11 @@ class CharacterManager: public QDialog {
 
 public:
     explicit CharacterManager(QWidget* parent = nullptr);
+    CharacterManager(const CharacterManager& other) = delete;
+    CharacterManager(CharacterManager&& other) noexcept = delete;
+
+    CharacterManager& operator=(const CharacterManager& other) = delete;
+    CharacterManager& operator=(CharacterManager&& other) noexcept = delete;
 
     void addCharacter(const CharacterData& character);
 
