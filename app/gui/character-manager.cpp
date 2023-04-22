@@ -337,10 +337,15 @@ void CharacterManager::setupUi() {
 #if defined(_MSC_VER) && !defined(__clang__)
 #   pragma warning(push)
 #   pragma warning(disable : 4464)
+#elif defined(__clang__)
+#   pragma clang diagnostic push
+#   pragma clang diagnostic ignored "-Wreserved-identifier"
 #endif
 
 #include "moc_character-manager.cpp"
 
 #if defined(_MSC_VER) && !defined(__clang__)
 #   pragma warning(pop)
+#elif defined(__clang__)
+#   pragma clang diagnostic pop
 #endif
