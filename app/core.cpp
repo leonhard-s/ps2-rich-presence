@@ -8,6 +8,9 @@
 #include <QtCore/QString>
 #include <QtCore/QTimer>
 
+#include <algorithm>
+#include <limits>
+
 #include "arx.hpp"
 #include "discord-game-sdk/discord.h"
 
@@ -111,7 +114,7 @@ void RichPresenceApp::onEventPayloadReceived(
 ) {
     // The app only cares about if there are messages coming in. Handling
     // the payloads and dealing with error states is the tracker's problem.
-    Q_UNUSED(event_name);
+    Q_UNUSED(event_name)
 
     // Get timestamp of the event
     auto it = payload.find("timestamp");
@@ -124,7 +127,7 @@ void RichPresenceApp::onEventPayloadReceived(
     auto event_time = QDateTime::fromSecsSinceEpoch(
         timestamp.toLong(), Qt::TimeSpec::UTC);
     auto now = QDateTime::currentDateTimeUtc();
-    event_latency_ = event_time.msecsTo(now);
+    event_latency_ = static_cast<qint32>(event_time.msecsTo(now));
     // Update recent events list; used for event frequency calculation
     last_event_payload_ = now;
     updateRecentEventsList();
@@ -173,8 +176,9 @@ void RichPresenceApp::schedulePresenceUpdate() {
     }
     // Calculate the number of seconds until we ar eallowed to update the
     // presence again.
-    auto ms_until_next_update =
-        rate_limit - last_presence_update_.msecsTo(now);
+    auto ms_until_next_update = static_cast<int>(std::clamp(
+        rate_limit - last_presence_update_.msecsTo(now),
+        0LL, static_cast<long long>(INT_MAX)));
     qDebug() << "Scheduling presence update in" << ms_until_next_update << "ms";
     // (Re)start the timer. Presence will be updated when the timer fires.
     rate_limit_timer_->start(ms_until_next_update);
