@@ -16,20 +16,20 @@ struct GameState {
         ps2::Faction faction,
         ps2::Faction team,
         ps2::Server server,
-        ps2::Class class_,
+        ps2::Class cls,
         ps2::Vehicle vehicle,
         ps2::Zone zone);
 
     bool operator==(const GameState& other) const;
     bool operator!=(const GameState& other) const;
 
-    arx::character_id_t character_id;
-    ps2::Faction faction;
-    ps2::Faction team;
-    ps2::Server server;
+    arx::character_id_t character_id_;
+    ps2::Faction faction_;
+    ps2::Faction team_;
+    ps2::Server server_;
     ps2::Class class_;
-    ps2::Vehicle vehicle;
-    ps2::Zone zone;
+    ps2::Vehicle vehicle_;
+    ps2::Zone zone_;
 };
 
 /**
@@ -58,7 +58,7 @@ public:
     void setServer(ps2::Server server) noexcept;
     ps2::Class getProfileAsClass() const noexcept;
     ps2::Vehicle getProfileAsVehicle() const noexcept;
-    void setProfile(ps2::Class class_) noexcept;
+    void setProfile(ps2::Class cls) noexcept;
     void setProfile(ps2::Vehicle vehicle) noexcept;
     ps2::Faction getTeam() const noexcept;
     void setTeam(ps2::Faction team) noexcept;

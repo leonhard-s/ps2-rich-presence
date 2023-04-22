@@ -64,31 +64,31 @@ discord::Activity PresenceFactory::buildGameActivity(const GameState& state) {
     discord::Activity activity{};
     std::string temp;
     // Details
-    ps2::faction_to_display_name(state.faction, &temp);
+    ps2::faction_to_display_name(state.faction_, &temp);
     QString details;
-    if (state.faction == state.team) {
+    if (state.faction_ == state.team_) {
         details = QString::fromStdString(temp);
     }
     else {
-        ps2::faction_to_display_name(state.team, &temp);
+        ps2::faction_to_display_name(state.team_, &temp);
         details = "Freelancing for " + QString::fromStdString(temp);
     }
     activity.SetDetails(details.toStdString().c_str());
     // State
-    ps2::server_to_display_name(state.server, &temp);
+    ps2::server_to_display_name(state.server_, &temp);
     activity.SetState(temp.c_str());
     auto& assets = activity.GetAssets();
     // Large image
-    assets::imageKeyFromZone(state.zone, &temp);
+    assets::imageKeyFromZone(state.zone_, &temp);
     assets.SetLargeImage(temp.c_str());
-    ps2::zone_to_display_name(state.zone, &temp);
+    ps2::zone_to_display_name(state.zone_, &temp);
     assets.SetLargeText(temp.c_str());
     // Small image
     std::string key, text;
-    if (state.vehicle != ps2::Vehicle::None) {
-        assets::imageKeyFromVehicle(state.vehicle, &temp);
+    if (state.vehicle_ != ps2::Vehicle::None) {
+        assets::imageKeyFromVehicle(state.vehicle_, &temp);
         key = temp;
-        ps2::vehicle_to_display_name(state.vehicle, &temp);
+        ps2::vehicle_to_display_name(state.vehicle_, &temp);
         text = temp;
     }
     else {

@@ -76,7 +76,7 @@ bool MainWindow::isPresenceEnabled() const {
 }
 
 bool MainWindow::isTrackerRunning() const {
-    return app_->getCharacter().id != 0;
+    return app_->getCharacter().id_ != 0;
 }
 
 void MainWindow::saveConfig() {
@@ -107,14 +107,14 @@ void MainWindow::loadConfig() {
             auto info = character.value<CharacterData>();
             characters_combo_box_->insertItem(
                 characters_combo_box_->count() - 2,
-                info.name, character);
+                info.name_, character);
         });
     // TODO: Load GUI config
 }
 
 void MainWindow::startTracking(const CharacterData& character) {
     app_->setCharacter(character);
-    status_->setText(tr("Tracking active for %1").arg(character.name));
+    status_->setText(tr("Tracking active for %1").arg(character.name_));
 }
 
 void MainWindow::stopTracking() {
@@ -139,7 +139,7 @@ void MainWindow::onCharacterChanged(int index) {
     // A character was selected
     auto info = characters_combo_box_->itemData(index).value<CharacterData>();
     // Ignore non-character selections
-    if (info.id == 0) {
+    if (info.id_ == 0) {
         return;
     }
     // If the tracker is already running for another character, stop it
@@ -191,7 +191,7 @@ void MainWindow::openCharacterManager(
             // Offset of 2 because of the separator and "Manage" items
             characters_combo_box_->insertItem(
                 characters_combo_box_->count() - 2,
-                info.name, QVariant::fromValue(info));
+                info.name_, QVariant::fromValue(info));
         }
         // Select the topmost character if any were added
         if (list->count() > 0) {

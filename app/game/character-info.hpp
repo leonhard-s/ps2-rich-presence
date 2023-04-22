@@ -21,7 +21,7 @@ struct CharacterData {
         arx::character_id_t id,
         const QString& name,
         ps2::Faction faction,
-        ps2::Class class_,
+        ps2::Class cls,
         ps2::Server server);
     CharacterData(const CharacterData&) = default;
     CharacterData(CharacterData&&) = default;
@@ -34,11 +34,11 @@ struct CharacterData {
     bool operator==(const CharacterData& other) const;
     bool operator!=(const CharacterData& other) const;
 
-    arx::character_id_t id;
-    QString name;
-    ps2::Faction faction;
+    arx::character_id_t id_;
+    QString name_;
+    ps2::Faction faction_;
     ps2::Class class_;
-    ps2::Server server;
+    ps2::Server server_;
 };
 
 QDebug operator<<(QDebug dbg, const CharacterData& info);
@@ -53,7 +53,7 @@ public:
         arx::character_id_t id,
         const QString& name,
         ps2::Faction faction,
-        ps2::Class class_,
+        ps2::Class cls,
         ps2::Server server,
         QObject* parent = nullptr);
     CharacterInfo(const CharacterInfo&) = delete;
@@ -84,7 +84,7 @@ private:
     void updateFieldsIfChanged(arx::character_id_t id,
         const QString& name,
         ps2::Faction faction,
-        ps2::Class class_,
+        ps2::Class cls,
         ps2::Server server);
 
     CharacterData info_;

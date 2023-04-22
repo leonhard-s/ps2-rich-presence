@@ -22,31 +22,31 @@
 namespace PresenceApp {
 
 CharacterData::CharacterData()
-    : id{ 0 }
-    , name{ "" }
-    , faction{ ps2::Faction::NS }
+    : id_{ 0 }
+    , name_{ "" }
+    , faction_{ ps2::Faction::NS }
     , class_{ ps2::Class::LightAssault }
-    , server{ ps2::Server::Connery } {}
+    , server_{ ps2::Server::Connery } {}
 
 CharacterData::CharacterData(
     arx::character_id_t id,
     const QString& name,
     ps2::Faction faction,
-    ps2::Class class_,
+    ps2::Class cls,
     ps2::Server server
 )
-    : id{ id },
-    name{ name },
-    faction{ faction },
-    class_{ class_ },
-    server{ server } {}
+    : id_{ id }
+    , name_{ name }
+    , faction_{ faction }
+    , class_{ cls }
+    , server_{ server } {}
 
 bool CharacterData::operator==(const CharacterData& other) const {
-    return id == other.id &&
-        name == other.name &&
-        faction == other.faction &&
+    return id_ == other.id_ &&
+        name_ == other.name_ &&
+        faction_ == other.faction_ &&
         class_ == other.class_ &&
-        server == other.server;
+        server_ == other.server_;
 }
 
 bool CharacterData::operator!=(const CharacterData& other) const {
@@ -55,8 +55,8 @@ bool CharacterData::operator!=(const CharacterData& other) const {
 
 QDebug operator<<(QDebug dbg, const CharacterData& info) {
     std::string tag;
-    ps2::faction_to_tag(info.faction, &tag);
-    return dbg << info.name << "[" << QString::fromStdString(tag) << "]";
+    ps2::faction_to_tag(info.faction_, &tag);
+    return dbg << info.name_ << "[" << QString::fromStdString(tag) << "]";
 }
 
 CharacterInfo::CharacterInfo(QObject* parent)
@@ -69,34 +69,34 @@ CharacterInfo::CharacterInfo(QObject* parent)
 CharacterInfo::CharacterInfo(arx::character_id_t id, QObject* parent)
     : CharacterInfo(parent)
 {
-    info_.id = id;
+    info_.id_ = id;
 }
 
 CharacterInfo::CharacterInfo(arx::character_id_t id,
     const QString& name,
     ps2::Faction faction,
-    ps2::Class class_,
+    ps2::Class cls,
     ps2::Server server,
     QObject* parent
 )
     : CharacterInfo(id, parent)
 {
-    info_.name = name;
-    info_.faction = faction;
-    info_.class_ = class_;
-    info_.server = server;
+    info_.name_ = name;
+    info_.faction_ = faction;
+    info_.class_ = cls;
+    info_.server_ = server;
 }
 
 arx::character_id_t CharacterInfo::getId() const {
-    return info_.id;
+    return info_.id_;
 }
 
 QString CharacterInfo::getName() const {
-    return info_.name;
+    return info_.name_;
 }
 
 ps2::Faction CharacterInfo::getFaction() const {
-    return info_.faction;
+    return info_.faction_;
 }
 
 ps2::Class CharacterInfo::getClass() const {
@@ -104,16 +104,15 @@ ps2::Class CharacterInfo::getClass() const {
 }
 
 ps2::Server CharacterInfo::getServer() const {
-    return info_.server;
+    return info_.server_;
 }
 
 void CharacterInfo::populate() {
     // Only look up sensible character IDs
-    auto id = info_.id;
-    if (id <= 0) {
+    if (info_.id_ <= 0) {
         qWarning() << "Call to CharacterInfo::populate() ignored due to "
             "invalid character ID:"
-            << id;
+            << info_.id_;
         return;
     }
     // Generate request
@@ -149,10 +148,10 @@ QNetworkRequest CharacterInfo::getCharacterInfoRequest() {
     // Create Query via ARX
     arx::Query query("character", SERVICE_ID);
     query.addTerm(
-        arx::SearchTerm("character_id", std::to_string(info_.id)));
+        arx::SearchTerm("character_id", std::to_string(info_.id_)));
     query.setShow({ "character_id", "name.first", "faction_id", "profile_id" });
     auto join = arx::JoinData("characters_world");
-    join.show.push_back("world_id");
+    join.show_.push_back("world_id");
     query.addJoin(join);
     // Generate URL
     auto url = qUrlFromArxQuery(query);
@@ -196,28 +195,28 @@ void CharacterInfo::updateFieldsIfChanged(
     arx::character_id_t id,
     const QString& name,
     ps2::Faction faction,
-    ps2::Class class_,
+    ps2::Class cls,
     ps2::Server server
 ) {
     bool changed = false;
-    if (id != info_.id) {
-        info_.id = id;
+    if (id != info_.id_) {
+        info_.id_ = id;
         changed = true;
     }
-    if (name != info_.name) {
-        info_.name = name;
+    if (name != info_.name_) {
+        info_.name_ = name;
         changed = true;
     }
-    if (faction != info_.faction) {
-        info_.faction = faction;
+    if (faction != info_.faction_) {
+        info_.faction_ = faction;
         changed = true;
     }
-    if (class_ != info_.class_) {
-        info_.class_ = class_;
+    if (cls != info_.class_) {
+        info_.class_ = cls;
         changed = true;
     }
-    if (server != info_.server) {
-        info_.server = server;
+    if (server != info_.server_) {
+        info_.server_ = server;
         changed = true;
     }
     // Emit signal if any fields changed

@@ -7,39 +7,39 @@
 namespace PresenceApp {
 
 GameState::GameState()
-    : character_id{ 0 }
-    , faction{ 0 }
-    , team{ 0 }
-    , server{ 0 }
+    : character_id_{ 0 }
+    , faction_{ 0 }
+    , team_{ 0 }
+    , server_{ 0 }
     , class_{ 0 }
-    , vehicle{ 0 }
-    , zone{ 0 } {}
+    , vehicle_{ 0 }
+    , zone_{ 0 } {}
 
 GameState::GameState(
     arx::character_id_t character_id,
     ps2::Faction faction,
     ps2::Faction team,
     ps2::Server server,
-    ps2::Class class_,
+    ps2::Class cls,
     ps2::Vehicle vehicle,
     ps2::Zone zone
 )
-    : character_id{ character_id }
-    , faction{ faction }
-    , team{ team }
-    , server{ server }
-    , class_{ class_ }
-    , vehicle{ vehicle }
-    , zone{ zone } {}
+    : character_id_{ character_id }
+    , faction_{ faction }
+    , team_{ team }
+    , server_{ server }
+    , class_{ cls }
+    , vehicle_{ vehicle }
+    , zone_{ zone } {}
 
 bool GameState::operator==(const GameState& other) const {
-    return character_id == other.character_id &&
-        faction == other.faction &&
-        team == other.team &&
-        server == other.server &&
+    return character_id_ == other.character_id_ &&
+        faction_ == other.faction_ &&
+        team_ == other.team_ &&
+        server_ == other.server_ &&
         class_ == other.class_ &&
-        vehicle == other.vehicle &&
-        zone == other.zone;
+        vehicle_ == other.vehicle_ &&
+        zone_ == other.zone_;
 }
 
 bool GameState::operator!=(const GameState& other) const {
@@ -50,12 +50,12 @@ GameStateFactory::GameStateFactory(
     arx::character_id_t character_id,
     ps2::Faction faction,
     ps2::Server server,
-    ps2::Class class_
+    ps2::Class cls
 )
     : character_id_{ character_id }
     , faction_{ faction }
     , server_{ server }
-    , class_{ class_ }
+    , class_{ cls }
     , vehicle_{ ps2::Vehicle::None }
     , team_{ faction }
     , zone_{ ps2::Zone::Sanctuary } {}
@@ -88,8 +88,8 @@ ps2::Vehicle GameStateFactory::getProfileAsVehicle() const noexcept {
     return vehicle_;
 }
 
-void GameStateFactory::setProfile(ps2::Class klass) noexcept {
-    this->class_ = klass;
+void GameStateFactory::setProfile(ps2::Class cls) noexcept {
+    this->class_ = cls;
     vehicle_ = ps2::Vehicle::None;
 }
 

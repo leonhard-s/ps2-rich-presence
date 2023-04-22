@@ -39,7 +39,7 @@ ActivityTracker::ActivityTracker(
 )
     : QObject(parent)
     , character_{ character }
-    , state_factory_{ character.id, character.faction, character.server, character.class_ }
+    , state_factory_{ character.id_, character.faction_, character.server_, character.class_ }
     , current_state_{}
     , ess_client_{}
 {
@@ -86,7 +86,7 @@ void ActivityTracker::onPayloadReceived(const QString& event_name,
 }
 
 void ActivityTracker::handleDeathPayload(const arx::json_t& payload) {
-    bool are_we_the_baddies = integerFromApiString<arx::character_id_t>(payload["attacker_character_id"]) == character_.id;
+    bool are_we_the_baddies = integerFromApiString<arx::character_id_t>(payload["attacker_character_id"]) == character_.id_;
     // Team
     ps2::Faction team = state_factory_.getFaction();
     // As Team ID is a new addition, we'll check it still exists to be safe
@@ -136,7 +136,7 @@ void ActivityTracker::handleDeathPayload(const arx::json_t& payload) {
 }
 
 void ActivityTracker::handleGainexperiencePayload(const arx::json_t& payload) {
-    bool wonders_of_modern_medicine = integerFromApiString<arx::character_id_t>(payload["character_id"]) == character_.id;
+    bool wonders_of_modern_medicine = integerFromApiString<arx::character_id_t>(payload["character_id"]) == character_.id_;
     if (!wonders_of_modern_medicine) {
         // The character receiving experience is not the tracked character.
         // Since we do not discriminate between experience types yet, we
@@ -176,12 +176,12 @@ QList<arx::Subscription> ActivityTracker::generateSubscriptions() const {
         // Event names
         { "Death" },
         // Characters
-        { QString::number(character_.id).toStdString() });
+        { QString::number(character_.id_).toStdString() });
     auto experience = arx::Subscription(
         // Event names
         { "GainExperience" },
         // Characters
-        { QString::number(character_.id).toStdString() });
+        { QString::number(character_.id_).toStdString() });
     return QList{ deaths, experience };
 }
 

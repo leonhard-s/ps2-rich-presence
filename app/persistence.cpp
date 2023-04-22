@@ -19,25 +19,25 @@ namespace {
 
 QJsonObject characterToJson(const PresenceApp::CharacterData& character) {
     QJsonObject json;
-    json["id"] = QString::number(character.id);
-    json["name"] = character.name;
-    json["faction"] = ps2::faction_to_faction_id(character.faction);
+    json["id"] = QString::number(character.id_);
+    json["name"] = character.name_;
+    json["faction"] = ps2::faction_to_faction_id(character.faction_);
     json["last_profile"] = static_cast<quint16>(ps2::class_to_profile_id(
-        character.class_, character.faction));
-    json["world"] = ps2::server_to_world_id(character.server);
+        character.class_, character.faction_));
+    json["world"] = ps2::server_to_world_id(character.server_);
     return json;
 }
 
 PresenceApp::CharacterData characterFromJson(const QJsonObject& json) {
     PresenceApp::CharacterData char_;
-    char_.id = json["id"].toString().toULongLong();
-    char_.name = json["name"].toString();
+    char_.id_ = json["id"].toString().toULongLong();
+    char_.name_ = json["name"].toString();
     auto faction_ok = ps2::faction_from_faction_id(
-        static_cast<arx::faction_id_t>(json["faction"].toInt()), &char_.faction);
+        static_cast<arx::faction_id_t>(json["faction"].toInt()), &char_.faction_);
     auto class_ok = ps2::class_from_profile_id(
         static_cast<arx::profile_id_t>(json["last_profile"].toInt()), &char_.class_);
     auto server_ok = ps2::server_from_world_id(
-        static_cast<arx::world_id_t>(json["world"].toInt()), &char_.server);
+        static_cast<arx::world_id_t>(json["world"].toInt()), &char_.server_);
     if (!faction_ok || !class_ok || !server_ok) {
         qWarning() << "Failed to load character data from JSON";
         // TODO: Propagate error state

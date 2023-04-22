@@ -56,7 +56,7 @@ const CharacterData& RichPresenceApp::getCharacter() const {
 void RichPresenceApp::setCharacter(const CharacterData& character) {
     if (character_ != character) {
         character_ = character;
-        if (character.id != 0) {
+        if (character.id_ != 0) {
             tracker_.reset(new ActivityTracker(character, this));
             QObject::connect(tracker_.get(), &ActivityTracker::payloadReceived,
                 this, &RichPresenceApp::onEventPayloadReceived);

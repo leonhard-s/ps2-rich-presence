@@ -25,7 +25,7 @@ std::string generateCensusPath(
     const std::string& service_id,
     const std::string& format,
     const std::string& verb,
-    const std::string& namespace_,
+    const std::string& ns,
     const std::string& collection
 ) {
     std::stringstream path;
@@ -33,7 +33,7 @@ std::string generateCensusPath(
     if (format != "json") {
         path << "/" << format;
     }
-    path << "/" << verb << "/" << namespace_;
+    path << "/" << verb << "/" << ns;
     if (!collection.empty()) {
         path << "/" << collection;
     }

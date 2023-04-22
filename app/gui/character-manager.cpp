@@ -62,7 +62,7 @@ CharacterManager::CharacterManager(QWidget* parent
 
 void CharacterManager::addCharacter(const CharacterData& character) {
     if (list_ != nullptr) {
-        auto item = new QListWidgetItem(character.name);
+        auto item = new QListWidgetItem(character.name_);
         item->setData(Qt::UserRole, QVariant::fromValue(character));
         list_->addItem(item);
     }
@@ -169,7 +169,7 @@ void CharacterManager::onCharacterInfoReceived() {
     CharacterData info{ temp.getId(), temp.getName(), temp.getFaction(),
                        temp.getClass(), temp.getServer() };
     // Create character entry
-    auto item = new QListWidgetItem(info.name);
+    auto item = new QListWidgetItem(info.name_);
     item->setData(Qt::UserRole, QVariant::fromValue(info));
     list_->addItem(item);
 }
@@ -180,8 +180,8 @@ QUrl CharacterManager::getCharacterInfoUrl(const QString& character) const {
     arx::Query query("character", SERVICE_ID);
     query.addTerm(arx::SearchTerm("name.first_lower", name));
     auto join = arx::JoinData("characters_world");
-    join.show.push_back("world_id");
-    join.inject_at = "world";
+    join.show_.push_back("world_id");
+    join.inject_at_ = "world";
     query.addJoin(join);
     query.setShow({ "character_id", "name.first", "faction_id", "profile_id" });
     // Build QUrl object
@@ -197,7 +197,7 @@ CharacterData CharacterManager::parseCharacterPayload(
     arx::profile_id_t profile_id = 0;
     arx::world_id_t world_id = 0;
     ps2::Faction faction = ps2::Faction::NS;
-    ps2::Class class_ = ps2::Class::LightAssault;
+    ps2::Class cls = ps2::Class::LightAssault;
     ps2::Server server = ps2::Server::Connery;
     // Get name object
     auto name_obj = payload["name"];
@@ -250,7 +250,7 @@ CharacterData CharacterManager::parseCharacterPayload(
     if (ps2::faction_from_faction_id(faction_id, &faction)) {
         qWarning() << "Unable to convert faction ID:" << faction_id;
     }
-    if (ps2::class_from_profile_id(profile_id, &class_)) {
+    if (ps2::class_from_profile_id(profile_id, &cls)) {
         qWarning() << "Unable to create class from profile ID:"
             << profile_id;
     }
@@ -258,7 +258,7 @@ CharacterData CharacterManager::parseCharacterPayload(
         qWarning() << "Unable to create server from world ID:" << world_id;
     }
     // Create character info
-    return CharacterData(id, name, faction, class_, server);
+    return CharacterData(id, name, faction, cls, server);
 }
 
 QDialog* CharacterManager::createCharacterNameInputDialog() {
