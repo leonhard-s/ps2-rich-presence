@@ -28,15 +28,15 @@ void SupportsJoin::addJoin(const JoinData& join) {
 }
 
 JoinData::JoinData()
-    : collection{ "" }
-    , on{ "" }
-    , to{ "" }
-    , list{ false }
-    , show{}
-    , hide{}
-    , inject_at{ "" }
-    , terms{}
-    , outer{ true } {}
+    : collection_{ "" }
+    , on_{ "" }
+    , to_{ "" }
+    , list_{ false }
+    , show_{}
+    , hide_{}
+    , inject_at_{ "" }
+    , terms_{}
+    , outer_{ true } {}
 
 JoinData::JoinData(
     const std::string& collection,
@@ -49,59 +49,59 @@ JoinData::JoinData(
     const std::initializer_list<SearchTerm>& terms,
     bool outer
 )
-    : collection{ collection }
-    , on{ on }
-    , to{ to }
-    , list{ list }
-    , show{ show }
-    , hide{ hide }
-    , inject_at{ inject_at }
-    , terms{ terms }
-    , outer{ outer } {}
+    : collection_{ collection }
+    , on_{ on }
+    , to_{ to }
+    , list_{ list }
+    , show_{ show }
+    , hide_{ hide }
+    , inject_at_{ inject_at }
+    , terms_{ terms }
+    , outer_{ outer } {}
 
 void JoinData::setFieldNames(const std::string& field) {
-    this->on = field;
-    this->to = field;
+    this->on_ = field;
+    this->to_ = field;
 }
 
 void JoinData::setFieldNames(
     const std::string& parent_field,
     const std::string& child_field
 ) {
-    this->on = parent_field;
-    this->to = child_field;
+    this->on_ = parent_field;
+    this->to_ = child_field;
 }
 
 std::string JoinData::serialise() const {
     std::stringstream ss;
-    ss << collection;
-    if (!on.empty()) {
-        ss << "^on:" << on;
+    ss << collection_;
+    if (!on_.empty()) {
+        ss << "^on:" << on_;
     }
-    if (!to.empty()) {
-        ss << "^to:" << to;
+    if (!to_.empty()) {
+        ss << "^to:" << to_;
     }
-    if (list) {
+    if (list_) {
         ss << "^list:1";
     }
-    if (!show.empty()) {
-        ss << "^show:" << arx::join(show, "'");
+    if (!show_.empty()) {
+        ss << "^show:" << arx::join(show_, "'");
     }
-    if (!hide.empty()) {
-        ss << "^hide:" << arx::join(hide, "'");
+    if (!hide_.empty()) {
+        ss << "^hide:" << arx::join(hide_, "'");
     }
-    if (!inject_at.empty()) {
-        ss << "^inject_at:" << inject_at;
+    if (!inject_at_.empty()) {
+        ss << "^inject_at:" << inject_at_;
     }
-    if (!terms.empty()) {
+    if (!terms_.empty()) {
         std::vector<std::string> terms_strings;
-        terms_strings.reserve(terms.size());
-        std::transform(terms.begin(), terms.end(),
+        terms_strings.reserve(terms_.size());
+        std::transform(terms_.begin(), terms_.end(),
             std::back_inserter(terms_strings),
             [](const auto& term) { return term.serialise(); });
         ss << "^terms:" << arx::join(terms_strings, "'");
     }
-    if (!outer) {
+    if (!outer_) {
         ss << "^outer:0";
     }
     if (!joins.empty()) {
@@ -116,10 +116,10 @@ std::string JoinData::serialise() const {
 }
 
 TreeData::TreeData()
-    : field{ "" }
-    , list{ false }
-    , prefix{ "" }
-    , start{ "" } {}
+    : field_{ "" }
+    , list_{ false }
+    , prefix_{ "" }
+    , start_{ "" } {}
 
 TreeData::TreeData(
     const std::string& field,
@@ -127,22 +127,22 @@ TreeData::TreeData(
     const std::string& prefix,
     const std::string& start
 )
-    : field{ field }
-    , list{ list }
-    , prefix{ prefix }
-    , start{ start } {}
+    : field_{ field }
+    , list_{ list }
+    , prefix_{ prefix }
+    , start_{ start } {}
 
 std::string TreeData::serialise() const {
     std::stringstream ss;
-    ss << field;
-    if (!prefix.empty()) {
-        ss << "^prefix:" << prefix;
+    ss << field_;
+    if (!prefix_.empty()) {
+        ss << "^prefix:" << prefix_;
     }
-    if (list) {
+    if (list_) {
         ss << "^list:1";
     }
-    if (!start.empty()) {
-        ss << "^start:" << start;
+    if (!start_.empty()) {
+        ss << "^start:" << start_;
     }
     return ss.str();
 }
@@ -173,6 +173,63 @@ Query::Query(
     , exact_match_first_{ false }
     , distinct_{ "" },
     retry_{ true } {}
+
+Query::Query(const Query& other)
+    : SupportsJoin(other)
+    , service_id_{ other.service_id_ }
+    , format_{ other.format_ }
+    , verb_{ other.verb_ }
+    , namespace_{ other.namespace_ }
+    , collection_{ other.collection_ }
+    , show_{ other.show_ }
+    , hide_{ other.hide_ }
+    , sort_{ other.sort_ }
+    , has_{ other.has_ }
+    , resolve_{ other.resolve_ }
+    , case_{ other.case_ }
+    , limit_{ other.limit_ }
+    , limit_per_db_{ other.limit_per_db_ }
+    , start_{ other.start_ }
+    , include_null_{ other.include_null_ }
+    , lang_{ other.lang_ }
+    , timing_{ other.timing_ }
+    , exact_match_first_{ other.exact_match_first_ }
+    , distinct_{ other.distinct_ }
+    , retry_{ other.retry_ } {
+    if (other.tree_) {
+        tree_ = std::make_unique<TreeData>(*other.tree_);
+    }
+}
+
+Query& Query::operator=(const Query& other) {
+    if (this != &other) {
+        SupportsJoin::operator=(other);
+        service_id_ = other.service_id_;
+        format_ = other.format_;
+        verb_ = other.verb_;
+        namespace_ = other.namespace_;
+        collection_ = other.collection_;
+        show_ = other.show_;
+        hide_ = other.hide_;
+        sort_ = other.sort_;
+        has_ = other.has_;
+        resolve_ = other.resolve_;
+        case_ = other.case_;
+        limit_ = other.limit_;
+        limit_per_db_ = other.limit_per_db_;
+        start_ = other.start_;
+        include_null_ = other.include_null_;
+        lang_ = other.lang_;
+        timing_ = other.timing_;
+        exact_match_first_ = other.exact_match_first_;
+        distinct_ = other.distinct_;
+        retry_ = other.retry_;
+        if (other.tree_) {
+            tree_ = std::make_unique<TreeData>(*other.tree_);
+        }
+    }
+    return *this;
+}
 
 std::string Query::getServiceId() const {
     return service_id_;

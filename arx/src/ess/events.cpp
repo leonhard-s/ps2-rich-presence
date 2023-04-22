@@ -87,10 +87,19 @@ string_t eventToEventName(const Event& event) {
         return "SkillAdded";
     case Event::VehicleDestroy:
         return "VehicleDestroy";
+    case Event::Unknown:
     default:
         return "Unknown";
     }
 }
+
+#if defined(_MSC_VER) && !defined(__clang__)
+#   pragma warning(push)
+#   pragma warning(disable : 4061)
+#elif defined(__clang__)
+#   pragma clang diagnostic push
+#   pragma clang diagnostic ignored "-Wswitch-enum"
+#endif
 
 bool isEventCharacterCentric(const Event& event) {
     switch (event) {
@@ -124,5 +133,11 @@ bool isEventWorldCentric(const Event& event) {
         return false;
     }
 }
+
+#if defined(_MSC_VER) && !defined(__clang__)
+#   pragma warning(pop)
+#elif defined(__clang__)
+#   pragma clang diagnostic pop
+#endif
 
 } // namespace arx

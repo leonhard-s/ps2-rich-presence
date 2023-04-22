@@ -4,7 +4,7 @@
 
 #include <string>
 
-#include "arx/ps2_types.hpp"
+#include "arx/ps2-types.hpp"
 
 namespace ps2 {
 
@@ -157,6 +157,7 @@ int vehicle_to_display_name(Vehicle vehicle, std::string* display_name) {
     case Vehicle::Dervish:
         *display_name = "Dervish";
         break;
+    case Vehicle::None:
     default:
         return -1;
     }

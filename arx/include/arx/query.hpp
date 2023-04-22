@@ -44,15 +44,15 @@ struct JoinData: public SupportsJoin {
 
     std::string serialise() const;
 
-    std::string collection;
-    std::string on;
-    std::string to;
-    bool list;
-    std::vector<std::string> show;
-    std::vector<std::string> hide;
-    std::string inject_at;
-    std::vector<SearchTerm> terms;
-    bool outer;
+    std::string collection_;
+    std::string on_;
+    std::string to_;
+    bool list_;
+    std::vector<std::string> show_;
+    std::vector<std::string> hide_;
+    std::string inject_at_;
+    std::vector<SearchTerm> terms_;
+    bool outer_;
 };
 
 struct TreeData {
@@ -65,10 +65,10 @@ struct TreeData {
 
     std::string serialise() const;
 
-    std::string field;
-    bool list;
-    std::string prefix;
-    std::string start;
+    std::string field_;
+    bool list_;
+    std::string prefix_;
+    std::string start_;
 };
 
 class Query: public SupportsJoin {
@@ -76,6 +76,11 @@ public:
     explicit Query(
         const std::string& collection = "",
         const std::string& service_id = "s:example");
+    Query(const Query& other);
+    Query(Query&& other) noexcept = default;
+
+    Query& operator=(const Query& other);
+    Query& operator=(Query&& other) noexcept = default;
 
     // Request format / path configuration
 
@@ -86,7 +91,7 @@ public:
     std::string getVerb() const;
     void setVerb(const std::string& verb);
     std::string getNamespace() const;
-    void setNamespace(const std::string& namespace_);
+    void setNamespace(const std::string& ns);
     std::string getCollection() const;
     void setCollection(const std::string& collection);
 

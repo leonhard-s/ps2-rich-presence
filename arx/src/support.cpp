@@ -48,6 +48,7 @@ std::string serialiseModifier(SearchModifier modifier) {
         return "*";
     case SearchModifier::STARTS_WITH:
         return "^";
+    case SearchModifier::EQUAL_TO:
     default:
         return "";
     }

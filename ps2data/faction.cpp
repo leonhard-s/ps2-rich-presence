@@ -4,7 +4,7 @@
 
 #include <string>
 
-#include "arx/ps2_types.hpp"
+#include "arx/ps2-types.hpp"
 
 namespace ps2 {
 
@@ -87,6 +87,7 @@ arx::faction_id_t faction_to_faction_id(Faction faction) {
         return 3;
     case Faction::NSO:
         return 4;
+    case Faction::NS:
     default:
         return 0;
     }

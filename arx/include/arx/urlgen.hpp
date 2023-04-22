@@ -18,7 +18,7 @@ std::string generateCensusPath(
     const std::string& service_id,
     const std::string& format = "json",
     const std::string& verb = "get",
-    const std::string& namespace_ = "ps2",
+    const std::string& ns = "ps2",
     const std::string& collection = "");
 
 std::vector<std::pair<std::string, std::string>> getQueryItems(
