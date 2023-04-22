@@ -21,7 +21,7 @@ namespace PresenceApp {
 RichPresenceApp::RichPresenceApp(QObject* parent)
     : QObject(parent)
     , presence_enabled_{ true }
-    , event_latency_{ -1.0 }
+    , event_latency_{ -1 }
 {
     presence_.reset(new PresenceFactory(this));
     discord_.reset(new PresenceHandler(this));
@@ -69,7 +69,7 @@ void RichPresenceApp::setCharacter(const CharacterData& character) {
         // Reset timestamps and payload cache
         last_event_payload_ = QDateTime::fromSecsSinceEpoch(0);
         last_game_state_update_ = QDateTime::fromSecsSinceEpoch(0);
-        event_latency_ = -1.0;
+        event_latency_ = -1;
         recent_events_.clear();
         emit eventPayloadReceived();
         emit gameStateChanged();
@@ -89,7 +89,7 @@ QDateTime RichPresenceApp::getLastPresenceUpdate() const {
     return last_presence_update_;
 }
 
-int RichPresenceApp::getEventLatency() const {
+qint32 RichPresenceApp::getEventLatency() const {
     return event_latency_;
 }
 
@@ -100,7 +100,7 @@ double RichPresenceApp::getEventFrequency() {
     }
     auto oldest_event = recent_events_.front();
     auto now = QDateTime::currentDateTimeUtc();
-    double timespan = oldest_event.secsTo(now);
+    double timespan = static_cast<double>(oldest_event.secsTo(now));
     auto freq = static_cast<double>(recent_events_.size()) / timespan;
     return freq;
 }

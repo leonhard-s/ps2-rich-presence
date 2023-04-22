@@ -37,7 +37,7 @@ public:
     QDateTime getLastEventPayload() const;
     QDateTime getLastGameStateUpdate() const;
     QDateTime getLastPresenceUpdate() const;
-    int getEventLatency() const;
+    qint32 getEventLatency() const;
     double getEventFrequency();
 
 Q_SIGNALS:
@@ -64,7 +64,7 @@ private:
     bool presence_enabled_;
     QScopedPointer<PresenceFactory> presence_;
     QScopedPointer<PresenceHandler> discord_;
-    double event_latency_;
+    qint32 event_latency_;
     QScopedPointer<ActivityTracker> tracker_;
 
     QDateTime last_event_payload_;

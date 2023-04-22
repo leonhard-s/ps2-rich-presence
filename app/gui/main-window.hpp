@@ -51,7 +51,7 @@ private:
 
     QString getProjectLink() const;
     void setEventFrequency(double events_per_second);
-    void setEventLatency(int latency_ms);
+    void setEventLatency(qint32 latency_ms);
     void setLastPayload(bool never);
     void setLastPayload(QDateTime timestamp);
     void setLastPresence(bool never);

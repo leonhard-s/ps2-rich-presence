@@ -239,7 +239,7 @@ void MainWindow::setEventFrequency(double events_per_second) {
     }
 }
 
-void MainWindow::setEventLatency(int latency_ms) {
+void MainWindow::setEventLatency(qint32 latency_ms) {
     if (latency_ms < 0) {
         latency_->setText(tr("n/a"));
     }
