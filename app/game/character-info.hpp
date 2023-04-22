@@ -3,22 +3,12 @@
 #pragma once
 
 #include <QtCore/QDebug>
+#include <QtCore/QMetaType>
 #include <QtCore/QObject>
 #include <QtCore/QScopedPointer>
 #include <QtCore/QString>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkRequest>
-
-#ifdef _MSC_VER
-#   pragma warning(push)
-#   pragma warning(disable : 4866)
-#endif
-
-#include <QtCore/QMetaType>
-
-#ifdef _MSC_VER
-#   pragma warning(pop)
-#endif
 
 #include "arx.hpp"
 #include "ps2.hpp"

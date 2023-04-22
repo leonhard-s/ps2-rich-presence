@@ -144,7 +144,7 @@ void MainWindow::onCharacterChanged(int index) {
     }
     // If the tracker is already running for another character, stop it
     if (isTrackerRunning()) {
-        auto current = app_->getCharacter();
+        const auto& current = app_->getCharacter();
         if (current == info) {
             // We are already tracking this character, nothing to be done
             return;

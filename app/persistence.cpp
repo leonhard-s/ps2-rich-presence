@@ -32,9 +32,16 @@ PresenceApp::CharacterData characterFromJson(const QJsonObject& json) {
     PresenceApp::CharacterData char_;
     char_.id = json["id"].toString().toULongLong();
     char_.name = json["name"].toString();
-    ps2::faction_from_faction_id(json["faction"].toInt(), &char_.faction);
-    ps2::class_from_profile_id(json["last_profile"].toInt(), &char_.class_);
-    ps2::server_from_world_id(json["world"].toInt(), &char_.server);
+    auto faction_ok = ps2::faction_from_faction_id(
+        static_cast<arx::faction_id_t>(json["faction"].toInt()), &char_.faction);
+    auto class_ok = ps2::class_from_profile_id(
+        static_cast<arx::profile_id_t>(json["last_profile"].toInt()), &char_.class_);
+    auto server_ok = ps2::server_from_world_id(
+        static_cast<arx::world_id_t>(json["world"].toInt()), &char_.server);
+    if (!faction_ok || !class_ok || !server_ok) {
+        qWarning() << "Failed to load character data from JSON";
+        // TODO: Propagate error state
+    }
     return char_;
 }
 

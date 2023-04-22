@@ -20,6 +20,7 @@ if(MSVC)
     # Disable warnings
     /wd4820 # Padding bytes added
     /wd5045 # Spectre mitigation
+    /wd4866 # Evaluation order nonconformance in operator<< (compiler issue)
   )
 else()
   add_compile_options(

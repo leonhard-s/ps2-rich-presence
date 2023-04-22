@@ -49,7 +49,7 @@ void RichPresenceApp::setRichPresenceEnabled(bool enabled) {
     presence_enabled_ = enabled;
 }
 
-CharacterData RichPresenceApp::getCharacter() const {
+const CharacterData& RichPresenceApp::getCharacter() const {
     return character_;
 }
 
@@ -101,7 +101,7 @@ double RichPresenceApp::getEventFrequency() {
     auto oldest_event = recent_events_.front();
     auto now = QDateTime::currentDateTimeUtc();
     double timespan = oldest_event.secsTo(now);
-    auto freq = recent_events_.size() / timespan;
+    auto freq = static_cast<double>(recent_events_.size()) / timespan;
     return freq;
 }
 

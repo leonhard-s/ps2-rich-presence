@@ -26,7 +26,7 @@ public:
 
     bool getRichPresenceEnabled() const;
     void setRichPresenceEnabled(bool enabled);
-    CharacterData getCharacter() const;
+    const CharacterData& getCharacter() const;
     void setCharacter(const CharacterData& character);
 
     QDateTime getLastEventPayload() const;
