@@ -13,7 +13,7 @@ namespace PresenceApp {
  *
  * This is limited to between "just now" and "over an hour ago".
  */
-QString getTimeAgo(const QDateTime& timestamp) {
+static QString getTimeAgo(const QDateTime& timestamp) {
     // Get time diference in seconds
     const auto time_ago = timestamp.secsTo(QDateTime::currentDateTime());
     // Return time ago in a human readable format
