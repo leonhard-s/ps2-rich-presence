@@ -1,6 +1,6 @@
 // Copyright 2022 Leonhard S.
 
-#include "arx/ess/payload.hpp"
+#include "arx/ess/message.hpp"
 
 #include "arx/types.hpp"
 

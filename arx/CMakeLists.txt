@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.25 FATAL_ERROR)
-project(Auraxium VERSION 0.3 LANGUAGES CXX)
+project(Auraxium VERSION 0.4 LANGUAGES CXX)
 
 find_package(nlohmann_json 3.11.2 REQUIRED)
 
@@ -13,7 +13,7 @@ add_library(Arx STATIC
   "include/arx.hpp"
   "include/arx/ess/endpoint.hpp"
   "include/arx/ess/events.hpp"
-  "include/arx/ess/payload.hpp"
+  "include/arx/ess/message.hpp"
   "include/arx/ess/subscription.hpp"
   "include/arx/ess.hpp"
   "src/query.cpp"
@@ -22,7 +22,7 @@ add_library(Arx STATIC
   "src/urlgen.cpp"
   "src/ess/endpoint.cpp"
   "src/ess/events.cpp"
-  "src/ess/payload.cpp"
+  "src/ess/message.cpp"
   "src/ess/subscription.cpp"
 )
 target_include_directories(Arx
