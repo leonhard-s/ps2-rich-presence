@@ -21,6 +21,9 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC") # MSVC compiler
     /wd4820 # Padding bytes added
     /wd5045 # Spectre mitigation
     /wd4866 # Evaluation order nonconformance in operator<< (compiler issue)
+
+    /wd4710 # Function not inlined
+    /wd4711 # Function selected for inline expansion
   )
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND MSVC) # Clang compiler with MSVC frontend
   add_compile_options(

@@ -90,7 +90,7 @@ install(TARGETS Ps2RichPresence
 # Install Qt
 qt6_generate_deploy_app_script(
   TARGET Ps2RichPresence
-  FILENAME_VARIABLE QT_DEPLOY_SCRIPT
+  OUTPUT_SCRIPT QT_DEPLOY_SCRIPT
   NO_UNSUPPORTED_PLATFORM_ERROR
 )
 install(SCRIPT ${QT_DEPLOY_SCRIPT})
