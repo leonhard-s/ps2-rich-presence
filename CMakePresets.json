@@ -29,7 +29,7 @@
             "cacheVariables": {
                 "CMAKE_INSTALL_PREFIX": {
                     "type": "PATH",
-                    "value": "${sourceDir}/dist/${presetName}"
+                    "value": "${sourceDir}/out/install/${presetName}"
                 },
                 "CMAKE_TOOLCHAIN_FILE": {
                     "type": "PATH",
