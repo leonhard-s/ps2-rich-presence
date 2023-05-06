@@ -128,9 +128,4 @@ foreach(DEP ${DEPENDENCIES_DEBUG})
 endforeach()
 
 # Discord SDK
-install(FILES "${Discord_DLL_RELEASE}" DESTINATION "bin"
-  CONFIGURATIONS "Release" "RelWithDebInfo" "MinSizeRel"
-)
-install(FILES "${Discord_DLL_DEBUG}" DESTINATION "bin"
-  CONFIGURATIONS "Debug"
-)
+install(IMPORTED_RUNTIME_ARTIFACTS Discord::GameSDK)

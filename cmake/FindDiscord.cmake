@@ -132,22 +132,16 @@ if(Discord_FOUND)
     IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
   )
 
-  add_library(Discord::_DLL SHARED IMPORTED)
-  set_target_properties(Discord::_DLL PROPERTIES
+  add_library(Discord::GameSDK SHARED IMPORTED)
+  set_target_properties(Discord::GameSDK PROPERTIES
     IMPORTED_LOCATION_RELEASE ${Discord_DLL_RELEASE}
     IMPORTED_LOCATION_DEBUG ${Discord_DLL_DEBUG}
     IMPORTED_IMPLIB_RELEASE ${Discord_LIBRARY_RELEASE}
     IMPORTED_IMPLIB_DEBUG ${Discord_LIBRARY_DEBUG}
     IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
   )
-
-  add_library(Discord::GameSDK INTERFACE IMPORTED)
-  target_include_directories(Discord::GameSDK
-    INTERFACE ${Discord_INCLUDE_DIR}
-  )
   target_link_libraries(Discord::GameSDK
     INTERFACE
       Discord::_CPP
-      Discord::_DLL
   )
 endif()
