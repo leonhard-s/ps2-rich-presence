@@ -76,52 +76,10 @@ set_target_properties(Ps2RichPresence PROPERTIES
   OUTPUT_NAME "ps2-rich-presence"
 )
 
-install(TARGETS Ps2RichPresence
-  RUNTIME DESTINATION "bin"
-)
+install(TARGETS Ps2RichPresence RUNTIME DESTINATION ".")
 
 # Install
 # -----------------------------------------------------------------------------
 
-# Install Qt
-qt6_generate_deploy_app_script(
-  TARGET Ps2RichPresence
-  OUTPUT_SCRIPT QT_DEPLOY_SCRIPT
-  NO_UNSUPPORTED_PLATFORM_ERROR
-)
-install(SCRIPT ${QT_DEPLOY_SCRIPT})
-set(DEPENDENCIES_RELEASE
-  libpng16.dll
-  zlib1.dll
-  freetype.dll
-  double-conversion.dll
-  pcre2-16.dll
-  brotlidec.dll
-  bz2.dll
-  brotlicommon.dll
-)
-set(DEPENDENCIES_DEBUG
-  libpng16d.dll
-  zlibd1.dll
-  freetyped.dll
-  double-conversion.dll
-  pcre2-16d.dll
-  brotlidec.dll
-  bz2d.dll
-  brotlicommon.dll
-)
-
-foreach(DEP ${DEPENDENCIES_RELEASE})
-  install(FILES "${Qt6_DIR}/../../bin/${DEP}" DESTINATION "bin"
-    CONFIGURATIONS "Release" "RelWithDebInfo" "MinSizeRel"
-  )
-endforeach()
-
-foreach(DEP ${DEPENDENCIES_DEBUG})
-  install(FILES "${Qt6_DIR}/../../debug/bin/${DEP}" DESTINATION "bin"
-    CONFIGURATIONS "Debug"
-  )
-endforeach()
-
 # Discord SDK
-install(IMPORTED_RUNTIME_ARTIFACTS Discord::GameSDK)
+install(IMPORTED_RUNTIME_ARTIFACTS Discord::GameSDK DESTINATION ".")

@@ -42,6 +42,10 @@
                 "VCPKG_INSTALL_OPTIONS": {
                     "type": "string",
                     "value": "--no-print-usage"
+                },
+                "VCPKG_OVERLAY_TRIPLETS": {
+                    "type": "string",
+                    "value": "${sourceDir}/cmake/vcpkg_triplets"
                 }
             },
             "hidden": true
@@ -61,6 +65,10 @@
                 "CMAKE_CXX_FLAGS": {
                     "type": "string",
                     "value": "/EHsc"
+                },
+                "VCPKG_TARGET_TRIPLET": {
+                    "type": "string",
+                    "value": "x64-windows-custom"
                 }
             }
         },

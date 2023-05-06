@@ -62,7 +62,7 @@ add_subdirectory(app)
 # -----------------------------------------------------------------------------
 
 # License
-install(FILES "${PROJECT_BINARY_DIR}/LICENSE.txt" DESTINATION "share")
+install(FILES "${PROJECT_BINARY_DIR}/LICENSE.txt" DESTINATION ".")
 
 # Packaging
 # -----------------------------------------------------------------------------
