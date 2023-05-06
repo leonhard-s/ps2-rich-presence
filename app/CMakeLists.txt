@@ -72,10 +72,6 @@ target_link_libraries(Ps2RichPresence
     Arx
 )
 set_target_properties(Ps2RichPresence PROPERTIES
-  CXX_STANDARD 20
-  CXX_STANDARD_REQUIRED ON
-  CXX_EXTENSIONS OFF
-
   AUTOMOC ON
   OUTPUT_NAME "ps2-rich-presence"
 )
