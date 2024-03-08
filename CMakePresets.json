@@ -33,7 +33,7 @@
                 },
                 "CMAKE_TOOLCHAIN_FILE": {
                     "type": "PATH",
-                    "value": "$env{VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake"
+                    "value": "${sourceDir}/vcpkg/scripts/buildsystems/vcpkg.cmake"
                 },
                 "VCPKG_INSTALLED_DIR": {
                     "type": "PATH",
