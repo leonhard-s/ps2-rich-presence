@@ -1,13 +1,8 @@
 {
-    "version": 4,
-    "cmakeMinimumRequired": {
-        "major": 3,
-        "minor": 25,
-        "patch": 0
-    },
+    "version": 6,
     "configurePresets": [
         {
-            "name": "windows",
+            "name": "require-windows",
             "hidden": true,
             "condition": {
                 "type": "equals",
@@ -16,7 +11,7 @@
             }
         },
         {
-            "name": "linux",
+            "name": "require-linux",
             "hidden": true,
             "condition": {
                 "type": "equals",
@@ -26,6 +21,7 @@
         },
         {
             "name": "vcpkg",
+            "hidden": true,
             "cacheVariables": {
                 "CMAKE_INSTALL_PREFIX": {
                     "type": "PATH",
@@ -42,128 +38,231 @@
                 "VCPKG_INSTALL_OPTIONS": {
                     "type": "string",
                     "value": "--no-print-usage"
-                },
-                "VCPKG_OVERLAY_TRIPLETS": {
-                    "type": "string",
-                    "value": "${sourceDir}/cmake/vcpkg_triplets"
                 }
-            },
-            "hidden": true
+            }
         },
         {
-            "name": "vcpkg-x64-windows",
-            "displayName": "Win64 (vcpkg)",
+            "name": "vcpkg-windows",
+            "hidden": true,
             "inherits": [
-                "windows",
+                "require-windows",
                 "vcpkg"
             ],
             "cacheVariables": {
-                "CMAKE_GENERATOR": {
-                    "type": "string",
-                    "value": "Visual Studio 17 2022"
-                },
-                "CMAKE_CXX_FLAGS": {
-                    "type": "string",
-                    "value": "/EHsc"
-                },
                 "VCPKG_TARGET_TRIPLET": {
                     "type": "string",
-                    "value": "x64-windows-custom"
+                    "value": "x64-windows"
+                },
+                "VCPKG_OVERLAY_TRIPLETS": {
+                    "type": "STRING",
+                    "value": "${sourceDir}/cmake/vcpkg_triplets"
                 }
             }
         },
         {
-            "name": "vcpkg-x64-windows-codeanalysis",
-            "displayName": "Win64 (vcpkg, Code Analysis)",
+            "name": "vcpkg-linux",
+            "hidden": true,
             "inherits": [
-                "vcpkg-x64-windows"
-            ],
-            "cacheVariables": {
-                "CMAKE_CXX_FLAGS": {
-                    "type": "string",
-                    "value": "/analyze /EHsc"
-                }
-            }
-        },
-        {
-            "name": "vcpkg-x64-windows-asan",
-            "displayName": "Win64 (vcpkg, ASAN)",
-            "inherits": [
-                "vcpkg-x64-windows"
-            ],
-            "cacheVariables": {
-                "CMAKE_CXX_FLAGS": {
-                    "type": "string",
-                    "value": "/fsanitize=address /EHsc /D_DISABLE_VECTOR_ANNOTATION"
-                }
-            }
-        },
-        {
-            "name": "vcpkg-x64-linux",
-            "displayName": "Linux64 (vcpkg)",
-            "inherits": [
-                "linux",
+                "require-linux",
                 "vcpkg"
             ],
             "cacheVariables": {
-                "CMAKE_GENERATOR": {
+                "VCPKG_TARGET_TRIPLET": {
                     "type": "string",
-                    "value": "Unix Makefiles"
-                }
-            },
-            "hidden": true
-        },
-        {
-            "name": "vcpkg-x64-linux-release",
-            "displayName": "Release",
-            "inherits": [
-                "vcpkg-x64-linux"
-            ],
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": {
-                    "type": "string",
-                    "value": "Release"
+                    "value": "x64-linux"
                 }
             }
         },
         {
-            "name": "vcpkg-x64-linux-debug",
-            "displayName": "Debug",
-            "inherits": [
-                "vcpkg-x64-linux"
-            ],
+            "name": "debug",
+            "hidden": true,
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": {
                     "type": "string",
                     "value": "Debug"
                 }
             }
-        }
-    ],
-    "buildPresets": [
-        {
-            "name": "vcpkg-x64-windows-release",
-            "displayName": "Release",
-            "configuration": "Release",
-            "configurePreset": "vcpkg-x64-windows"
         },
         {
-            "name": "vcpkg-x64-windows-debug",
-            "displayName": "Debug",
-            "configuration": "Debug",
-            "configurePreset": "vcpkg-x64-windows"
+            "name": "release",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": {
+                    "type": "string",
+                    "value": "Release"
+                },
+                "CMAKE_INTERPROCEDURAL_OPTIMIZATION": {
+                    "type": "bool",
+                    "value": true
+                }
+            }
         },
         {
-            "name": "vcpkg-x64-linux-release",
-            "displayName": "Release",
-            "configuration": "Release",
-            "configurePreset": "vcpkg-x64-linux-release"
+            "name": "windows-msvc",
+            "hidden": true,
+            "inherits": [
+                "vcpkg-windows"
+            ],
+            "generator": "Ninja",
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": {
+                    "type": "PATH",
+                    "value": "cl.exe"
+                },
+                "CMAKE_C_COMPILER": {
+                    "type": "PATH",
+                    "value": "cl.exe"
+                }
+            }
         },
         {
-            "name": "vcpkg-x64-linux-debug",
-            "displayName": "Debug",
-            "configuration": "Debug",
-            "configurePreset": "vcpkg-x64-linux-debug"
+            "name": "windows-clang",
+            "hidden": true,
+            "inherits": [
+                "vcpkg-windows"
+            ],
+            "generator": "Ninja",
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": {
+                    "type": "PATH",
+                    "value": "clang.exe"
+                },
+                "CMAKE_C_COMPILER": {
+                    "type": "PATH",
+                    "value": "clang.exe"
+                }
+            }
+        },
+        {
+            "name": "windows-msvc-debug",
+            "displayName": "MSVC (Debug)",
+            "inherits": [
+                "windows-msvc",
+                "debug"
+            ]
+        },
+        {
+            "name": "windows-msvc-debug-analyze",
+            "displayName": "MSVC (Debug with Code Analysis)",
+            "inherits": [
+                "windows-msvc-debug"
+            ],
+            "cacheVariables": {
+                "CMAKE_CXX_FLAGS_INIT": {
+                    "type": "string",
+                    "value": "/analyze"
+                }
+            }
+        },
+        {
+            "name": "windows-msvc-debug-asan",
+            "displayName": "MSVC (Debug with AddressSanitizer)",
+            "inherits": [
+                "windows-msvc-debug"
+            ],
+            "cacheVariables": {
+                "CMAKE_CXX_FLAGS_INIT": {
+                    "type": "string",
+                    "value": "/fsanitize=address"
+                }
+            }
+        },
+        {
+            "name": "windows-msvc-release",
+            "displayName": "MSVC (Release)",
+            "inherits": [
+                "windows-msvc",
+                "release"
+            ]
+        },
+        {
+            "name": "windows-clang-debug",
+            "displayName": "Clang (Debug)",
+            "inherits": [
+                "windows-clang",
+                "debug"
+            ]
+        },
+        {
+            "name": "windows-clang-release",
+            "displayName": "Clang (Release)",
+            "inherits": [
+                "windows-clang",
+                "release"
+            ]
+        },
+        {
+            "name": "linux-gcc",
+            "hidden": true,
+            "inherits": [
+                "vcpkg-linux"
+            ],
+            "generator": "Ninja",
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": {
+                    "type": "PATH",
+                    "value": "g++"
+                }
+            }
+        },
+        {
+            "name": "linux-clang",
+            "hidden": true,
+            "inherits": [
+                "vcpkg-linux"
+            ],
+            "generator": "Ninja",
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": {
+                    "type": "PATH",
+                    "value": "clang++"
+                }
+            }
+        },
+        {
+            "name": "linux-gcc-debug",
+            "displayName": "GCC (Debug)",
+            "inherits": [
+                "linux-gcc",
+                "debug"
+            ]
+        },
+        {
+            "name": "linux-gcc-release",
+            "displayName": "GCC (Release)",
+            "inherits": [
+                "linux-gcc",
+                "release"
+            ]
+        },
+        {
+            "name": "linux-clang-debug",
+            "displayName": "Clang (Debug)",
+            "inherits": [
+                "linux-clang",
+                "debug"
+            ]
+        },
+        {
+            "name": "linux-clang-release",
+            "displayName": "Clang (Release)",
+            "inherits": [
+                "linux-clang",
+                "release"
+            ]
+        },
+        {
+            "name": "windows-clang-tidy",
+            "displayName": "Clang (Debug with Clang-Tidy)",
+            "inherits": [
+                "windows-clang-debug"
+            ],
+            "cacheVariables": {
+                "CMAKE_CXX_CLANG_TIDY": {
+                    "type": "string",
+                    "value": "clang-tidy;--checks=cppcoreguidelines-*,clang-analyzer-*,google-*,misc-*,modernize-*,performance-*,readability-*,-modernize-use-trailing-return-type,-google-readability-todo,-readability-identifier-length"
+                }
+            }
         }
     ]
 }

@@ -26,6 +26,19 @@
             "name": "qtwebsockets",
             "version>=": "6.5.0",
             "default-features": false
+        },
+        {
+            "name": "openssl",
+            "version>=": "3.1.1",
+            "default-features": false
+        },
+        {
+            "name": "nlohmann-json",
+            "version>=": "3.11.2"
+        },
+        {
+            "name": "zlib",
+            "version>=": "1.2.13"
         }
     ]
 }
