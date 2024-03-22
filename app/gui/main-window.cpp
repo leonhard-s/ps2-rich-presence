@@ -23,6 +23,7 @@
 #include "game/character-info.hpp"
 #include "gui/character-manager.hpp"
 #include "gui/timeago.hpp"
+#include "moc_macros.hpp"
 #include "persistence.hpp"
 
 namespace PresenceApp {
@@ -383,18 +384,6 @@ void MainWindow::setupUi() {
 
 } // namespace PresenceApp
 
-#if defined(_MSC_VER) && !defined(__clang__)
-#   pragma warning(push)
-#   pragma warning(disable : 4464)
-#elif defined(__clang__)
-#   pragma clang diagnostic push
-#   pragma clang diagnostic ignored "-Wreserved-identifier"
-#endif
-
+PUSH_MOC_WARNINGS_FILTER;
 #include "moc_main-window.cpp"
-
-#if defined(_MSC_VER) && !defined(__clang__)
-#   pragma warning(pop)
-#elif defined(__clang__)
-#   pragma clang diagnostic pop
-#endif
+POP_MOC_WARNINGS_FILTER;

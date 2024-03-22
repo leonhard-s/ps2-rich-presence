@@ -10,6 +10,7 @@
 
 #include "appdata/assets.hpp"
 #include "game/state.hpp"
+#include "moc_macros.hpp"
 
 namespace PresenceApp {
 PresenceFactory::PresenceFactory(QObject* parent)
@@ -104,18 +105,6 @@ discord::Activity PresenceFactory::buildGameActivity(const GameState& state) {
 
 } // namespace PresenceApp
 
-#if defined(_MSC_VER) && !defined(__clang__)
-#   pragma warning(push)
-#   pragma warning(disable : 4464)
-#elif defined(__clang__)
-#   pragma clang diagnostic push
-#   pragma clang diagnostic ignored "-Wreserved-identifier"
-#endif
-
+PUSH_MOC_WARNINGS_FILTER;
 #include "moc_factory.cpp"
-
-#if defined(_MSC_VER) && !defined(__clang__)
-#   pragma warning(pop)
-#elif defined(__clang__)
-#   pragma clang diagnostic pop
-#endif
+POP_MOC_WARNINGS_FILTER;

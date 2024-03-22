@@ -53,6 +53,7 @@ add_executable(Ps2RichPresence WIN32
   "utils.hpp"
   "utils.cpp"
   "main.cpp"
+  "moc_macros.hpp"
   "$<$<PLATFORM_ID:Windows>:../windows/ps2rpc.rc>"
 )
 target_include_directories(Ps2RichPresence

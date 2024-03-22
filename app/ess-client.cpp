@@ -13,6 +13,8 @@
 #include "arx.hpp"
 #include "arx/ess.hpp"
 
+#include "moc_macros.hpp"
+
 namespace PresenceApp {
 
 EssClient::EssClient(const QString& service_id, QObject* parent)
@@ -116,18 +118,6 @@ void EssClient::parseMessage(const QString& message) {
 
 } // namespace PresenceApp
 
-#if defined(_MSC_VER) && !defined(__clang__)
-#   pragma warning(push)
-#   pragma warning(disable : 4464)
-#elif defined(__clang__)
-#   pragma clang diagnostic push
-#   pragma clang diagnostic ignored "-Wreserved-identifier"
-#endif
-
+PUSH_MOC_WARNINGS_FILTER;
 #include "moc_ess-client.cpp"
-
-#if defined(_MSC_VER) && !defined(__clang__)
-#   pragma warning(pop)
-#elif defined(__clang__)
-#   pragma clang diagnostic pop
-#endif
+POP_MOC_WARNINGS_FILTER;

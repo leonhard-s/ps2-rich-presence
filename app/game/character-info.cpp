@@ -17,6 +17,7 @@
 #include "ps2.hpp"
 
 #include "appdata/service-id.hpp"
+#include "moc_macros.hpp"
 #include "utils.hpp"
 
 namespace PresenceApp {
@@ -227,18 +228,6 @@ void CharacterInfo::updateFieldsIfChanged(
 
 } // namespace PresenceApp
 
-#if defined(_MSC_VER) && !defined(__clang__)
-#   pragma warning(push)
-#   pragma warning(disable : 4464)
-#elif defined(__clang__)
-#   pragma clang diagnostic push
-#   pragma clang diagnostic ignored "-Wreserved-identifier"
-#endif
-
+PUSH_MOC_WARNINGS_FILTER;
 #include "moc_character-info.cpp"
-
-#if defined(_MSC_VER) && !defined(__clang__)
-#   pragma warning(pop)
-#elif defined(__clang__)
-#   pragma clang diagnostic pop
-#endif
+POP_MOC_WARNINGS_FILTER;
