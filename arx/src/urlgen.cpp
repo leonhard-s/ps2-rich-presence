@@ -9,16 +9,19 @@
 #include <utility>
 #include <vector>
 
+#include "arx/support.hpp"
 #include "arx/query.hpp"
 
 namespace arx {
 
-std::string getScheme() {
-    return "https";
+const std::string& getScheme() {
+    static const auto scheme = std::string("https");
+    return scheme;
 }
 
-std::string getHost() {
-    return "census.daybreakgames.com";
+const std::string& getHost() {
+    static const auto host = std::string("census.daybreakgames.com");
+    return host;
 }
 
 std::string generateCensusPath(

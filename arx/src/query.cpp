@@ -433,11 +433,11 @@ std::string Query::getUrl() const {
     return url.str();
 }
 
-std::string Query::getScheme() const {
+std::string Query::getScheme() {
     return arx::getScheme();
 }
 
-std::string Query::getHost() const {
+std::string Query::getHost() {
     return arx::getHost();
 }
 

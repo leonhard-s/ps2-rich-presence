@@ -147,8 +147,8 @@ public:
 
     std::string getUrl() const;
 
-    std::string getScheme() const;
-    std::string getHost() const;
+    static std::string getScheme();
+    static std::string getHost();
     std::string getPath() const;
     std::vector<std::pair<std::string, std::string>> getQuery() const;
 

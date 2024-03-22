@@ -10,9 +10,9 @@
 
 namespace arx {
 
-std::string getScheme();
+const std::string& getScheme();
 
-std::string getHost();
+const std::string& getHost();
 
 std::string generateCensusPath(
     const std::string& service_id,
