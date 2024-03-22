@@ -43,7 +43,7 @@ struct CharacterData {
 
 QDebug operator<<(QDebug dbg, const CharacterData& info);
 
-class CharacterInfo: public QObject {
+class CharacterInfo : public QObject {
     Q_OBJECT
 
 public:

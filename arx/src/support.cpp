@@ -55,9 +55,7 @@ std::string serialiseModifier(SearchModifier modifier) {
 }
 
 SearchTerm::SearchTerm()
-    : field_{ "" }
-    , value_{ "" }
-    , modifier_{ SearchModifier::EQUAL_TO } {}
+    : modifier_{ SearchModifier::EQUAL_TO } {}
 
 SearchTerm::SearchTerm(
     const std::string& field,
@@ -68,16 +66,15 @@ SearchTerm::SearchTerm(
     , value_{ value }
     , modifier_{ modifier } {}
 
-SearchTerm SearchTerm::createFromValue(const std::string& field,
+SearchTerm SearchTerm::createFromValue(
+    const std::string& field,
     const std::string& value) {
     // Check if the given value contains a modifier literal
     auto mod = modifierFromData(value);
     if (mod != SearchModifier::EQUAL_TO) {
         return SearchTerm{ field, value.substr(1), mod };
     }
-    else {
-        return SearchTerm{ field, value, mod };
-    }
+    return SearchTerm{ field, value, mod };
 }
 
 std::pair<std::string, std::string> SearchTerm::asQueryItem() const {

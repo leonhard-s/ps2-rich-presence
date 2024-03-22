@@ -101,9 +101,9 @@ double RichPresenceApp::getEventFrequency() {
     if (recent_events_.empty()) {
         return 0.0;
     }
-    auto oldest_event = recent_events_.front();
-    auto now = QDateTime::currentDateTimeUtc();
-    double timespan = static_cast<double>(oldest_event.secsTo(now));
+    const auto oldest_event = recent_events_.front();
+    const auto now = QDateTime::currentDateTimeUtc();
+    const double timespan = static_cast<double>(oldest_event.secsTo(now));
     auto freq = static_cast<double>(recent_events_.size()) / timespan;
     return freq;
 }
@@ -112,11 +112,6 @@ void RichPresenceApp::onEventPayloadReceived(
     const QString& event_name,
     const arx::json_t& payload
 ) {
-    // The app only cares about if there are messages coming in. Handling
-    // the payloads and dealing with error states is the tracker's problem.
-    Q_UNUSED(event_name)
-
-    // Get timestamp of the event
     auto it = payload.find("timestamp");
     if (it == payload.end()) {
         qWarning() << "No timestamp found for" << event_name << "payload";

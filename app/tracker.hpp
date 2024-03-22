@@ -16,7 +16,7 @@
 
 namespace PresenceApp {
 
-class ActivityTracker: public QObject {
+class ActivityTracker : public QObject {
     Q_OBJECT
 
 public:

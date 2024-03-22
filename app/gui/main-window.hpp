@@ -17,7 +17,7 @@
 
 namespace PresenceApp {
 
-class MainWindow: public QWidget {
+class MainWindow : public QWidget {
     Q_OBJECT
 
 public:

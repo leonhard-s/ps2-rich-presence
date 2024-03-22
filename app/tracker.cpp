@@ -5,7 +5,6 @@
 #include <QtCore/QDebug>
 #include <QtCore/QList>
 #include <QtCore/QObject>
-#include <QtCore/QScopedPointer>
 #include <QtCore/QString>
 #include <QtCore/QUrl>
 #include <QtCore/QUrlQuery>

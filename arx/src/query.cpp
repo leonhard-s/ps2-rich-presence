@@ -19,8 +19,8 @@ std::vector<JoinData> SupportsJoin::getJoins() const {
     return joins;
 }
 
-void SupportsJoin::setJoins(std::initializer_list<JoinData> join_list) {
-    this->joins = join_list;
+void SupportsJoin::setJoins(std::initializer_list<JoinData> joins_list) {
+    this->joins = joins_list;
 }
 
 void SupportsJoin::addJoin(const JoinData& join) {
@@ -327,8 +327,8 @@ bool Query::getCase() const {
     return case_;
 }
 
-void Query::setCase(bool value) {
-    this->case_ = value;
+void Query::setCase(bool case_sensitive) {
+    this->case_ = case_sensitive;
 }
 
 int Query::getLimit() const {

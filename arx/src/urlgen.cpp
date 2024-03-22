@@ -104,8 +104,8 @@ std::vector<std::pair<std::string, std::string>> getQueryItems(
     if (!query->getRetry()) {
         items.emplace_back("c:retry", "0");
     }
-    auto tree = query->getTree();
-    if (tree) {
+    const auto tree = query->getTree();
+    if (tree != nullptr) {
         items.emplace_back("c:tree", tree->serialise());
     }
     auto joins = query->getJoins();

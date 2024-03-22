@@ -17,14 +17,14 @@ struct JoinData;
 class SupportsJoin {
 public:
     std::vector<JoinData> getJoins() const;
-    void setJoins(std::initializer_list<JoinData> joins);
+    void setJoins(std::initializer_list<JoinData> joins_list);
     void addJoin(const JoinData& join);
 
 protected:
     std::vector<JoinData> joins;
 };
 
-struct JoinData: public SupportsJoin {
+struct JoinData : public SupportsJoin {
     JoinData();
     explicit JoinData(
         const std::string& collection,
@@ -71,7 +71,7 @@ struct TreeData {
     std::string start_;
 };
 
-class Query: public SupportsJoin {
+class Query : public SupportsJoin {
 public:
     explicit Query(
         const std::string& collection = "",
@@ -91,7 +91,7 @@ public:
     std::string getVerb() const;
     void setVerb(const std::string& verb);
     std::string getNamespace() const;
-    void setNamespace(const std::string& ns);
+    void setNamespace(const std::string& game);
     std::string getCollection() const;
     void setCollection(const std::string& collection);
 

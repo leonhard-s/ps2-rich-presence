@@ -10,7 +10,6 @@
 #include <QtCore/QTimer>
 
 #include "arx.hpp"
-
 #include "game/character-info.hpp"
 #include "presence/factory.hpp"
 #include "presence/handler.hpp"
@@ -18,7 +17,7 @@
 
 namespace PresenceApp {
 
-class RichPresenceApp: public QObject {
+class RichPresenceApp : public QObject {
     Q_OBJECT
 
 public:

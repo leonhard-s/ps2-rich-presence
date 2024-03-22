@@ -18,7 +18,7 @@
 
 namespace PresenceApp {
 
-class CharacterManager: public QDialog {
+class CharacterManager : public QDialog {
     Q_OBJECT
 
 public:

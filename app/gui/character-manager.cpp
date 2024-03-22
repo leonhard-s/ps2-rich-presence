@@ -127,7 +127,7 @@ void CharacterManager::onCharacterSelected() {
 void CharacterManager::onCharacterInfoReceived() {
     // Get reply (cast to ScopedPointer to ensure it is deleted when this
     // function returns)
-    QScopedPointer<QNetworkReply> reply {
+    QScopedPointer<QNetworkReply> reply{
         qobject_cast<QNetworkReply*>(QObject::sender())
     };
     // Remove temporary list entry
