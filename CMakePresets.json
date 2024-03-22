@@ -125,11 +125,15 @@
             "cacheVariables": {
                 "CMAKE_CXX_COMPILER": {
                     "type": "PATH",
-                    "value": "clang.exe"
+                    "value": "clang-cl.exe"
                 },
                 "CMAKE_C_COMPILER": {
                     "type": "PATH",
-                    "value": "clang.exe"
+                    "value": "clang-cl.exe"
+                },
+                "CMAKE_CXX_FLAGS": {
+                    "type": "STRING",
+                    "value": "-Xclang -fcxx-exceptions"
                 }
             }
         },
