@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
 
@@ -27,7 +29,7 @@ public Q_SLOTS:
     void setActivity(discord::Activity activity);
 
 private:
-    discord::Core* discord_core_;
+    std::unique_ptr<discord::Core> discord_core_;
     QTimer* timer_;
 };
 

@@ -9,7 +9,6 @@
 #include <QtCore/QTimer>
 
 #include <algorithm>
-#include <limits>
 
 #include "arx.hpp"
 #include "discord-game-sdk/discord.h"
@@ -23,17 +22,15 @@ namespace PresenceApp {
 
 RichPresenceApp::RichPresenceApp(QObject* parent)
     : QObject(parent)
+    , rate_limit_timer_{ std::make_unique<QTimer>(this) }
     , presence_enabled_{ true }
+    , presence_{ std::make_unique<PresenceFactory>(this) }
+    , discord_{ std::make_unique<PresenceHandler>(this) }
     , event_latency_{ -1 }
+    , last_event_payload_{ QDateTime::fromSecsSinceEpoch(0) }
+    , last_game_state_update_{ QDateTime::fromSecsSinceEpoch(0) }
+    , last_presence_update_{ QDateTime::fromSecsSinceEpoch(0) }
 {
-    presence_.reset(new PresenceFactory(this));
-    discord_.reset(new PresenceHandler(this));
-    // Reset timestamps
-    last_event_payload_ = QDateTime::fromSecsSinceEpoch(0);
-    last_game_state_update_ = QDateTime::fromSecsSinceEpoch(0);
-    last_presence_update_ = QDateTime::fromSecsSinceEpoch(0);
-    // Set up rate limiting timer
-    rate_limit_timer_.reset(new QTimer(this));
     rate_limit_timer_->setSingleShot(true);
     rate_limit_timer_->start(0);
     QObject::connect(rate_limit_timer_.get(), &QTimer::timeout,
@@ -60,7 +57,7 @@ void RichPresenceApp::setCharacter(const CharacterData& character) {
     if (character_ != character) {
         character_ = character;
         if (character.id_ != 0) {
-            tracker_.reset(new ActivityTracker(character, this));
+            tracker_ = std::make_unique<ActivityTracker>(character, this);
             QObject::connect(tracker_.get(), &ActivityTracker::payloadReceived,
                 this, &RichPresenceApp::onEventPayloadReceived);
             QObject::connect(tracker_.get(), &ActivityTracker::stateChanged,

@@ -62,7 +62,7 @@ MainWindow::MainWindow()
     loadConfig();
 
     // Update "last X" labels periodically
-    last_seen_timer_.reset(new QTimer(this));
+    last_seen_timer_ = std::make_unique<QTimer>(this);
     last_seen_timer_->setInterval(1000);
     last_seen_timer_->setSingleShot(false);
     QObject::connect(last_seen_timer_.get(), &QTimer::timeout,

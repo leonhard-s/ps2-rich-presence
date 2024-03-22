@@ -69,7 +69,7 @@ void CharacterManager::addCharacter(const CharacterData& character) {
 }
 
 void CharacterManager::onAddButtonClicked() {
-    QScopedPointer<QDialog> dialog(createCharacterNameInputDialog());
+    auto dialog = std::unique_ptr<QDialog>(createCharacterNameInputDialog());
     if (dialog->exec() == QDialog::DialogCode::Rejected) {
         return;
     }

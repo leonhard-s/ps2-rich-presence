@@ -2,9 +2,10 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QList>
 #include <QtCore/QObject>
-#include <QtCore/QScopedPointer>
 #include <QtCore/QTimer>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
@@ -60,8 +61,8 @@ private:
     void resetCharacterComboBox();
     void setupUi();
 
-    QScopedPointer<RichPresenceApp> app_;
-    QScopedPointer<QTimer> last_seen_timer_;
+    std::unique_ptr<RichPresenceApp> app_;
+    std::unique_ptr<QTimer> last_seen_timer_;
 
     // GUI elements
     QComboBox* characters_combo_box_;

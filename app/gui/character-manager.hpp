@@ -2,9 +2,10 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QJsonObject>
 #include <QtCore/QObject>
-#include <QtCore/QScopedPointer>
 #include <QtCore/QString>
 #include <QtCore/QUrl>
 #include <QtNetwork/QNetworkAccessManager>
@@ -47,7 +48,7 @@ private:
     QDialog* createCharacterNameInputDialog();
     void setupUi();
 
-    QScopedPointer<QNetworkAccessManager> manager_;
+    std::unique_ptr<QNetworkAccessManager> manager_;
 
     QListWidget* list_;
     QPushButton* button_add_;

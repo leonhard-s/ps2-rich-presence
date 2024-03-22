@@ -2,10 +2,11 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QDebug>
 #include <QtCore/QMetaType>
 #include <QtCore/QObject>
-#include <QtCore/QScopedPointer>
 #include <QtCore/QString>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkRequest>
@@ -88,7 +89,7 @@ private:
         ps2::Server server);
 
     CharacterData info_;
-    QScopedPointer<QNetworkAccessManager> manager_;
+    std::unique_ptr<QNetworkAccessManager> manager_;
 };
 
 } // namespace PresenceApp

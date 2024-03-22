@@ -2,9 +2,10 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QList>
 #include <QtCore/QObject>
-#include <QtCore/QScopedPointer>
 #include <QtCore/QString>
 
 #include "arx.hpp"
@@ -49,7 +50,7 @@ private:
     CharacterData character_;
     GameStateFactory state_factory_;
     GameState current_state_;
-    QScopedPointer<EssClient> ess_client_;
+    std::unique_ptr<EssClient> ess_client_;
 };
 
 } // namespace PresenceApp
