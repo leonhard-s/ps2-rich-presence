@@ -2,6 +2,8 @@
 
 #include "ess-client.hpp"
 
+#include <utility>
+
 #include <QtCore/QDebug>
 #include <QtCore/QList>
 #include <QtCore/QObject>
@@ -17,10 +19,9 @@
 
 namespace PresenceApp {
 
-EssClient::EssClient(const QString& service_id, QObject* parent)
+EssClient::EssClient(QString service_id, QObject* parent)
     : QObject{ parent }
-    , service_id_{ service_id }
-    , subscriptions_{}
+    , service_id_{ std::move(service_id) }
 {
     QObject::connect(&ws_, &QWebSocket::connected,
         this, &EssClient::onConnected);
@@ -49,7 +50,7 @@ void EssClient::disconnect() {
     ws_.close();
 }
 
-void EssClient::subscribe(const arx::Subscription subscription) {
+void EssClient::subscribe(const arx::Subscription& subscription) {
     if (!subscriptions_.contains(subscription)) {
         subscriptions_.append(subscription);
         emit subscriptionAdded(subscription);
@@ -62,8 +63,8 @@ void EssClient::subscribe(const arx::Subscription subscription) {
     }
 }
 
-void EssClient::unsubscribe(const arx::Subscription subscription) {
-    if (subscriptions_.removeAll(subscription)) {
+void EssClient::unsubscribe(const arx::Subscription& subscription) {
+    if (subscriptions_.removeAll(subscription) > 0) {
         emit subscriptionRemoved(subscription);
     }
     if (isConnected()) {
@@ -78,8 +79,9 @@ void EssClient::reconnect() {
 }
 
 void EssClient::onConnected() {
-    auto timer = new QTimer(this);
-    timer->setInterval(1000);
+    constexpr auto subscription_delay_ms = 1000;
+    auto* timer = new QTimer(this);
+    timer->setInterval(subscription_delay_ms);
     timer->setSingleShot(true);
     QObject::connect(timer, &QTimer::timeout, [timer, this]() {
         qDebug() << "Timer expired, subscribing";

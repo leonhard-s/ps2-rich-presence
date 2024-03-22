@@ -50,11 +50,11 @@ private:
     void updateEventFrequency();
     void updateLastSeenLabels();
 
-    QString getProjectLink() const;
+    static QString getProjectLink();
     void setEventFrequency(double events_per_second);
     void setEventLatency(qint32 latency_ms);
-    void setLastPayload(QDateTime timestamp);
-    void setLastPresence(QDateTime timestamp);
+    void setLastPayload(const QDateTime& timestamp);
+    void setLastPresence(const QDateTime& timestamp);
     void setStatus(const QString& status);
     void setTrackingEnabled(bool enabled);
 

@@ -18,7 +18,7 @@ enum class SearchModifier {
     STARTS_WITH,
 };
 
-SearchModifier modifierFromData(const std::string& data);
+SearchModifier modifierFromData(std::string_view data);
 
 std::string serialiseModifier(SearchModifier modifier);
 
@@ -26,13 +26,13 @@ class SearchTerm {
 public:
     SearchTerm();
     SearchTerm(
-        const std::string& field,
-        const std::string& value,
+        std::string_view field,
+        std::string_view value,
         SearchModifier modifier = SearchModifier::EQUAL_TO);
 
     SearchTerm static createFromValue(
-        const std::string& field,
-        const std::string& value);
+        std::string_view field,
+        std::string_view value);
 
     std::pair<std::string, std::string> asQueryItem() const;
     std::string serialise() const;
@@ -45,6 +45,6 @@ private:
 
 std::string join(
     const std::vector<std::string>& strings,
-    const std::string& delimiter);
+    std::string_view delimiter);
 
 } // namespace arx

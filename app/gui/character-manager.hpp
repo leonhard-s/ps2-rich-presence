@@ -43,8 +43,8 @@ private Q_SLOTS:
     void onCharacterInfoReceived();
 
 private:
-    QUrl getCharacterInfoUrl(const QString& character) const;
-    CharacterData parseCharacterPayload(const arx::json_t& payload);
+    static QUrl getCharacterInfoUrl(const QString& character);
+    static CharacterData parseCharacterPayload(const arx::json_t& payload);
     QDialog* createCharacterNameInputDialog();
     void setupUi();
 

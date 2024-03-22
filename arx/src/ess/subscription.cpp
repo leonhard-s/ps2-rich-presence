@@ -2,6 +2,7 @@
 
 #include "arx/ess/subscription.hpp"
 
+#include <utility>
 #include <vector>
 
 #include "arx/types.hpp"
@@ -25,9 +26,9 @@ Subscription::Subscription(
     std::vector<string_t> worlds,
     bool logical_and
 )
-    : event_names_{ event_names }
-    , characters_{ characters }
-    , worlds_{ worlds }
+    : event_names_{ std::move(event_names) }
+    , characters_{ std::move(characters) }
+    , worlds_{ std::move(worlds) }
     , logical_and_{ logical_and } {}
 
 bool Subscription::operator==(const Subscription& other) const {
@@ -73,15 +74,15 @@ string_t Subscription::buildUnsubscribeMessage() const {
     return data.dump();
 }
 
-const std::vector<string_t> Subscription::getEventNames() const {
+std::vector<string_t> Subscription::getEventNames() const {
     return event_names_;
 }
 
-const std::vector<string_t> Subscription::getCharacters() const {
+std::vector<string_t> Subscription::getCharacters() const {
     return characters_;
 }
 
-const std::vector<string_t> Subscription::getWorlds() const {
+std::vector<string_t> Subscription::getWorlds() const {
     return worlds_;
 }
 

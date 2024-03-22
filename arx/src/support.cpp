@@ -10,7 +10,7 @@
 
 namespace arx {
 
-SearchModifier modifierFromData(const std::string& data) {
+SearchModifier modifierFromData(std::string_view data) {
     auto first_char = data.front();
     switch (first_char) {
     case '!':
@@ -58,8 +58,8 @@ SearchTerm::SearchTerm()
     : modifier_{ SearchModifier::EQUAL_TO } {}
 
 SearchTerm::SearchTerm(
-    const std::string& field,
-    const std::string& value,
+    std::string_view field,
+    std::string_view value,
     SearchModifier modifier
 )
     : field_{ field }
@@ -67,8 +67,8 @@ SearchTerm::SearchTerm(
     , modifier_{ modifier } {}
 
 SearchTerm SearchTerm::createFromValue(
-    const std::string& field,
-    const std::string& value) {
+    std::string_view field,
+    std::string_view value) {
     // Check if the given value contains a modifier literal
     auto mod = modifierFromData(value);
     if (mod != SearchModifier::EQUAL_TO) {
@@ -89,7 +89,7 @@ std::string SearchTerm::serialise() const {
 
 std::string join(
     const std::vector<std::string>& strings,
-    const std::string& delimiter
+    std::string_view delimiter
 ) {
     std::stringstream joined;
     std::transform(strings.cbegin(), strings.cend(),
@@ -98,7 +98,7 @@ std::string join(
             if (str == strings.front()) {
                 return str;
             }
-            return delimiter + str;
+            return std::string(delimiter) + str;
         });
     return joined.str();
 }

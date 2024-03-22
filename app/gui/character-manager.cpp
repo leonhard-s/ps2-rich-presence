@@ -4,7 +4,6 @@
 
 #include <QtCore/QJsonObject>
 #include <QtCore/QRegularExpression>
-#include <QtCore/QScopedPointer>
 #include <QtCore/QString>
 #include <QtCore/QUrl>
 #include <QtCore/QUrlQuery>
@@ -38,6 +37,10 @@ CharacterManager::CharacterManager(QWidget* parent
 )
     : QDialog{ parent }
     , manager_{ new QNetworkAccessManager() }
+    , list_{ nullptr }
+    , button_add_{ nullptr }
+    , button_remove_{ nullptr }
+    , button_close_{ nullptr }
 {
     // Configure the modal dialog
     setWindowTitle(tr("Manage Characters"));
@@ -63,7 +66,7 @@ CharacterManager::CharacterManager(QWidget* parent
 
 void CharacterManager::addCharacter(const CharacterData& character) {
     if (list_ != nullptr) {
-        auto item = new QListWidgetItem(character.name_);
+        auto* item = new QListWidgetItem(character.name_);
         item->setData(Qt::UserRole, QVariant::fromValue(character));
         list_->addItem(item);
     }
@@ -91,11 +94,11 @@ void CharacterManager::onAddButtonClicked() {
         }
     }
     // Validate that this character exists
-    auto reply = manager_->get(QNetworkRequest(getCharacterInfoUrl(name)));
+    auto* reply = manager_->get(QNetworkRequest(getCharacterInfoUrl(name)));
     QObject::connect(reply, &QNetworkReply::finished,
         this, &CharacterManager::onCharacterInfoReceived);
     // Create temp character entry to show while waiting for reply
-    auto item = new QListWidgetItem(tr("Loading '%1'…").arg(name));
+    auto* item = new QListWidgetItem(tr("Loading '%1'…").arg(name));
     // Make unselectable
     item->setFlags(item->flags() & ~Qt::ItemIsSelectable);
     item->setData(Qt::UserRole, QVariant::fromValue(reply));
@@ -128,7 +131,7 @@ void CharacterManager::onCharacterSelected() {
 void CharacterManager::onCharacterInfoReceived() {
     // Get reply (cast to ScopedPointer to ensure it is deleted when this
     // function returns)
-    QScopedPointer<QNetworkReply> reply{
+    const QScopedPointer<QNetworkReply> reply{
         qobject_cast<QNetworkReply*>(QObject::sender())
     };
     // Remove temporary list entry
@@ -149,8 +152,8 @@ void CharacterManager::onCharacterInfoReceived() {
     }
     // Validate payload
     const std::string collection = "character";
-    auto payload = getJsonPayload(reply);
-    if (!arx::validatePayload(collection, payload)) {
+    auto payload = getJsonPayload(reply.get());
+    if (arx::validatePayload(collection, payload) != 0) {
         QMessageBox::critical(this,
             tr("Character Manager"),
             tr("Invalid character info payload."),
@@ -167,21 +170,21 @@ void CharacterManager::onCharacterInfoReceived() {
     // HACK: Parse character data
     CharacterInfo temp;
     temp.handleCharacterInfoPayload(payload);
-    CharacterData info{ temp.getId(), temp.getName(), temp.getFaction(),
+    const CharacterData info{ temp.getId(), temp.getName(), temp.getFaction(),
                        temp.getClass(), temp.getServer() };
     // Create character entry
-    auto item = new QListWidgetItem(info.name_);
+    auto* item = new QListWidgetItem(info.name_);
     item->setData(Qt::UserRole, QVariant::fromValue(info));
     list_->addItem(item);
 }
 
-QUrl CharacterManager::getCharacterInfoUrl(const QString& character) const {
+QUrl CharacterManager::getCharacterInfoUrl(const QString& character) {
     auto name = character.toLower().toStdString();
     // Create API query
     arx::Query query("character", SERVICE_ID);
     query.addTerm(arx::SearchTerm("name.first_lower", name));
     auto join = arx::JoinData("characters_world");
-    join.show_.push_back("world_id");
+    join.show_.emplace_back("world_id");
     join.inject_at_ = "world";
     query.addJoin(join);
     query.setShow({ "character_id", "name.first", "faction_id", "profile_id" });
@@ -216,7 +219,7 @@ CharacterData CharacterManager::parseCharacterPayload(
         qWarning() << "Invalid type: key \"name\" must be an object";
     }
     // Get character ID
-    auto id_val = payload["character_id"];
+    const auto& id_val = payload["character_id"];
     if (id_val.is_string()) {
         id = std::stoull(id_val.get<std::string>());
     }
@@ -224,7 +227,7 @@ CharacterData CharacterManager::parseCharacterPayload(
         qWarning() << "Invalid type: \"character_id\" must be a string";
     }
     // Get faction
-    auto faction_val = payload["faction_id"];
+    const auto& faction_val = payload["faction_id"];
     if (faction_val.is_number_integer()) {
         faction_id = faction_val.get<arx::faction_id_t>();
     }
@@ -232,7 +235,7 @@ CharacterData CharacterManager::parseCharacterPayload(
         qWarning() << "Invalid type: \"faction_id\" must be a number";
     }
     // Get profile
-    auto profile_val = payload["profile_id"];
+    const auto& profile_val = payload["profile_id"];
     if (profile_val.is_number_integer()) {
         profile_id = profile_val.get<arx::profile_id_t>();
     }
@@ -240,7 +243,7 @@ CharacterData CharacterManager::parseCharacterPayload(
         qWarning() << "Invalid type: \"profile_id\" must be a number";
     }
     // Get world
-    auto world_val = payload["world_id"];
+    const auto& world_val = payload["world_id"];
     if (world_val.is_number_integer()) {
         world_id = world_val.get<arx::world_id_t>();
     }
@@ -248,27 +251,27 @@ CharacterData CharacterManager::parseCharacterPayload(
         qWarning() << "Invalid type: \"world_id\" must be a number";
     }
     // Convert IDs to enum values
-    if (ps2::faction_from_faction_id(faction_id, &faction)) {
+    if (ps2::faction_from_faction_id(faction_id, &faction) != 0) {
         qWarning() << "Unable to convert faction ID:" << faction_id;
     }
-    if (ps2::class_from_profile_id(profile_id, &cls)) {
+    if (ps2::class_from_profile_id(profile_id, &cls) != 0) {
         qWarning() << "Unable to create class from profile ID:"
             << profile_id;
     }
-    if (ps2::server_from_world_id(world_id, &server)) {
+    if (ps2::server_from_world_id(world_id, &server) != 0) {
         qWarning() << "Unable to create server from world ID:" << world_id;
     }
     // Create character info
-    return CharacterData(id, name, faction, cls, server);
+    return { id, name, faction, cls, server };
 }
 
 QDialog* CharacterManager::createCharacterNameInputDialog() {
-    auto dialog = new QDialog(this);
+    auto* dialog = new QDialog(this);
     dialog->setWindowTitle(tr("Add Character"));
     dialog->setMinimumSize(120, 80);
-    auto layout = new QVBoxLayout(dialog);
+    auto* layout = new QVBoxLayout(dialog);
 
-    auto name_input = new QLineEdit(dialog);
+    auto* name_input = new QLineEdit(dialog);
     layout->addWidget(name_input);
     name_input->setPlaceholderText(tr("Enter character name"));
     name_input->setInputMethodHints(Qt::ImhNoPredictiveText);
@@ -277,15 +280,15 @@ QDialog* CharacterManager::createCharacterNameInputDialog() {
             // Only accept between 3 and 32 alphanumerical characters
             QRegularExpression("[a-zA-Z0-9]{3,32}"), name_input));
 
-    auto button_layout = new QHBoxLayout();
+    auto* button_layout = new QHBoxLayout();
     layout->addLayout(button_layout);
     button_layout->addSpacerItem(new QSpacerItem(40, 20,
         QSizePolicy::Expanding,
         QSizePolicy::Minimum));
-    auto button_ok = new QPushButton(tr("OK"), dialog);
+    auto* button_ok = new QPushButton(tr("OK"), dialog);
     button_layout->addWidget(button_ok);
     button_ok->setDefault(true);
-    auto button_cancel = new QPushButton(tr("Cancel"), dialog);
+    auto* button_cancel = new QPushButton(tr("Cancel"), dialog);
     button_layout->addWidget(button_cancel);
 
     QObject::connect(name_input, &QLineEdit::returnPressed,
@@ -298,10 +301,10 @@ QDialog* CharacterManager::createCharacterNameInputDialog() {
 }
 
 void CharacterManager::setupUi() {
-    auto layout = new QVBoxLayout(this);
+    auto* layout = new QVBoxLayout(this);
 
     // Instruction text
-    auto instructions = new QLabel(
+    auto* instructions = new QLabel(
         tr("Add characters below using their ingame name.\n"
             "\n"
             "You can drag character names to reorder them. Names higher in "
@@ -319,7 +322,7 @@ void CharacterManager::setupUi() {
     list_->setDragDropMode(QAbstractItemView::InternalMove);
 
     // Buttons
-    auto button_layout = new QHBoxLayout();
+    auto* button_layout = new QHBoxLayout();
     layout->addLayout(button_layout);
 
     button_add_ = new QPushButton(tr("Add"), this);

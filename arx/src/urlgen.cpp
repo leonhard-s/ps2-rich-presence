@@ -14,14 +14,14 @@
 
 namespace arx {
 
-const std::string& getScheme() {
-    static const auto scheme = std::string("https");
-    return scheme;
+std::string_view getScheme() {
+    static const auto* const value = "https";
+    return value;
 }
 
-const std::string& getHost() {
-    static const auto host = std::string("census.daybreakgames.com");
-    return host;
+std::string_view getHost() {
+    static const auto* const value = "census.daybreakgames.com";
+    return value;
 }
 
 std::string generateCensusPath(
@@ -107,7 +107,7 @@ std::vector<std::pair<std::string, std::string>> getQueryItems(
     if (!query->getRetry()) {
         items.emplace_back("c:retry", "0");
     }
-    const auto tree = query->getTree();
+    const auto* const tree = query->getTree();
     if (tree != nullptr) {
         items.emplace_back("c:tree", tree->serialise());
     }

@@ -85,7 +85,8 @@ discord::Activity PresenceFactory::buildGameActivity(const GameState& state) {
     ps2::zone_to_display_name(state.zone_, &temp);
     assets.SetLargeText(temp.c_str());
     // Small image
-    std::string key, text;
+    std::string key;
+    std::string text;
     if (state.vehicle_ != ps2::Vehicle::None) {
         assets::imageKeyFromVehicle(state.vehicle_, &temp);
         key = temp;

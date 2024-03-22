@@ -40,7 +40,7 @@ MessageType getMessageType(const json_t& message) {
         return getMessageTypeEvent(message);
     }
     // Subscription echo
-    if (service == "") {
+    if (service.empty()) {
         // Subscriptions do not have a service specified but must have a
         // top-level "subscription" key
         if (message.find("subscription") != message.end()) {
@@ -53,15 +53,15 @@ MessageType getMessageType(const json_t& message) {
 
 json_t getPayload(const json_t& message) {
     if (getMessageType(message) != MessageType::SERVICE_MESSAGE) {
-        return json_t();
+        return {};
     }
     auto it = message.find("payload");
     if (it == message.end() || !it->is_object()) {
-        return json_t();
+        return {};
     }
     auto payload = it->get<json_t>();
     if (payload.find("event_name") == payload.end()) {
-        return json_t();
+        return {};
     }
     return payload;
 }

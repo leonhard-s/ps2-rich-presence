@@ -15,12 +15,11 @@ namespace PresenceApp {
 /**
  * WebSocket client for the PS2 event streaming service.
  */
-class EssClient: public QObject {
+class EssClient : public QObject {
     Q_OBJECT
 
 public:
-    explicit EssClient(const QString& service_id,
-        QObject* parent = nullptr);
+    explicit EssClient(QString service_id, QObject* parent = nullptr);
     EssClient(const EssClient& other) = delete;
     EssClient(EssClient&& other) noexcept = delete;
 
@@ -35,16 +34,16 @@ Q_SIGNALS:
     void disconnected();
     void messageReceived(QString message);
     void payloadReceived(QString event_name, arx::json_t payload);
-    void subscriptionAdded(const arx::Subscription subscription);
-    void subscriptionRemoved(const arx::Subscription subscription);
+    void subscriptionAdded(const arx::Subscription& subscription);
+    void subscriptionRemoved(const arx::Subscription& subscription);
     void subscriptionsCleared();
 
 public Q_SLOTS:
     void connect();
     void disconnect();
     void reconnect();
-    void subscribe(const arx::Subscription subscription);
-    void unsubscribe(const arx::Subscription subscription);
+    void subscribe(const arx::Subscription& subscription);
+    void unsubscribe(const arx::Subscription& subscription);
 
 private Q_SLOTS:
     void onConnected();

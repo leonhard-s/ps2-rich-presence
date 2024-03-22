@@ -22,9 +22,9 @@ public:
     string_t buildSubscribeMessage() const;
     string_t buildUnsubscribeMessage() const;
 
-    const std::vector<string_t> getEventNames() const;
-    const std::vector<string_t> getCharacters() const;
-    const std::vector<string_t> getWorlds() const;
+    std::vector<string_t> getEventNames() const;
+    std::vector<string_t> getCharacters() const;
+    std::vector<string_t> getWorlds() const;
     bool getLogicalAndFlag() const;
 
 private:

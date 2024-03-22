@@ -20,7 +20,7 @@ struct CharacterData {
     CharacterData();
     CharacterData(
         arx::character_id_t id,
-        const QString& name,
+        QString name,
         ps2::Faction faction,
         ps2::Class cls,
         ps2::Server server);
@@ -52,7 +52,7 @@ public:
     explicit CharacterInfo(arx::character_id_t id, QObject* parent = nullptr);
     CharacterInfo(
         arx::character_id_t id,
-        const QString& name,
+        QString name,
         ps2::Faction faction,
         ps2::Class cls,
         ps2::Server server,
@@ -81,15 +81,15 @@ private Q_SLOTS:
     void onCharacterInfoRequestFinished();
 
 private:
-    QNetworkRequest getCharacterInfoRequest();
+    QNetworkRequest getCharacterInfoRequest() const;
     void updateFieldsIfChanged(arx::character_id_t id,
-        const QString& name,
+        QString name,
         ps2::Faction faction,
         ps2::Class cls,
         ps2::Server server);
 
     CharacterData info_;
-    std::unique_ptr<QNetworkAccessManager> manager_;
+    QNetworkAccessManager* manager_;
 };
 
 } // namespace PresenceApp

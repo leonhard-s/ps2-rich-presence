@@ -101,7 +101,7 @@ double RichPresenceApp::getEventFrequency() {
     }
     const auto oldest_event = recent_events_.front();
     const auto now = QDateTime::currentDateTimeUtc();
-    const double timespan = static_cast<double>(oldest_event.secsTo(now));
+    const auto timespan = static_cast<double>(oldest_event.secsTo(now));
     auto freq = static_cast<double>(recent_events_.size()) / timespan;
     return freq;
 }
@@ -139,13 +139,14 @@ void RichPresenceApp::onRateLimitTimerExpired() {
 }
 
 void RichPresenceApp::pruneRecentEvents() {
+    constexpr qint64 recency_threshold = 30000;
     // Remove events older than 30 seconds from the list
     QList<QDateTime> still_fresh;
     auto now = QDateTime::currentDateTimeUtc();
     std::copy_if(recent_events_.begin(), recent_events_.end(),
         std::back_inserter(still_fresh),
         [now](const QDateTime& event_time) {
-            return event_time.msecsTo(now) <= 30000;
+            return event_time.msecsTo(now) <= recency_threshold;
         });
 }
 
@@ -171,7 +172,7 @@ void RichPresenceApp::schedulePresenceUpdate() {
     // presence again.
     auto ms_until_next_update = static_cast<int>(std::clamp(
         rate_limit - last_presence_update_.msecsTo(now),
-        0LL, static_cast<long long>(INT_MAX)));
+        0LL, static_cast<qint64>(INT_MAX)));
     qDebug() << "Scheduling presence update in" << ms_until_next_update << "ms";
     // (Re)start the timer. Presence will be updated when the timer fires.
     rate_limit_timer_->start(ms_until_next_update);
@@ -190,9 +191,10 @@ void RichPresenceApp::updatePresence() {
 }
 
 void RichPresenceApp::updateRecentEventsList() {
+    constexpr qsizetype num_recent_events = 100;
     auto now = QDateTime::currentDateTimeUtc();
     // Only keep the 100 most recent events
-    while (recent_events_.size() > 100) {
+    while (recent_events_.size() > num_recent_events) {
         recent_events_.pop_front();
     }
     // Add the new event to the list

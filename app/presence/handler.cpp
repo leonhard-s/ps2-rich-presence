@@ -18,9 +18,9 @@ PresenceHandler::PresenceHandler(QObject* parent)
     : QObject{ parent }
 {
     // Create discord core
-    discord::Core* temp_;
+    discord::Core* temp_ = nullptr;
     auto result = discord::Core::Create(appid, DiscordCreateFlags_Default, &temp_);
-    if (!temp_) {
+    if (temp_ == nullptr) {
         qCritical() << "Failed to create discord core (error code" << static_cast<int>(result) << ")";
     }
     else {

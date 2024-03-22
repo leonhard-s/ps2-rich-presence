@@ -30,6 +30,17 @@ namespace PresenceApp {
 
 MainWindow::MainWindow()
     : QWidget(nullptr)
+    , characters_combo_box_{ nullptr }
+    , status_{ nullptr }
+    , latency_{ nullptr }
+    , event_frequency_{ nullptr }
+    , payload_ago_{ nullptr }
+    , presence_ago_{ nullptr }
+    , auto_track_{ nullptr }
+    , start_with_windows_{ nullptr }
+    , minimise_to_tray_{ nullptr }
+    , enable_button_{ nullptr }
+    , minimise_button_{ nullptr }
 {
     // Configure the main window
     setFixedWidth(280);
@@ -55,7 +66,7 @@ MainWindow::MainWindow()
         this,
         &MainWindow::showMinimized);
     // Create application object
-    app_.reset(new RichPresenceApp(this));
+    app_ = std::make_unique<RichPresenceApp>(this);
     QObject::connect(app_.get(), &RichPresenceApp::eventPayloadReceived,
         this, &MainWindow::onEventPayloadReceived);
 
@@ -169,7 +180,7 @@ void MainWindow::onLastSeenTimerExpired() {
 
 void MainWindow::openCharacterManager(
     const QList<CharacterData>& characters) {
-    auto dialog = new CharacterManager(this);
+    auto* dialog = new CharacterManager(this);
     // Add existing characters
     std::for_each(characters.begin(), characters.end(),
         [dialog](const CharacterData& character) {
@@ -178,12 +189,12 @@ void MainWindow::openCharacterManager(
     // Show the dialog
     if (dialog->exec() == QDialog::DialogCode::Accepted) {
         // Update characters dropdown
-        auto list = dialog->findChild<QListWidget*>();
+        auto* list = dialog->findChild<QListWidget*>();
         // Reset the dropdown
         resetCharacterComboBox();
         // Add characters from manager
         for (int i = 0; i < list->count(); ++i) {
-            auto item = list->item(i);
+            auto* item = list->item(i);
             // Only consider selectable entries (ignores pending items)
             if (!(item->flags() & Qt::ItemFlag::ItemIsSelectable)) {
                 continue;
@@ -226,7 +237,7 @@ void MainWindow::updateLastSeenLabels() {
     setLastPayload(app_->getLastEventPayload());
 }
 
-QString MainWindow::getProjectLink() const {
+QString MainWindow::getProjectLink() {
     return "https://github.com/leonhard-s/ps2-rich-presence/";
 }
 
@@ -250,12 +261,12 @@ void MainWindow::setEventLatency(qint32 latency_ms) {
 }
 
 void MainWindow::setLastPayload(
-    QDateTime timestamp = QDateTime::fromSecsSinceEpoch(0)) {
+    const QDateTime& timestamp = QDateTime::fromSecsSinceEpoch(0)) {
     payload_ago_->setText(getTimeAgo(timestamp));
 }
 
 void MainWindow::setLastPresence(
-    QDateTime timestamp = QDateTime::fromSecsSinceEpoch(0)) {
+    const QDateTime& timestamp = QDateTime::fromSecsSinceEpoch(0)) {
     presence_ago_->setText(getTimeAgo(timestamp));
 }
 
@@ -279,12 +290,12 @@ void MainWindow::resetCharacterComboBox() {
 }
 
 void MainWindow::setupUi() {
-    auto layout = new QVBoxLayout(this);
+    auto* layout = new QVBoxLayout(this);
 
     // Characters label and combo box
-    auto characters_layout = new QHBoxLayout();
+    auto* characters_layout = new QHBoxLayout();
     layout->addLayout(characters_layout);
-    auto character_label = new QLabel(tr("Character:"), this);
+    auto* character_label = new QLabel(tr("Character:"), this);
     characters_layout->addWidget(character_label);
     characters_combo_box_ = new QComboBox(this);
     characters_layout->addWidget(characters_combo_box_);
@@ -302,32 +313,32 @@ void MainWindow::setupUi() {
         QSizePolicy::Expanding));
 
     // Statistics group
-    auto statistics_group = new QGroupBox(tr("Statistics"), this);
+    auto* statistics_group = new QGroupBox(tr("Statistics"), this);
     layout->addWidget(statistics_group);
-    auto statistics_layout = new QGridLayout(statistics_group);
+    auto* statistics_layout = new QGridLayout(statistics_group);
 
-    auto latency_label = new QLabel(
+    auto* latency_label = new QLabel(
         tr("Event stream latency") + ":", this);
     statistics_layout->addWidget(latency_label, 0, 0);
     latency_ = new QLabel("", this);
     setEventLatency(-1); // "Unknown"
     statistics_layout->addWidget(latency_, 0, 1);
 
-    auto frequency_label = new QLabel(
+    auto* frequency_label = new QLabel(
         tr("Events per second") + ":", this);
     statistics_layout->addWidget(frequency_label, 1, 0);
     event_frequency_ = new QLabel("", this);
     setEventFrequency(-1.0); // "Unknown"
     statistics_layout->addWidget(event_frequency_, 1, 1);
 
-    auto payload_ago_label = new QLabel(
+    auto* payload_ago_label = new QLabel(
         tr("Last event payload") + ":", this);
     statistics_layout->addWidget(payload_ago_label, 2, 0);
     payload_ago_ = new QLabel("", this);
     setLastPayload();
     statistics_layout->addWidget(payload_ago_, 2, 1);
 
-    auto presence_ago_label = new QLabel(
+    auto* presence_ago_label = new QLabel(
         tr("Last presence update") + ":", this);
     statistics_layout->addWidget(presence_ago_label, 3, 0);
     presence_ago_ = new QLabel("", this);
@@ -337,9 +348,9 @@ void MainWindow::setupUi() {
     statistics_layout->setColumnMinimumWidth(0, 120);
 
     // Settings group
-    auto settings_group = new QGroupBox(tr("Settings"), this);
+    auto* settings_group = new QGroupBox(tr("Settings"), this);
     layout->addWidget(settings_group);
-    auto settings_layout = new QVBoxLayout(settings_group);
+    auto* settings_layout = new QVBoxLayout(settings_group);
 
     auto_track_ = new QCheckBox(
         tr("Automatically track characters on login"), this);
@@ -355,23 +366,23 @@ void MainWindow::setupUi() {
     layout->addSpacerItem(new QSpacerItem(20, 10, QSizePolicy::Minimum,
         QSizePolicy::Expanding));
 
-    auto footer_labels_layout = new QHBoxLayout();
+    auto* footer_labels_layout = new QHBoxLayout();
     layout->addLayout(footer_labels_layout);
 
     auto version_string = tr("Version %1")
         .arg(QCoreApplication::applicationVersion());
-    auto version_label = new QLabel(version_string, this);
+    auto* version_label = new QLabel(version_string, this);
     footer_labels_layout->addWidget(version_label);
 
     auto link = getProjectLink();
     auto title = tr("Project Repository");
     auto project_text = QString("[") + title + "]" + "(" + link + ")";
-    auto repo_label = new QLabel(project_text, this);
+    auto* repo_label = new QLabel(project_text, this);
     footer_labels_layout->addWidget(repo_label);
     repo_label->setTextFormat(Qt::TextFormat::MarkdownText);
     repo_label->setOpenExternalLinks(true);
 
-    auto footer_buttons_layout = new QHBoxLayout();
+    auto* footer_buttons_layout = new QHBoxLayout();
     layout->addLayout(footer_buttons_layout);
 
     enable_button_ = new QPushButton("", this);

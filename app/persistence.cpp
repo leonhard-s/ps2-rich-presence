@@ -38,14 +38,14 @@ PresenceApp::CharacterData characterFromJson(const QJsonObject& json) {
         static_cast<arx::profile_id_t>(json["last_profile"].toInt()), &char_.class_);
     auto server_ok = ps2::server_from_world_id(
         static_cast<arx::world_id_t>(json["world"].toInt()), &char_.server_);
-    if (!faction_ok || !class_ok || !server_ok) {
+    if (faction_ok != 0 || class_ok != 0 || server_ok != 0) {
         qWarning() << "Failed to load character data from JSON";
         // TODO: Propagate error state
     }
     return char_;
 }
 
-static bool keyIsValid(const QString& key) {
+bool keyIsValid(const QString& key) {
     return (key == "characters" ||
         key == "auto_track" ||
         key == "start_with_os" ||
@@ -81,7 +81,7 @@ QVariantMap loadConfigVersion1_0(const QJsonObject& json) {
 }
 
 QString getConfigFilePath() {
-    QString dir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    const QString dir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     // Create config directory if it does not exist
     QDir().mkpath(dir);
     // Append filename
@@ -121,8 +121,8 @@ void AppConfigManager::save(const QVariantMap& config) {
     json_object["version"] = "1.0";
 
     // Write config file to disk
-    QJsonDocument json_document(json_object);
-    QString json_string = json_document.toJson(QJsonDocument::Indented);
+    const QJsonDocument json_document(json_object);
+    const QString json_string = json_document.toJson(QJsonDocument::Indented);
     QFile file(getConfigFilePath());
     file.open(QIODevice::WriteOnly);
     file.write(json_string.toUtf8());
@@ -132,12 +132,12 @@ void AppConfigManager::save(const QVariantMap& config) {
 QVariantMap AppConfigManager::load() {
     QVariantMap config;
     // See if the config file exists
-    QString path = getConfigFilePath();
+    const QString path = getConfigFilePath();
     if (QFile::exists(path)) {
         // Load config file from disk
         QFile file(path);
         file.open(QIODevice::ReadOnly);
-        QJsonDocument json_document = QJsonDocument::fromJson(file.readAll());
+        const QJsonDocument json_document = QJsonDocument::fromJson(file.readAll());
         file.close();
         // Check version
         if (json_document.object().contains("version") &&
