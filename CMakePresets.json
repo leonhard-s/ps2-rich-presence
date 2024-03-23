@@ -51,7 +51,7 @@
             "cacheVariables": {
                 "VCPKG_TARGET_TRIPLET": {
                     "type": "string",
-                    "value": "x64-windows"
+                    "value": "x64-windows-custom"
                 },
                 "VCPKG_OVERLAY_TRIPLETS": {
                     "type": "STRING",
