@@ -18,7 +18,6 @@
             "features": [
                 "brotli",
                 "gui",
-                "network",
                 "widgets"
             ]
         },
