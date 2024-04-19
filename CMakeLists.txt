@@ -59,6 +59,8 @@ add_subdirectory(arx)
 # originally created for.
 add_subdirectory(ps2data)
 
+add_subdirectory(core)
+
 # Main executable
 add_subdirectory(app)
 
