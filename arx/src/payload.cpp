@@ -24,7 +24,7 @@ int validatePayload(const json_string_t& collection, const json_t& payload) {
         !payload.contains(getResultListName(collection))) {
         return -2; // Payload is missing a required key
     }
-    if (!payload["returned"].is_array()) {
+    if (!payload["returned"].is_number_integer()) {
         return -3; // Return list key is not an array
     }
     return 0;
