@@ -19,7 +19,7 @@ find_package(Discord REQUIRED)
 
 # Qt
 find_package(Qt6 6.4 CONFIG REQUIRED
-  COMPONENTS Core Gui Widgets WebSockets
+  COMPONENTS Core Gui Widgets
 )
 
 # Targets
