@@ -10,10 +10,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QScopedPointer>
 #include <QtCore/QString>
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkReply>
 
+#include "api/rest_client.h"
 #include "arx.hpp"
 #include "ps2.hpp"
 
@@ -63,7 +61,6 @@ QDebug operator<<(QDebug dbg, const CharacterData& info) {
 
 CharacterInfo::CharacterInfo(QObject* parent)
     : QObject(parent)
-    , manager_{ new QNetworkAccessManager(this) }
 {}
 
 CharacterInfo::CharacterInfo(arx::character_id_t id, QObject* parent)
@@ -118,33 +115,21 @@ void CharacterInfo::populate() {
     // Generate request
     auto request = getCharacterInfoRequest();
     // Reply object will be deleted by reply handler
-    auto* reply = manager_->get(request);
-    QObject::connect(reply, &QNetworkReply::finished,
+    auto* const client = new PresenceLib::AsyncRestClient(this);
+    QObject::connect(client, &PresenceLib::AsyncRestClient::requestFinished,
         this, &CharacterInfo::onCharacterInfoRequestFinished);
+    QObject::connect(client, &PresenceLib::AsyncRestClient::requestFinished,
+        client, &QObject::deleteLater);
+    QObject::connect(client, &PresenceLib::AsyncRestClient::requestFailed,
+        client, &QObject::deleteLater);
 }
 
-void CharacterInfo::onCharacterInfoRequestFinished() {
-    // Get reply object from caller
-    const std::unique_ptr<QNetworkReply> reply(
-        qobject_cast<QNetworkReply*>(QObject::sender()));
-    if (!reply) {
-        qWarning() << "CharacterInfo::onCharacterInfoRequestFinished()"
-            << "Signal sender is not a QNetworkReply object.";
-    }
-    // Check for network errors
-    if (reply->error() != QNetworkReply::NoError) {
-        qWarning() << "CharacterInfo::onCharacterInfoRequestFinished()"
-            << "Network error:" << reply->errorString();
-        return;
-    }
-    // Get payload from reply
-    auto payload = getJsonPayload(reply.get());
-    // Handle payload
+void CharacterInfo::onCharacterInfoRequestFinished(const QJsonDocument& response) {
+    auto payload = qtJsonToArxJson(response);
     handleCharacterInfoPayload(payload);
 }
 
-QNetworkRequest CharacterInfo::getCharacterInfoRequest() const {
-    // Create Query via ARX
+QString CharacterInfo::getCharacterInfoRequest() const {
     arx::Query query("character", SERVICE_ID);
     query.addTerm(
         arx::SearchTerm("character_id", std::to_string(info_.id_)));
@@ -153,9 +138,7 @@ QNetworkRequest CharacterInfo::getCharacterInfoRequest() const {
     join.show_.emplace_back("world_id");
     query.addJoin(join);
     // Generate URL
-    auto url = qUrlFromArxQuery(query);
-    // Create request
-    return QNetworkRequest(url);
+    return qStringFromArxQuery(query);
 }
 
 void CharacterInfo::handleCharacterInfoPayload(const arx::json_t& payload) {

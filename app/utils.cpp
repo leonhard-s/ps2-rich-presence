@@ -5,11 +5,10 @@
 #include <string>
 #include <utility>
 
-#include <QtCore/QScopedPointer>
+#include <QtCore/QJsonDocument>
 #include <QtCore/QString>
 #include <QtCore/QUrl>
 #include <QtCore/QUrlQuery>
-#include <QtNetwork/QNetworkReply>
 
 #include "arx.hpp"
 #include "ps2.hpp"
@@ -46,7 +45,7 @@ T quotedIntegerViaJsonKey(const arx::json_t& object,
 
 namespace PresenceApp {
 
-QUrl qUrlFromArxQuery(const arx::Query& query) {
+QString qStringFromArxQuery(const arx::Query& query) {
     QUrl url;
     url.setScheme(QString::fromStdString(std::string(arx::Query::getScheme())));
     url.setHost(QString::fromStdString(std::string(arx::Query::getHost())));
@@ -59,11 +58,12 @@ QUrl qUrlFromArxQuery(const arx::Query& query) {
             QString::fromStdString(item.second));
         });
     url.setQuery(q);
-    return url;
+    return url.toString();
 }
 
-arx::json_t getJsonPayload(QNetworkReply* reply) {
-    return arx::json_t::parse(reply->readAll().toStdString());
+arx::json_t qtJsonToArxJson(const QJsonDocument& data) {
+    auto str = QString(data.toJson(QJsonDocument::Compact));
+    return arx::json_t::parse(str.toStdString());
 }
 
 arx::character_id_t characterIdFromJson(const arx::json_t& object) {

@@ -65,10 +65,10 @@ target_link_libraries(Ps2RichPresence
   PRIVATE
     Qt::Core
     Qt::Gui
-    Qt::Network
     Qt::Widgets
     Qt::WebSockets
     Discord::GameSDK
+    PresenceLib
     Ps2Data
     Arx
 )

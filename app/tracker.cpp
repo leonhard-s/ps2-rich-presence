@@ -8,9 +8,6 @@
 #include <QtCore/QString>
 #include <QtCore/QUrl>
 #include <QtCore/QUrlQuery>
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkReply>
 
 #include "arx.hpp"
 #include "arx/ess.hpp"

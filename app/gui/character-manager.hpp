@@ -4,11 +4,9 @@
 
 #include <memory>
 
-#include <QtCore/QJsonObject>
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QUrl>
-#include <QtNetwork/QNetworkAccessManager>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QPushButton>
@@ -16,6 +14,8 @@
 #include "arx.hpp"
 
 #include "game/character-info.hpp"
+
+class QJsonDocument;
 
 namespace PresenceApp {
 
@@ -40,20 +40,19 @@ private Q_SLOTS:
     void onAddButtonClicked();
     void onRemoveButtonClicked();
     void onCharacterSelected();
-    void onCharacterInfoReceived();
+    void onCharacterInfoReceived(const QJsonDocument& response);
 
 private:
-    static QUrl getCharacterInfoUrl(const QString& character);
+    static QString getCharacterInfoUrl(const QString& character);
     static CharacterData parseCharacterPayload(const arx::json_t& payload);
     QDialog* createCharacterNameInputDialog();
     void setupUi();
-
-    std::unique_ptr<QNetworkAccessManager> manager_;
 
     QListWidget* list_;
     QPushButton* button_add_;
     QPushButton* button_remove_;
     QPushButton* button_close_;
+    bool is_loading_;
 };
 
 } // namespace PresenceApp

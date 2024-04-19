@@ -4,18 +4,18 @@
 
 #include <string>
 
-#include <QtCore/QScopedPointer>
 #include <QtCore/QUrl>
-#include <QtNetwork/QNetworkReply>
 
 #include "arx.hpp"
 #include "ps2.hpp"
 
+class QJsonDocument;
+
 namespace PresenceApp {
 
-QUrl qUrlFromArxQuery(const arx::Query& query);
+QString qStringFromArxQuery(const arx::Query& query);
 
-arx::json_t getJsonPayload(QNetworkReply* reply);
+arx::json_t qtJsonToArxJson(const QJsonDocument& data);
 
 arx::character_id_t characterIdFromJson(const arx::json_t& object);
 

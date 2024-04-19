@@ -8,8 +8,6 @@
 #include <QtCore/QMetaType>
 #include <QtCore/QObject>
 #include <QtCore/QString>
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkRequest>
 
 #include "arx.hpp"
 #include "ps2.hpp"
@@ -78,10 +76,10 @@ public Q_SLOTS:
     void populate();
 
 private Q_SLOTS:
-    void onCharacterInfoRequestFinished();
+    void onCharacterInfoRequestFinished(const QJsonDocument& response);
 
 private:
-    QNetworkRequest getCharacterInfoRequest() const;
+    QString getCharacterInfoRequest() const;
     void updateFieldsIfChanged(arx::character_id_t id,
         QString name,
         ps2::Faction faction,
@@ -89,7 +87,6 @@ private:
         ps2::Server server);
 
     CharacterData info_;
-    QNetworkAccessManager* manager_;
 };
 
 } // namespace PresenceApp

@@ -2,15 +2,12 @@
 
 #include "gui/character-manager.hpp"
 
-#include <QtCore/QJsonObject>
+#include <QtCore/QJsonDocument>
 #include <QtCore/QRegularExpression>
 #include <QtCore/QString>
 #include <QtCore/QUrl>
 #include <QtCore/QUrlQuery>
 #include <QtGui/QRegularExpressionValidator>
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkReply>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QGridLayout>
@@ -26,6 +23,7 @@
 #include "arx.hpp"
 #include "ps2.hpp"
 
+#include "api/rest_client.h"
 #include "appdata/service-id.hpp"
 #include "game/character-info.hpp"
 #include "moc_macros.hpp"
@@ -36,7 +34,6 @@ namespace PresenceApp {
 CharacterManager::CharacterManager(QWidget* parent
 )
     : QDialog{ parent }
-    , manager_{ new QNetworkAccessManager() }
     , list_{ nullptr }
     , button_add_{ nullptr }
     , button_remove_{ nullptr }
@@ -94,15 +91,14 @@ void CharacterManager::onAddButtonClicked() {
         }
     }
     // Validate that this character exists
-    auto* reply = manager_->get(QNetworkRequest(getCharacterInfoUrl(name)));
-    QObject::connect(reply, &QNetworkReply::finished,
+    auto* const client = new PresenceLib::AsyncRestClient(this);
+    QObject::connect(client, &PresenceLib::AsyncRestClient::requestFinished,
         this, &CharacterManager::onCharacterInfoReceived);
-    // Create temp character entry to show while waiting for reply
-    auto* item = new QListWidgetItem(tr("Loading '%1'…").arg(name));
-    // Make unselectable
-    item->setFlags(item->flags() & ~Qt::ItemIsSelectable);
-    item->setData(Qt::UserRole, QVariant::fromValue(reply));
-    list_->addItem(item);
+    QObject::connect(client, &PresenceLib::AsyncRestClient::requestFinished,
+        client, &QObject::deleteLater);
+    client->request(getCharacterInfoUrl(name));
+    is_loading_ = true;
+    setEnabled(false);
 }
 
 void CharacterManager::onRemoveButtonClicked() {
@@ -128,22 +124,14 @@ void CharacterManager::onCharacterSelected() {
     button_remove_->setEnabled(list_->currentRow() != -1);
 }
 
-void CharacterManager::onCharacterInfoReceived() {
-    // Get reply (cast to ScopedPointer to ensure it is deleted when this
-    // function returns)
-    const QScopedPointer<QNetworkReply> reply{
-        qobject_cast<QNetworkReply*>(QObject::sender())
-    };
-    // Remove temporary list entry
-    for (int i = 0; i < list_->count(); ++i) {
-        auto item_data = list_->item(i)->data(Qt::UserRole);
-        if (item_data.value<QNetworkReply*>() == reply.data()) {
-            list_->takeItem(i);
-            break;
-        }
+void CharacterManager::onCharacterInfoReceived(const QJsonDocument& response) {
+    if (is_loading_) {
+        setEnabled(true);
+        is_loading_ = false;
     }
+
     // Check for errors
-    if (reply->error() != QNetworkReply::NetworkError::NoError) {
+    if (response.isEmpty()) {
         QMessageBox::critical(this,
             tr("Character Manager"),
             tr("Failed to retrieve character info."),
@@ -152,7 +140,7 @@ void CharacterManager::onCharacterInfoReceived() {
     }
     // Validate payload
     const std::string collection = "character";
-    auto payload = getJsonPayload(reply.get());
+    auto payload = qtJsonToArxJson(response);
     if (arx::validatePayload(collection, payload) != 0) {
         QMessageBox::critical(this,
             tr("Character Manager"),
@@ -178,7 +166,7 @@ void CharacterManager::onCharacterInfoReceived() {
     list_->addItem(item);
 }
 
-QUrl CharacterManager::getCharacterInfoUrl(const QString& character) {
+QString CharacterManager::getCharacterInfoUrl(const QString& character) {
     auto name = character.toLower().toStdString();
     // Create API query
     arx::Query query("character", SERVICE_ID);
@@ -188,8 +176,8 @@ QUrl CharacterManager::getCharacterInfoUrl(const QString& character) {
     join.inject_at_ = "world";
     query.addJoin(join);
     query.setShow({ "character_id", "name.first", "faction_id", "profile_id" });
-    // Build QUrl object
-    return qUrlFromArxQuery(query);
+    // Build query string
+    return qStringFromArxQuery(query);
 }
 
 CharacterData CharacterManager::parseCharacterPayload(
