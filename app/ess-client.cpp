@@ -10,7 +10,8 @@
 #include <QtCore/QString>
 #include <QtCore/QTimer>
 #include <QtCore/QUrl>
-#include <QtWebSockets/QWebSocket>
+
+#include <dbg_census/stream/ess_client.h>
 
 #include "arx.hpp"
 #include "arx/ess.hpp"
@@ -22,17 +23,13 @@ namespace PresenceApp {
 EssClient::EssClient(QString service_id, QObject* parent)
     : QObject{ parent }
     , service_id_{ std::move(service_id) }
-{
-    QObject::connect(&ws_, &QWebSocket::connected,
-        this, &EssClient::onConnected);
-    QObject::connect(&ws_, &QWebSocket::disconnected,
-        this, &EssClient::onDisconnected);
-    QObject::connect(&ws_, &QWebSocket::textMessageReceived,
-        this, &EssClient::parseMessage);
-}
+{}
+
+EssClient::~EssClient() = default;
 
 bool EssClient::isConnected() const {
-    return ws_.isValid() && ws_.state() == QAbstractSocket::SocketState::ConnectedState;
+    // TODO: Reconnect handling
+    return ess_client_ != nullptr;
 }
 
 const QList<arx::Subscription>& EssClient::getSubscriptions() const {
@@ -40,14 +37,28 @@ const QList<arx::Subscription>& EssClient::getSubscriptions() const {
 }
 
 void EssClient::connect() {
-    const QUrl url = QUrl(QString::fromStdString(
-        arx::getEndpointUrl(service_id_.toStdString())));
-    ws_.open(url);
-    qDebug() << "Connecting to" << url.toString();
+    ess_client_ = std::make_unique<dbg_census::stream::EssClient>(
+        service_id_.toStdString());
+
+    // Hook up signals
+    ess_client_->setOnReadyCallback([this]() {
+        onConnected();
+        });
+    ess_client_->setOnDisconnectCallback([this]() {
+        emit disconnected();
+        });
+    // TODO: Use payload callback
+    ess_client_->setOnMessageCallback([this](const std::string& msg) {
+        parseMessage(QString::fromStdString(msg));
+        });
+
+    qDebug() << "Connecting to ESS service";
+    ess_client_->connect();
 }
 
 void EssClient::disconnect() {
-    ws_.close();
+    ess_client_->disconnect();
+    ess_client_.reset();
 }
 
 void EssClient::subscribe(const arx::Subscription& subscription) {
@@ -56,10 +67,9 @@ void EssClient::subscribe(const arx::Subscription& subscription) {
         emit subscriptionAdded(subscription);
     }
     if (isConnected()) {
-        auto msg = QString::fromStdString(
-            subscription.buildSubscribeMessage());
+        auto msg = subscription.buildSubscribeMessage();
         qDebug() << "Sending: " << msg;
-        ws_.sendTextMessage(msg);
+        ess_client_->send(msg);
     }
 }
 
@@ -68,8 +78,7 @@ void EssClient::unsubscribe(const arx::Subscription& subscription) {
         emit subscriptionRemoved(subscription);
     }
     if (isConnected()) {
-        ws_.sendTextMessage(QString::fromStdString(
-            subscription.buildUnsubscribeMessage()));
+        ess_client_->send(subscription.buildUnsubscribeMessage());
     }
 }
 
@@ -79,19 +88,8 @@ void EssClient::reconnect() {
 }
 
 void EssClient::onConnected() {
-    constexpr auto subscription_delay_ms = 1000;
-    auto* timer = new QTimer(this);
-    timer->setInterval(subscription_delay_ms);
-    timer->setSingleShot(true);
-    QObject::connect(timer, &QTimer::timeout, [timer, this]() {
-        qDebug() << "Timer expired, subscribing";
-        timer->deleteLater();
-        std::for_each(subscriptions_.begin(), subscriptions_.end(),
-            [this](const auto& subscription) {
-                subscribe(subscription);
-            });
-        });
-    timer->start();
+    std::for_each(subscriptions_.begin(), subscriptions_.end(),
+        [this](const auto& subscription) { subscribe(subscription); });
     emit connected();
 }
 

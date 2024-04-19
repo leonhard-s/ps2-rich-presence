@@ -2,13 +2,20 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QList>
 #include <QtCore/QObject>
 #include <QtCore/QString>
-#include <QtWebSockets/QWebSocket>
 
 #include "arx.hpp"
 #include "arx/ess.hpp"
+
+namespace dbg_census::stream {
+
+class EssClient;
+
+} // namespace dbg_census::stream
 
 namespace PresenceApp {
 
@@ -20,6 +27,7 @@ class EssClient : public QObject {
 
 public:
     explicit EssClient(QString service_id, QObject* parent = nullptr);
+    ~EssClient() override;
     EssClient(const EssClient& other) = delete;
     EssClient(EssClient&& other) noexcept = delete;
 
@@ -45,15 +53,14 @@ public Q_SLOTS:
     void subscribe(const arx::Subscription& subscription);
     void unsubscribe(const arx::Subscription& subscription);
 
-private Q_SLOTS:
-    void onConnected();
-    void onDisconnected();
-    void parseMessage(const QString& message);
-
 private:
     QString service_id_;
     QList<arx::Subscription> subscriptions_;
-    QWebSocket ws_;
+    std::unique_ptr<dbg_census::stream::EssClient> ess_client_;
+
+    void onConnected();
+    void onDisconnected();
+    void parseMessage(const QString& message);
 };
 
 } // namespace PresenceApp

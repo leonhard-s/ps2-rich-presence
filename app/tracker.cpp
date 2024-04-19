@@ -54,8 +54,10 @@ CharacterData ActivityTracker::getCharacter() const {
     return character_;
 }
 
-void ActivityTracker::onPayloadReceived(const QString& event_name,
-    const arx::json_t& payload) {
+void ActivityTracker::onPayloadReceived(
+    const QString& event_name,
+    const arx::json_t& payload
+) {
     emit payloadReceived(event_name, payload);
     // Update state factory based on payload
     if (event_name == "Death") {
