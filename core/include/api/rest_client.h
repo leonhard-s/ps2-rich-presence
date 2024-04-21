@@ -19,6 +19,10 @@ class AsyncRestClient : public QObject {
 public:
     explicit AsyncRestClient(QObject* parent = nullptr);
     ~AsyncRestClient() override;
+    AsyncRestClient(const AsyncRestClient&) = delete;
+    AsyncRestClient& operator=(const AsyncRestClient&) = delete;
+    AsyncRestClient(AsyncRestClient&&) = delete;
+    AsyncRestClient& operator=(AsyncRestClient&&) = delete;
 
     void request(const QString& url);
 
