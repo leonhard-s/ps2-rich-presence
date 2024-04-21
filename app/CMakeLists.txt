@@ -44,8 +44,6 @@ add_executable(Ps2RichPresence WIN32
   "game/state.cpp"
   "core.hpp"
   "core.cpp"
-  "ess-client.hpp"
-  "ess-client.cpp"
   "persistence.hpp"
   "persistence.cpp"
   "tracker.hpp"

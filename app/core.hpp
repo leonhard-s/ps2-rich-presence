@@ -49,7 +49,7 @@ Q_SIGNALS:
 private Q_SLOTS:
     void onEventPayloadReceived(
         const QString& event_name,
-        const arx::json_t& payload);
+        const QJsonObject& payload);
     void onGameStateChanged(const GameState& state);
     void onRateLimitTimerExpired();
 

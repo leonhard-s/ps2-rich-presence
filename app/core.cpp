@@ -7,6 +7,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QTimer>
+#include <QJsonObject>
 
 #include <algorithm>
 
@@ -108,17 +109,15 @@ double RichPresenceApp::getEventFrequency() {
 
 void RichPresenceApp::onEventPayloadReceived(
     const QString& event_name,
-    const arx::json_t& payload
+    const QJsonObject& payload
 ) {
     auto it = payload.find("timestamp");
     if (it == payload.end()) {
         qWarning() << "No timestamp found for" << event_name << "payload";
         return;
     }
-    auto timestamp = QString::fromStdString(
-        it.value().get<arx::json_string_t>());
     auto event_time = QDateTime::fromSecsSinceEpoch(
-        timestamp.toLong(), Qt::TimeSpec::UTC);
+        it->toString().toLong(), Qt::TimeSpec::UTC);
     auto now = QDateTime::currentDateTimeUtc();
     event_latency_ = static_cast<qint32>(event_time.msecsTo(now));
     // Update recent events list; used for event frequency calculation
