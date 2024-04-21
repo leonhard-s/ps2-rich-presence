@@ -8,6 +8,7 @@
 
 #include <dbg_census/stream/ess_client.h>
 #include <dbg_census/stream/subscription_builder.h>
+#include <moc_macros.h>
 
 namespace {
 
@@ -136,3 +137,7 @@ void EssClient::parseMessage(const QString& message) {
 }
 
 } // namespace PresenceLib
+
+PUSH_MOC_WARNINGS_FILTER;
+#include "api/moc_ess_client.cpp"
+POP_MOC_WARNINGS_FILTER;

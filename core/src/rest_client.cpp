@@ -5,6 +5,7 @@
 #include <QString>
 #include <QThread>
 #include <dbg_census/rest/rest_api_client.h>
+#include <moc_macros.h>
 
 namespace PresenceLib {
 
@@ -39,3 +40,7 @@ void AsyncRestClient::doRequest(const QString& url) {
 }
 
 } // namespace PresenceLib
+
+PUSH_MOC_WARNINGS_FILTER;
+#include "api/moc_rest_client.cpp"
+POP_MOC_WARNINGS_FILTER;
