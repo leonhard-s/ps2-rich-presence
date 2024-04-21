@@ -8,6 +8,7 @@
 #include <QtCore/QTimer>
 
 #include "discord-game-sdk/discord.h"
+#include <adopt_pointer.h>
 #include <moc_macros.h>
 
 #include "appdata/appid.hpp"
@@ -32,7 +33,7 @@ PresenceHandler::PresenceHandler(QObject* parent)
         discord::LogLevel::Debug, [](discord::LogLevel level, const char* message) { qDebug() << "Discord: " << static_cast<int>(level) << ": " << message; });
 
     // Create presence update timer
-    timer_ = new QTimer(this);
+    timer_ = adopt_pointer(new QTimer(this));
     timer_->setInterval(16); // ~60 FPS
     QObject::connect(timer_, &QTimer::timeout, [this]() { discord_core_->RunCallbacks(); });
     timer_->start();

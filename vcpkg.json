@@ -4,6 +4,10 @@
     "builtin-baseline": "b81bc3a83fdbdffe80325eeabb2ec735a1f3c29d",
     "dependencies": [
         {
+            "name": "ms-gsl",
+            "version>=": "4.0.0"
+        },
+        {
             "name": "nlohmann-json",
             "version>=": "3.11.2"
         },

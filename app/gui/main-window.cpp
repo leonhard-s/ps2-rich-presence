@@ -20,6 +20,7 @@
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QVBoxLayout>
 
+#include <adopt_pointer.h>
 #include <moc_macros.h>
 
 #include "game/character-info.hpp"
@@ -181,7 +182,7 @@ void MainWindow::onLastSeenTimerExpired() {
 
 void MainWindow::openCharacterManager(
     const QList<CharacterData>& characters) {
-    auto* dialog = new CharacterManager(this);
+    auto* dialog = adopt_pointer(new CharacterManager(this));
     // Add existing characters
     std::for_each(characters.begin(), characters.end(),
         [dialog](const CharacterData& character) {
@@ -291,105 +292,105 @@ void MainWindow::resetCharacterComboBox() {
 }
 
 void MainWindow::setupUi() {
-    auto* layout = new QVBoxLayout(this);
+    auto* layout = adopt_pointer(new QVBoxLayout(this));
 
     // Characters label and combo box
-    auto* characters_layout = new QHBoxLayout();
+    auto* characters_layout = adopt_pointer(new QHBoxLayout());
     layout->addLayout(characters_layout);
-    auto* character_label = new QLabel(tr("Character:"), this);
+    auto* character_label = adopt_pointer(new QLabel(tr("Character:"), this));
     characters_layout->addWidget(character_label);
-    characters_combo_box_ = new QComboBox(this);
+    characters_combo_box_ = adopt_pointer(new QComboBox(this));
     characters_layout->addWidget(characters_combo_box_);
     resetCharacterComboBox();
     characters_layout->setStretch(0, 1);
     characters_layout->setStretch(1, 2);
 
     // Status label
-    layout->addSpacerItem(new QSpacerItem(20, 10, QSizePolicy::Minimum,
-        QSizePolicy::Expanding));
-    status_ = new QLabel("", this);
+    layout->addSpacerItem(adopt_pointer(new QSpacerItem(20, 10, QSizePolicy::Minimum,
+        QSizePolicy::Expanding)));
+    status_ = adopt_pointer(new QLabel("", this));
     setStatus("");
     layout->addWidget(status_);
-    layout->addSpacerItem(new QSpacerItem(20, 10, QSizePolicy::Minimum,
-        QSizePolicy::Expanding));
+    layout->addSpacerItem(adopt_pointer(new QSpacerItem(20, 10, QSizePolicy::Minimum,
+        QSizePolicy::Expanding)));
 
     // Statistics group
-    auto* statistics_group = new QGroupBox(tr("Statistics"), this);
+    auto* statistics_group = adopt_pointer(new QGroupBox(tr("Statistics"), this));
     layout->addWidget(statistics_group);
-    auto* statistics_layout = new QGridLayout(statistics_group);
+    auto* statistics_layout = adopt_pointer(new QGridLayout(statistics_group));
 
-    auto* latency_label = new QLabel(
-        tr("Event stream latency") + ":", this);
+    auto* latency_label = adopt_pointer(new QLabel(
+        tr("Event stream latency") + ":", this));
     statistics_layout->addWidget(latency_label, 0, 0);
-    latency_ = new QLabel("", this);
+    latency_ = adopt_pointer(new QLabel("", this));
     setEventLatency(-1); // "Unknown"
     statistics_layout->addWidget(latency_, 0, 1);
 
-    auto* frequency_label = new QLabel(
-        tr("Events per second") + ":", this);
+    auto* frequency_label = adopt_pointer(new QLabel(
+        tr("Events per second") + ":", this));
     statistics_layout->addWidget(frequency_label, 1, 0);
-    event_frequency_ = new QLabel("", this);
+    event_frequency_ = adopt_pointer(new QLabel("", this));
     setEventFrequency(-1.0); // "Unknown"
     statistics_layout->addWidget(event_frequency_, 1, 1);
 
     auto* payload_ago_label = new QLabel(
         tr("Last event payload") + ":", this);
     statistics_layout->addWidget(payload_ago_label, 2, 0);
-    payload_ago_ = new QLabel("", this);
+    payload_ago_ = adopt_pointer(new QLabel("", this));
     setLastPayload();
     statistics_layout->addWidget(payload_ago_, 2, 1);
 
-    auto* presence_ago_label = new QLabel(
-        tr("Last presence update") + ":", this);
+    auto* presence_ago_label = adopt_pointer(new QLabel(
+        tr("Last presence update") + ":", this));
     statistics_layout->addWidget(presence_ago_label, 3, 0);
-    presence_ago_ = new QLabel("", this);
+    presence_ago_ = adopt_pointer(new QLabel("", this));
     setLastPresence();
     statistics_layout->addWidget(presence_ago_, 3, 1);
 
     statistics_layout->setColumnMinimumWidth(0, 120);
 
     // Settings group
-    auto* settings_group = new QGroupBox(tr("Settings"), this);
+    auto* settings_group = adopt_pointer(new QGroupBox(tr("Settings"), this));
     layout->addWidget(settings_group);
-    auto* settings_layout = new QVBoxLayout(settings_group);
+    auto* settings_layout = adopt_pointer(new QVBoxLayout(settings_group));
 
-    auto_track_ = new QCheckBox(
-        tr("Automatically track characters on login"), this);
+    auto_track_ = adopt_pointer(new QCheckBox(
+        tr("Automatically track characters on login"), this));
     settings_layout->addWidget(auto_track_);
 
-    start_with_windows_ = new QCheckBox(tr("Start with Windows"), this);
+    start_with_windows_ = adopt_pointer(new QCheckBox(tr("Start with Windows"), this));
     settings_layout->addWidget(start_with_windows_);
 
-    minimise_to_tray_ = new QCheckBox(tr("Minimise to system tray"), this);
+    minimise_to_tray_ = adopt_pointer(new QCheckBox(tr("Minimise to system tray"), this));
     settings_layout->addWidget(minimise_to_tray_);
 
     // Footer
-    layout->addSpacerItem(new QSpacerItem(20, 10, QSizePolicy::Minimum,
-        QSizePolicy::Expanding));
+    layout->addSpacerItem(adopt_pointer(new QSpacerItem(20, 10, QSizePolicy::Minimum,
+        QSizePolicy::Expanding)));
 
-    auto* footer_labels_layout = new QHBoxLayout();
+    auto* footer_labels_layout = adopt_pointer(new QHBoxLayout());
     layout->addLayout(footer_labels_layout);
 
     auto version_string = tr("Version %1")
         .arg(QCoreApplication::applicationVersion());
-    auto* version_label = new QLabel(version_string, this);
+    auto* version_label = adopt_pointer(new QLabel(version_string, this));
     footer_labels_layout->addWidget(version_label);
 
     auto link = getProjectLink();
     auto title = tr("Project Repository");
     auto project_text = QString("[") + title + "]" + "(" + link + ")";
-    auto* repo_label = new QLabel(project_text, this);
+    auto* repo_label = adopt_pointer(new QLabel(project_text, this));
     footer_labels_layout->addWidget(repo_label);
     repo_label->setTextFormat(Qt::TextFormat::MarkdownText);
     repo_label->setOpenExternalLinks(true);
 
-    auto* footer_buttons_layout = new QHBoxLayout();
+    auto* footer_buttons_layout = adopt_pointer(new QHBoxLayout());
     layout->addLayout(footer_buttons_layout);
 
-    enable_button_ = new QPushButton("", this);
+    enable_button_ = adopt_pointer(new QPushButton("", this));
     setTrackingEnabled(true);
     footer_buttons_layout->addWidget(enable_button_);
-    minimise_button_ = new QPushButton(tr("Minimize"), this);
+    minimise_button_ = adopt_pointer(new QPushButton(tr("Minimize"), this));
     minimise_button_->setChecked(true);
     footer_buttons_layout->addWidget(minimise_button_);
 }

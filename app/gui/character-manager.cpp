@@ -22,6 +22,7 @@
 
 #include "arx.hpp"
 #include "ps2.hpp"
+#include <adopt_pointer.h>
 #include <moc_macros.h>
 
 #include "api/rest_client.h"
@@ -63,7 +64,7 @@ CharacterManager::CharacterManager(QWidget* parent
 
 void CharacterManager::addCharacter(const CharacterData& character) {
     if (list_ != nullptr) {
-        auto* item = new QListWidgetItem(character.name_);
+        auto* item = adopt_pointer(new QListWidgetItem(character.name_));
         item->setData(Qt::UserRole, QVariant::fromValue(character));
         list_->addItem(item);
     }
@@ -91,7 +92,7 @@ void CharacterManager::onAddButtonClicked() {
         }
     }
     // Validate that this character exists
-    auto* const client = new PresenceLib::AsyncRestClient(this);
+    auto* const client = adopt_pointer(new PresenceLib::AsyncRestClient(this));
     QObject::connect(client, &PresenceLib::AsyncRestClient::requestFinished,
         this, &CharacterManager::onCharacterInfoReceived);
     QObject::connect(client, &PresenceLib::AsyncRestClient::requestFinished,
@@ -161,7 +162,7 @@ void CharacterManager::onCharacterInfoReceived(const QJsonDocument& response) {
     const CharacterData info{ temp.getId(), temp.getName(), temp.getFaction(),
                        temp.getClass(), temp.getServer() };
     // Create character entry
-    auto* item = new QListWidgetItem(info.name_);
+    auto* item = adopt_pointer(new QListWidgetItem(info.name_));
     item->setData(Qt::UserRole, QVariant::fromValue(info));
     list_->addItem(item);
 }
@@ -254,25 +255,26 @@ CharacterData CharacterManager::parseCharacterPayload(
 }
 
 QDialog* CharacterManager::createCharacterNameInputDialog() {
-    auto* dialog = new QDialog(this);
+    auto* dialog = adopt_pointer(new QDialog(this));
     dialog->setWindowTitle(tr("Add Character"));
     dialog->setMinimumSize(120, 80);
-    auto* layout = new QVBoxLayout(dialog);
+    auto* layout = adopt_pointer(new QVBoxLayout(dialog));
 
-    auto* name_input = new QLineEdit(dialog);
+    auto* name_input = adopt_pointer(new QLineEdit(dialog));
     layout->addWidget(name_input);
     name_input->setPlaceholderText(tr("Enter character name"));
     name_input->setInputMethodHints(Qt::ImhNoPredictiveText);
     name_input->setValidator(
-        new QRegularExpressionValidator(
+        adopt_pointer(new QRegularExpressionValidator(
             // Only accept between 3 and 32 alphanumerical characters
-            QRegularExpression("[a-zA-Z0-9]{3,32}"), name_input));
+            QRegularExpression("[a-zA-Z0-9]{3,32}"), name_input)));
 
-    auto* button_layout = new QHBoxLayout();
+    auto* button_layout = adopt_pointer(new QHBoxLayout());
     layout->addLayout(button_layout);
-    button_layout->addSpacerItem(new QSpacerItem(40, 20,
-        QSizePolicy::Expanding,
-        QSizePolicy::Minimum));
+    button_layout->addSpacerItem(adopt_pointer(
+        new QSpacerItem(40, 20,
+            QSizePolicy::Expanding,
+            QSizePolicy::Minimum)));
     auto* button_ok = new QPushButton(tr("OK"), dialog);
     button_layout->addWidget(button_ok);
     button_ok->setDefault(true);
@@ -289,7 +291,7 @@ QDialog* CharacterManager::createCharacterNameInputDialog() {
 }
 
 void CharacterManager::setupUi() {
-    auto* layout = new QVBoxLayout(this);
+    auto* layout = adopt_pointer(new QVBoxLayout(this));
 
     // Instruction text
     auto* instructions = new QLabel(
@@ -303,24 +305,24 @@ void CharacterManager::setupUi() {
     instructions->setWordWrap(true);
 
     // Characters list
-    list_ = new QListWidget(this);
+    list_ = adopt_pointer(new QListWidget(this));
     layout->addWidget(list_);
     list_->setAlternatingRowColors(true);
     list_->setDragEnabled(true);
     list_->setDragDropMode(QAbstractItemView::InternalMove);
 
     // Buttons
-    auto* button_layout = new QHBoxLayout();
+    auto* button_layout = adopt_pointer(new QHBoxLayout());
     layout->addLayout(button_layout);
 
-    button_add_ = new QPushButton(tr("Add"), this);
+    button_add_ = adopt_pointer(new QPushButton(tr("Add"), this));
     button_layout->addWidget(button_add_);
     button_add_->setDefault(true);
 
-    button_remove_ = new QPushButton(tr("Remove"), this);
+    button_remove_ = adopt_pointer(new QPushButton(tr("Remove"), this));
     button_layout->addWidget(button_remove_);
 
-    button_close_ = new QPushButton(tr("Confirm"), this);
+    button_close_ = adopt_pointer(new QPushButton(tr("Confirm"), this));
     button_layout->addWidget(button_close_);
 }
 

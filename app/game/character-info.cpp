@@ -14,6 +14,7 @@
 #include "api/rest_client.h"
 #include "arx.hpp"
 #include "ps2.hpp"
+#include <adopt_pointer.h>
 #include <moc_macros.h>
 
 #include "appdata/service-id.hpp"
@@ -115,7 +116,7 @@ void CharacterInfo::populate() {
     // Generate request
     auto request = getCharacterInfoRequest();
     // Reply object will be deleted by reply handler
-    auto* const client = new PresenceLib::AsyncRestClient(this);
+    auto* const client = adopt_pointer(new PresenceLib::AsyncRestClient(this));
     QObject::connect(client, &PresenceLib::AsyncRestClient::requestFinished,
         this, &CharacterInfo::onCharacterInfoRequestFinished);
     QObject::connect(client, &PresenceLib::AsyncRestClient::requestFinished,
