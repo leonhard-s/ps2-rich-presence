@@ -59,6 +59,7 @@ add_subdirectory(arx)
 # originally created for.
 add_subdirectory(ps2data)
 
+add_subdirectory(qthelpers)
 add_subdirectory(core)
 
 # Main executable

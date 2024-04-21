@@ -7,10 +7,10 @@
 
 #include "discord-game-sdk/discord.h"
 #include "ps2.hpp"
+#include <moc_macros.h>
 
 #include "appdata/assets.hpp"
 #include "game/state.hpp"
-#include "moc_macros.hpp"
 
 namespace PresenceApp {
 PresenceFactory::PresenceFactory(QObject* parent)

@@ -13,12 +13,12 @@
 
 #include "arx.hpp"
 #include "discord-game-sdk/discord.h"
+#include <moc_macros.h>
 
 #include "game/character-info.hpp"
 #include "game/state.hpp"
 #include "presence/handler.hpp"
 #include "tracker.hpp"
-#include "moc_macros.hpp"
 
 namespace PresenceApp {
 

@@ -2,6 +2,8 @@
 
 #include "gui/main-window.hpp"
 
+#include <numeric>
+
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDateTime>
 #include <QtCore/QDebug>
@@ -18,12 +20,11 @@
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QVBoxLayout>
 
-#include <numeric>
+#include <moc_macros.h>
 
 #include "game/character-info.hpp"
 #include "gui/character-manager.hpp"
 #include "gui/timeago.hpp"
-#include "moc_macros.hpp"
 #include "persistence.hpp"
 
 namespace PresenceApp {

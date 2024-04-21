@@ -22,11 +22,11 @@
 
 #include "arx.hpp"
 #include "ps2.hpp"
+#include <moc_macros.h>
 
 #include "api/rest_client.h"
 #include "appdata/service-id.hpp"
 #include "game/character-info.hpp"
-#include "moc_macros.hpp"
 #include "utils.hpp"
 
 namespace PresenceApp {

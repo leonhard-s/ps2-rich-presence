@@ -14,9 +14,9 @@
 #include "api/rest_client.h"
 #include "arx.hpp"
 #include "ps2.hpp"
+#include <moc_macros.h>
 
 #include "appdata/service-id.hpp"
-#include "moc_macros.hpp"
 #include "utils.hpp"
 
 namespace PresenceApp {

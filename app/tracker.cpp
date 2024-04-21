@@ -15,11 +15,11 @@
 #include "arx/ess.hpp"
 #include <api/ess_client.h>
 #include <dbg_census/stream/subscription_builder.h>
+#include <moc_macros.h>
 
 #include "appdata/service-id.hpp"
 #include "game/character-info.hpp"
 #include "game/state.hpp"
-#include "moc_macros.hpp"
 #include "utils.hpp"
 
 namespace {

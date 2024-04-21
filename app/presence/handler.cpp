@@ -8,9 +8,9 @@
 #include <QtCore/QTimer>
 
 #include "discord-game-sdk/discord.h"
+#include <moc_macros.h>
 
 #include "appdata/appid.hpp"
-#include "moc_macros.hpp"
 
 namespace PresenceApp {
 
