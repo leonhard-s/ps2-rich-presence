@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.25 FATAL_ERROR)
 project(Ps2GameData VERSION 0.2 LANGUAGES CXX)
 
+if(CMAKE_CXX_CLANG_TIDY)
+  string(APPEND CMAKE_CXX_CLANG_TIDY ",-cppcoreguidelines-avoid-magic-numbers,-readability-magic-numbers")
+endif()
+
 add_library(Ps2Data STATIC
   "class.hpp"
   "class.cpp"

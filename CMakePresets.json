@@ -264,7 +264,7 @@
             "cacheVariables": {
                 "CMAKE_CXX_CLANG_TIDY": {
                     "type": "string",
-                    "value": "clang-tidy;--checks=cppcoreguidelines-*,clang-analyzer-*,google-*,misc-*,modernize-*,performance-*,readability-*,-modernize-use-trailing-return-type,-google-readability-todo,-readability-identifier-length"
+                    "value": "clang-tidy;--checks=cppcoreguidelines-*,clang-analyzer-*,google-*,misc-*,modernize-*,performance-*,readability-*,-modernize-use-trailing-return-type,-google-readability-todo,-readability-identifier-length,-misc-include-cleaner"
                 }
             }
         }
