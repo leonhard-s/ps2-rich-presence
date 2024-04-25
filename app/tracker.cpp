@@ -14,7 +14,7 @@
 #include "arx.hpp"
 #include "arx/ess.hpp"
 #include <api/ess_client.h>
-#include <dbg_census/stream/subscription_builder.h>
+#include <api/subscriptions.h>
 #include <moc_macros.h>
 
 #include "appdata/service-id.hpp"
@@ -27,10 +27,6 @@ namespace {
 template <typename T>
 T integerFromApiString(const QJsonValue& value) {
     return static_cast<T>(std::strtoull(value.toString().toStdString().c_str(), nullptr, 10));
-}
-
-QJsonObject qtJsonFromStdString(const std::string& str) {
-    return QJsonDocument::fromJson(QString::fromStdString(str).toUtf8()).object();
 }
 
 } // namespace
@@ -178,14 +174,8 @@ void ActivityTracker::handleGainexperiencePayload(const QJsonObject& payload) {
 }
 
 QList<QJsonObject> ActivityTracker::generateSubscriptions() const {
-    auto builder = dbg_census::stream::SubscriptionBuilder{ "Death" };
-    builder.setCharacters({ static_cast<dbg_census::stream::detail::character_id_t>(character_.id_) });
-    auto deaths = qtJsonFromStdString(builder.build());
-
-    builder = dbg_census::stream::SubscriptionBuilder{ "GainExperience" };
-    builder.setCharacters({ static_cast<dbg_census::stream::detail::character_id_t>(character_.id_) });
-    auto experience = qtJsonFromStdString(builder.build());
-
+    auto deaths = PresenceLib::getDeathSubscription(character_.id_);
+    auto experience = PresenceLib::getExperienceSubscription(character_.id_);
     return QList{ deaths, experience };
 }
 

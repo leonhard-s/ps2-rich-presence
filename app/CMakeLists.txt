@@ -65,7 +65,6 @@ target_link_libraries(Ps2RichPresence
     Qt::Widgets
     QtHelpers
     Discord::GameSDK
-    DbgCensus::Stream # TODO: Wrap in PresenceLib
     PresenceLib
     Ps2Data
     Arx

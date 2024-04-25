@@ -18,6 +18,8 @@ target_include_directories(PresenceLib PUBLIC
 target_sources(PresenceLib PRIVATE
   include/api/ess_client.h
   include/api/rest_client.h
+  include/api/subscriptions.h
   src/ess_client.cpp
   src/rest_client.cpp
+  src/subscriptions.cpp
 )
