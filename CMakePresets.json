@@ -167,7 +167,7 @@
             "cacheVariables": {
                 "CMAKE_CXX_FLAGS_INIT": {
                     "type": "string",
-                    "value": "/fsanitize=address"
+                    "value": "/fsanitize=address /D_DISABLE_STRING_ANNOTATION /D_DISABLE_VECTOR_ANNOTATION"
                 }
             }
         },
