@@ -5,7 +5,6 @@
 
 #include <QJsonDocument>
 #include <QJsonObject>
-
 #include <dbg_census/stream/ess_client.h>
 #include <dbg_census/stream/subscription_builder.h>
 #include <moc_macros.h>

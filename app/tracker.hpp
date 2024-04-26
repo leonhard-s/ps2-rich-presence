@@ -4,12 +4,11 @@
 
 #include <memory>
 
-#include <QtCore/QList>
-#include <QtCore/QObject>
-#include <QtCore/QString>
-
-#include "arx.hpp"
-#include "ps2.hpp"
+#include <QList>
+#include <QObject>
+#include <QString>
+#include <arx.hpp>
+#include <ps2.hpp>
 
 #include "game/character-info.hpp"
 #include "game/state.hpp"

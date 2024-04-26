@@ -4,22 +4,21 @@
 
 #include <numeric>
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDateTime>
-#include <QtCore/QDebug>
-#include <QtCore/QList>
-#include <QtCore/QObject>
-#include <QtCore/QVariantList>
-#include <QtCore/QVariantMap>
-#include <QtWidgets/QComboBox>
-#include <QtWidgets/QGridLayout>
-#include <QtWidgets/QGroupBox>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QSpacerItem>
-#include <QtWidgets/QVBoxLayout>
-
+#include <QComboBox>
+#include <QCoreApplication>
+#include <QDateTime>
+#include <QDebug>
+#include <QGridLayout>
+#include <QGroupBox>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QList>
+#include <QObject>
+#include <QPushButton>
+#include <QSpacerItem>
+#include <QVariantList>
+#include <QVariantMap>
+#include <QVBoxLayout>
 #include <adopt_pointer.h>
 #include <moc_macros.h>
 

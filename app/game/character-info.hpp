@@ -4,13 +4,13 @@
 
 #include <memory>
 
-#include <QtCore/QDebug>
-#include <QtCore/QMetaType>
-#include <QtCore/QObject>
-#include <QtCore/QString>
+#include <QDebug>
+#include <QMetaType>
+#include <QObject>
+#include <QString>
 
-#include "arx.hpp"
-#include "ps2.hpp"
+#include <arx.hpp>
+#include <ps2.hpp>
 
 namespace PresenceApp {
 

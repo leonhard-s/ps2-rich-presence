@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <QtCore/QVariantMap>
+#include <QVariantMap>
 
 #include "game/character-info.hpp"
 

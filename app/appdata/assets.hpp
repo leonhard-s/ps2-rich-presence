@@ -4,7 +4,7 @@
 
 #include <string>
 
-#include "ps2.hpp"
+#include <ps2.hpp>
 
 namespace assets {
 

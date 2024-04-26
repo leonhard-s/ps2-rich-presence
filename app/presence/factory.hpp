@@ -2,10 +2,8 @@
 
 #pragma once
 
-#include <QtCore/QObject>
-#include <QtCore/QString>
-
-#include "discord-game-sdk/discord.h"
+#include <QObject>
+#include <discord-game-sdk/discord.h>
 
 #include "game/state.hpp"
 

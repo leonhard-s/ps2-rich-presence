@@ -1,13 +1,11 @@
 // Copyright 2022 Leonhard S.
 
-#include "presence/handler.hpp"
+#include "handler.hpp"
 
-#include <QtCore/QDebug>
-#include <QtCore/QObject>
-#include <QtCore/QString>
-#include <QtCore/QTimer>
-
-#include "discord-game-sdk/discord.h"
+#include <QDebug>
+#include <QObject>
+#include <QTimer>
+#include <discord-game-sdk/discord.h>
 #include <adopt_pointer.h>
 #include <moc_macros.h>
 

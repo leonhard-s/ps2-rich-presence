@@ -1,8 +1,8 @@
 // Copyright 2022 Leonhard S.
 
-#include "game/state.hpp"
+#include "state.hpp"
 
-#include "ps2.hpp"
+#include <ps2.hpp>
 
 namespace PresenceApp {
 

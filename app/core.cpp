@@ -2,17 +2,16 @@
 
 #include "core.hpp"
 
-#include <QtCore/QDateTime>
-#include <QtCore/QDebug>
-#include <QtCore/QObject>
-#include <QtCore/QString>
-#include <QtCore/QTimer>
-#include <QJsonObject>
-
 #include <algorithm>
 
-#include "arx.hpp"
-#include "discord-game-sdk/discord.h"
+#include <QDateTime>
+#include <QDebug>
+#include <QJsonObject>
+#include <QObject>
+#include <QString>
+#include <QTimer>
+#include <arx.hpp>
+#include <discord-game-sdk/discord.h>
 #include <moc_macros.h>
 
 #include "game/character-info.hpp"

@@ -1,12 +1,12 @@
 // Copyright 2022 Leonhard S.
 
-#include "presence/factory.hpp"
+#include "factory.hpp"
 
-#include <QtCore/QObject>
 #include <string>
 
-#include "discord-game-sdk/discord.h"
-#include "ps2.hpp"
+#include <QObject>
+#include <discord-game-sdk/discord.h>
+#include <ps2.hpp>
 #include <moc_macros.h>
 
 #include "appdata/assets.hpp"

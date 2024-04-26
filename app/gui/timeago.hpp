@@ -2,9 +2,8 @@
 
 #pragma once
 
-#include <QtCore/QDateTime>
-#include <QtCore/QObject>
-#include <QtCore/QString>
+#include <QDateTime>
+#include <QString>
 
 namespace PresenceApp {
 

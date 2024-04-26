@@ -4,10 +4,9 @@
 
 #include <memory>
 
-#include <QtCore/QObject>
-#include <QtCore/QTimer>
-
-#include "discord-game-sdk/discord.h"
+#include <QObject>
+#include <QTimer>
+#include <discord-game-sdk/discord.h>
 
 namespace PresenceApp {
 

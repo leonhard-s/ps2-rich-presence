@@ -4,14 +4,12 @@
 
 #include <memory>
 
-#include <QtCore/QObject>
-#include <QtCore/QString>
-#include <QtCore/QUrl>
-#include <QtWidgets/QDialog>
-#include <QtWidgets/QListWidget>
-#include <QtWidgets/QPushButton>
-
-#include "arx.hpp"
+#include <QDialog>
+#include <QListWidget>
+#include <QObject>
+#include <QPushButton>
+#include <QString>
+#include <arx.hpp>
 
 #include "game/character-info.hpp"
 

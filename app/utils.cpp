@@ -5,13 +5,12 @@
 #include <string>
 #include <utility>
 
-#include <QtCore/QJsonDocument>
-#include <QtCore/QString>
-#include <QtCore/QUrl>
-#include <QtCore/QUrlQuery>
-
-#include "arx.hpp"
-#include "ps2.hpp"
+#include <QJsonDocument>
+#include <QString>
+#include <QUrl>
+#include <QUrlQuery>
+#include <arx.hpp>
+#include <ps2.hpp>
 
 namespace {
 

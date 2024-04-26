@@ -1,27 +1,21 @@
 // Copyright 2022 Leonhard S.
 
-#include "gui/character-manager.hpp"
-
-#include <QtCore/QJsonDocument>
-#include <QtCore/QRegularExpression>
-#include <QtCore/QString>
-#include <QtCore/QUrl>
-#include <QtCore/QUrlQuery>
-#include <QtGui/QRegularExpressionValidator>
-#include <QtWidgets/QCheckBox>
-#include <QtWidgets/QDialog>
-#include <QtWidgets/QGridLayout>
-#include <QtWidgets/QInputDialog>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QListWidget>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QVBoxLayout>
+#include "character-manager.hpp"
 
 #include <string>
 
-#include "arx.hpp"
-#include "ps2.hpp"
+#include <QDialog>
+#include <QJsonDocument>
+#include <QLabel>
+#include <QListWidget>
+#include <QMessageBox>
+#include <QPushButton>
+#include <QRegularExpression>
+#include <QRegularExpressionValidator>
+#include <QString>
+#include <QVBoxLayout>
+#include <arx.hpp>
+#include <ps2.hpp>
 #include <adopt_pointer.h>
 #include <moc_macros.h>
 

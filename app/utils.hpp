@@ -4,10 +4,8 @@
 
 #include <string>
 
-#include <QtCore/QUrl>
-
-#include "arx.hpp"
-#include "ps2.hpp"
+#include <arx.hpp>
+#include <ps2.hpp>
 
 class QJsonDocument;
 

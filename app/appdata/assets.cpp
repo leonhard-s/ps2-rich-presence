@@ -1,10 +1,10 @@
 // Copyright 2022 Leonhard S.
 
-#include "appdata/assets.hpp"
+#include "assets.hpp"
 
 #include <string>
 
-#include "ps2.hpp"
+#include <ps2.hpp>
 
 namespace assets {
 int imageKeyFromClass(ps2::Class class_, std::string* image_key) {

@@ -2,17 +2,11 @@
 
 #include "tracker.hpp"
 
-#include <QtCore/QDebug>
-#include <QtCore/QList>
-#include <QtCore/QObject>
-#include <QtCore/QString>
-#include <QtCore/QUrl>
-#include <QtCore/QUrlQuery>
-
-#include <QJsonDocument>
-
-#include "arx.hpp"
-#include "arx/ess.hpp"
+#include <QDebug>
+#include <QList>
+#include <QObject>
+#include <QString>
+#include <arx.hpp>
 #include <api/ess_client.h>
 #include <api/subscriptions.h>
 #include <moc_macros.h>
@@ -49,7 +43,7 @@ ActivityTracker::ActivityTracker(
     std::for_each(subs.begin(), subs.end(),
         [this](const QJsonObject& sub) { ess_client_->subscribe(sub); });
     ess_client_->connect();
-    QObject::connect(ess_client_.get(), &PresenceLib::EssClient::payloadReceived,
+    QObject::connect(aress_client_.get(), &PresenceLib::EssClient::payloadReceived,
         this, &ActivityTracker::onPayloadReceived);
 }
 

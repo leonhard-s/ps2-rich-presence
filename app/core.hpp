@@ -4,13 +4,13 @@
 
 #include <memory>
 
-#include <QtCore/QDateTime>
-#include <QtCore/QList>
-#include <QtCore/QObject>
-#include <QtCore/QString>
-#include <QtCore/QTimer>
+#include <QDateTime>
+#include <QList>
+#include <QObject>
+#include <QString>
+#include <QTimer>
+#include <arx.hpp>
 
-#include "arx.hpp"
 #include "game/character-info.hpp"
 #include "presence/factory.hpp"
 #include "presence/handler.hpp"

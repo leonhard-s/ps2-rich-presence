@@ -4,14 +4,14 @@
 
 #include <memory>
 
-#include <QtCore/QList>
-#include <QtCore/QObject>
-#include <QtCore/QTimer>
-#include <QtWidgets/QCheckBox>
-#include <QtWidgets/QComboBox>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QWidget>
+#include <QCheckBox>
+#include <QComboBox>
+#include <QLabel>
+#include <QList>
+#include <QObject>
+#include <QPushButton>
+#include <QTimer>
+#include <QWidget>
 
 #include "game/character-info.hpp"
 #include "core.hpp"

@@ -2,16 +2,15 @@
 
 #include "persistence.hpp"
 
-#include <QtCore/QDir>
-#include <QtCore/QFile>
-#include <QtCore/QJsonArray>
-#include <QtCore/QJsonDocument>
-#include <QtCore/QJsonObject>
-#include <QtCore/QStandardPaths>
-#include <QtCore/QString>
-
-#include "arx.hpp"
-#include "ps2.hpp"
+#include <QDir>
+#include <QFile>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QStandardPaths>
+#include <QString>
+#include <arx.hpp>
+#include <ps2.hpp>
 
 #include "game/character-info.hpp"
 

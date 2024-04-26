@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "ps2.hpp"
+#include <ps2.hpp>
 
 namespace PresenceApp {
 

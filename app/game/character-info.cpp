@@ -1,19 +1,16 @@
 // Copyright 2022 Leonhard S.
 
-#include "game/character-info.hpp"
+#include "character-info.hpp"
 
 #include <string>
 #include <utility>
 
-#include <QtCore/QDebug>
-#include <QtCore/QJsonObject>
-#include <QtCore/QObject>
-#include <QtCore/QScopedPointer>
-#include <QtCore/QString>
-
-#include "api/rest_client.h"
-#include "arx.hpp"
-#include "ps2.hpp"
+#include <QDebug>
+#include <QObject>
+#include <QString>
+#include <api/rest_client.h>
+#include <arx.hpp>
+#include <ps2.hpp>
 #include <adopt_pointer.h>
 #include <moc_macros.h>
 
