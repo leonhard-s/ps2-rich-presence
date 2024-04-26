@@ -41,14 +41,16 @@ jobs:
     strategy:
       matrix:
         build_type: [Debug, Release]
-        toolset: [v143, ClangCL]
 
     env:
       BUILD_DIR: ${{ github.workspace }}\build
       DIST_DIR: ${{ github.workspace }}\dist
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: true
 
       - name: Restore vcpkg cache
         uses: actions/cache/restore@v3
@@ -58,16 +60,32 @@ jobs:
           restore-keys: ${{ runner.os }}-vcpkg-
           fail-on-cache-miss: true
 
-      - name: Configure CMake
-        run: cmake -S . -B ${{ env.BUILD_DIR }} --preset vcpkg-x64-windows -T ${{ matrix.toolset }} -DVCPKG_MANIFEST_INSTALL=OFF
+      - name: Setup Ninja
+        uses: ashutoshvarma/setup-ninja@master
+        with:
+          version: 1.11.0
+          dest: ${{ env.BUILD_DIR }}/ninja_bin
+  
+      - name: Enter VS Developer Command Prompt
+        uses: TheMrMilchmann/setup-msvc-dev@v2
+        with:
+          arch: x64
+  
+      - name: Configure CMake (Debug)
+        if: matrix.build_type == 'Debug'
+        run: cmake -S . -B ${{ env.BUILD_DIR }} --preset windows-msvc-debug -DVCPKG_MANIFEST_INSTALL=OFF
+
+      - name: Configure CMake (Release)
+        if: matrix.build_type == 'Release'
+        run: cmake -S . -B ${{ env.BUILD_DIR }} --preset windows-msvc-release -DVCPKG_MANIFEST_INSTALL=OFF
 
       - name: Build
-        run: cmake --build ${{ env.BUILD_DIR }} --config ${{ matrix.build_type }}
+        run: cmake --build ${{ env.BUILD_DIR }}
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: win64-${{ matrix.toolset }}-${{ matrix.build_type }}
+          name: win64-${{ matrix.build_type }}
           path: ${{ env.BUILD_DIR }}
 
   package_win64:
@@ -77,7 +95,6 @@ jobs:
     strategy:
       matrix:
         build_type: [Debug, Release]
-        toolset: [v143, ClangCL]
 
     env:
       BUILD_DIR: ${{ github.workspace }}/build
@@ -98,14 +115,14 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
-          name: win64-${{ matrix.toolset }}-${{ matrix.build_type }}
+          name: win64-${{ matrix.build_type }}
           path: ${{ env.BUILD_DIR }}
 
       - name: Install to dist directory
-        run: cmake --install ${{ env.BUILD_DIR }} --config ${{ matrix.build_type }} --prefix ${{ env.DIST_DIR }}-${{ matrix.toolset }}-${{ matrix.build_type }}
+        run: cmake --install ${{ env.BUILD_DIR }} --config ${{ matrix.build_type }} --prefix ${{ env.DIST_DIR }}-${{ matrix.build_type }}
 
       - name: Upload archive
         uses: actions/upload-artifact@v3
         with:
-          name: win64-${{ matrix.toolset }}-${{ matrix.build_type }}
-          path: ${{ env.DIST_DIR }}-${{ matrix.toolset }}-${{ matrix.build_type }}
+          name: win64-${{ matrix.build_type }}
+          path: ${{ env.DIST_DIR }}-${{ matrix.build_type }}
