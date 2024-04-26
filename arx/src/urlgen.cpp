@@ -9,16 +9,19 @@
 #include <utility>
 #include <vector>
 
+#include "arx/support.hpp"
 #include "arx/query.hpp"
 
 namespace arx {
 
-std::string getScheme() {
-    return "https";
+std::string_view getScheme() {
+    static const auto* const value = "https";
+    return value;
 }
 
-std::string getHost() {
-    return "census.daybreakgames.com";
+std::string_view getHost() {
+    static const auto* const value = "census.daybreakgames.com";
+    return value;
 }
 
 std::string generateCensusPath(
@@ -104,8 +107,8 @@ std::vector<std::pair<std::string, std::string>> getQueryItems(
     if (!query->getRetry()) {
         items.emplace_back("c:retry", "0");
     }
-    auto tree = query->getTree();
-    if (tree) {
+    const auto* const tree = query->getTree();
+    if (tree != nullptr) {
         items.emplace_back("c:tree", tree->serialise());
     }
     auto joins = query->getJoins();

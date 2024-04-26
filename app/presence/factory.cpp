@@ -7,6 +7,7 @@
 
 #include "discord-game-sdk/discord.h"
 #include "ps2.hpp"
+#include <moc_macros.h>
 
 #include "appdata/assets.hpp"
 #include "game/state.hpp"
@@ -84,7 +85,8 @@ discord::Activity PresenceFactory::buildGameActivity(const GameState& state) {
     ps2::zone_to_display_name(state.zone_, &temp);
     assets.SetLargeText(temp.c_str());
     // Small image
-    std::string key, text;
+    std::string key;
+    std::string text;
     if (state.vehicle_ != ps2::Vehicle::None) {
         assets::imageKeyFromVehicle(state.vehicle_, &temp);
         key = temp;
@@ -104,18 +106,6 @@ discord::Activity PresenceFactory::buildGameActivity(const GameState& state) {
 
 } // namespace PresenceApp
 
-#if defined(_MSC_VER) && !defined(__clang__)
-#   pragma warning(push)
-#   pragma warning(disable : 4464)
-#elif defined(__clang__)
-#   pragma clang diagnostic push
-#   pragma clang diagnostic ignored "-Wreserved-identifier"
-#endif
-
+PUSH_MOC_WARNINGS_FILTER;
 #include "moc_factory.cpp"
-
-#if defined(_MSC_VER) && !defined(__clang__)
-#   pragma warning(pop)
-#elif defined(__clang__)
-#   pragma clang diagnostic pop
-#endif
+POP_MOC_WARNINGS_FILTER;

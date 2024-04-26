@@ -8,7 +8,7 @@
 
 
 int main(int argc, char* argv[]) {
-    QApplication app(argc, argv);
+    const QApplication app(argc, argv);
     QCoreApplication::setOrganizationName("Leonhard S.");
     QCoreApplication::setApplicationName("PS2 Rich Presence");
     QCoreApplication::setApplicationVersion(PRESENCE_APP_VERSION);
@@ -16,5 +16,5 @@ int main(int argc, char* argv[]) {
     PresenceApp::MainWindow main_window;
     main_window.show();
 
-    return app.exec();
+    return QApplication::exec();
 }

@@ -19,8 +19,8 @@ std::vector<JoinData> SupportsJoin::getJoins() const {
     return joins;
 }
 
-void SupportsJoin::setJoins(std::initializer_list<JoinData> join_list) {
-    this->joins = join_list;
+void SupportsJoin::setJoins(std::initializer_list<JoinData> joins_list) {
+    this->joins = joins_list;
 }
 
 void SupportsJoin::addJoin(const JoinData& join) {
@@ -28,24 +28,17 @@ void SupportsJoin::addJoin(const JoinData& join) {
 }
 
 JoinData::JoinData()
-    : collection_{ "" }
-    , on_{ "" }
-    , to_{ "" }
-    , list_{ false }
-    , show_{}
-    , hide_{}
-    , inject_at_{ "" }
-    , terms_{}
+    : list_{ false }
     , outer_{ true } {}
 
 JoinData::JoinData(
-    const std::string& collection,
-    const std::string& on,
-    const std::string& to,
+    std::string_view collection,
+    std::string_view on,
+    std::string_view to,
     bool list,
     const std::initializer_list<std::string>& show,
     const std::initializer_list<std::string>& hide,
-    const std::string& inject_at,
+    std::string_view inject_at,
     const std::initializer_list<SearchTerm>& terms,
     bool outer
 )
@@ -59,14 +52,14 @@ JoinData::JoinData(
     , terms_{ terms }
     , outer_{ outer } {}
 
-void JoinData::setFieldNames(const std::string& field) {
+void JoinData::setFieldNames(std::string_view field) {
     this->on_ = field;
     this->to_ = field;
 }
 
 void JoinData::setFieldNames(
-    const std::string& parent_field,
-    const std::string& child_field
+    std::string_view parent_field,
+    std::string_view child_field
 ) {
     this->on_ = parent_field;
     this->to_ = child_field;
@@ -116,16 +109,14 @@ std::string JoinData::serialise() const {
 }
 
 TreeData::TreeData()
-    : field_{ "" }
-    , list_{ false }
-    , prefix_{ "" }
-    , start_{ "" } {}
+    : list_{ false }
+{}
 
 TreeData::TreeData(
-    const std::string& field,
+    std::string_view field,
     bool list,
-    const std::string& prefix,
-    const std::string& start
+    std::string_view prefix,
+    std::string_view start
 )
     : field_{ field }
     , list_{ list }
@@ -148,8 +139,8 @@ std::string TreeData::serialise() const {
 }
 
 Query::Query(
-    const std::string& collection,
-    const std::string& service_id
+    std::string_view collection,
+    std::string_view service_id
 )
     : SupportsJoin()
     , service_id_{ service_id }
@@ -157,22 +148,15 @@ Query::Query(
     , verb_{ "get" }
     , namespace_{ "ps2" }
     , collection_{ collection }
-    , show_{}
-    , hide_{}
-    , sort_{}
-    , has_{}
-    , resolve_{}
     , case_{ true }
     , limit_{ 1 }
     , limit_per_db_{ 1 }
     , start_{ 0 }
     , include_null_{ false }
-    , lang_{ "" }
-    , tree_{}
     , timing_{ false }
     , exact_match_first_{ false }
-    , distinct_{ "" },
-    retry_{ true } {}
+    , retry_{ true }
+{}
 
 Query::Query(const Query& other)
     : SupportsJoin(other)
@@ -235,7 +219,7 @@ std::string Query::getServiceId() const {
     return service_id_;
 }
 
-void Query::setServiceId(const std::string& service_id) {
+void Query::setServiceId(std::string_view service_id) {
     service_id_ = service_id;
 }
 
@@ -243,7 +227,7 @@ std::string Query::getFormat() const {
     return format_;
 }
 
-void Query::setFormat(const std::string& format) {
+void Query::setFormat(std::string_view format) {
     format_ = format;
 }
 
@@ -251,7 +235,7 @@ std::string Query::getVerb() const {
     return verb_;
 }
 
-void Query::setVerb(const std::string& verb) {
+void Query::setVerb(std::string_view verb) {
     verb_ = verb;
 }
 
@@ -259,7 +243,7 @@ std::string Query::getNamespace() const {
     return namespace_;
 }
 
-void Query::setNamespace(const std::string& game) {
+void Query::setNamespace(std::string_view game) {
     this->namespace_ = game;
 }
 
@@ -267,7 +251,7 @@ std::string Query::getCollection() const {
     return collection_;
 }
 
-void Query::setCollection(const std::string& collection) {
+void Query::setCollection(std::string_view collection) {
     collection_ = collection;
 }
 
@@ -327,8 +311,8 @@ bool Query::getCase() const {
     return case_;
 }
 
-void Query::setCase(bool value) {
-    this->case_ = value;
+void Query::setCase(bool case_sensitive) {
+    this->case_ = case_sensitive;
 }
 
 int Query::getLimit() const {
@@ -367,7 +351,7 @@ std::string Query::getLang() const {
     return lang_;
 }
 
-void Query::setLang(const std::string& lang) {
+void Query::setLang(std::string_view lang) {
     lang_ = lang;
 }
 
@@ -403,7 +387,7 @@ std::string Query::getDistinct() const {
     return distinct_;
 }
 
-void Query::setDistinct(const std::string& distinct) {
+void Query::setDistinct(std::string_view distinct) {
     distinct_ = distinct;
 }
 
@@ -433,11 +417,11 @@ std::string Query::getUrl() const {
     return url.str();
 }
 
-std::string Query::getScheme() const {
+std::string_view Query::getScheme() {
     return arx::getScheme();
 }
 
-std::string Query::getHost() const {
+std::string_view Query::getHost() {
     return arx::getHost();
 }
 

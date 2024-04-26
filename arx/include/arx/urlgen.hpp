@@ -3,6 +3,7 @@
 #pragma once
 
 #include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 
@@ -10,9 +11,8 @@
 
 namespace arx {
 
-std::string getScheme();
-
-std::string getHost();
+std::string_view getScheme();
+std::string_view getHost();
 
 std::string generateCensusPath(
     const std::string& service_id,

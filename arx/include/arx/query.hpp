@@ -5,6 +5,7 @@
 #include <initializer_list>
 #include <memory>
 #include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 
@@ -17,30 +18,30 @@ struct JoinData;
 class SupportsJoin {
 public:
     std::vector<JoinData> getJoins() const;
-    void setJoins(std::initializer_list<JoinData> joins);
+    void setJoins(std::initializer_list<JoinData> joins_list);
     void addJoin(const JoinData& join);
 
 protected:
     std::vector<JoinData> joins;
 };
 
-struct JoinData: public SupportsJoin {
+struct JoinData : public SupportsJoin {
     JoinData();
     explicit JoinData(
-        const std::string& collection,
-        const std::string& on = "",
-        const std::string& to = "",
+        std::string_view collection,
+        std::string_view on = "",
+        std::string_view to = "",
         bool list = false,
         const std::initializer_list<std::string>& show = {},
         const std::initializer_list<std::string>& hide = {},
-        const std::string& inject_at = "",
+        std::string_view inject_at = "",
         const std::initializer_list<SearchTerm>& terms = {},
         bool outer = true);
 
-    void setFieldNames(const std::string& field);
+    void setFieldNames(std::string_view field);
     void setFieldNames(
-        const std::string& parent_field,
-        const std::string& child_field);
+        std::string_view parent_field,
+        std::string_view child_field);
 
     std::string serialise() const;
 
@@ -58,10 +59,10 @@ struct JoinData: public SupportsJoin {
 struct TreeData {
     TreeData();
     explicit TreeData(
-        const std::string& field,
+        std::string_view field,
         bool list = false,
-        const std::string& prefix = "",
-        const std::string& start = "");
+        std::string_view prefix = "",
+        std::string_view start = "");
 
     std::string serialise() const;
 
@@ -71,11 +72,11 @@ struct TreeData {
     std::string start_;
 };
 
-class Query: public SupportsJoin {
+class Query : public SupportsJoin {
 public:
     explicit Query(
-        const std::string& collection = "",
-        const std::string& service_id = "s:example");
+        std::string_view collection = "",
+        std::string_view service_id = "s:example");
     Query(const Query& other);
     Query(Query&& other) noexcept = default;
 
@@ -85,15 +86,15 @@ public:
     // Request format / path configuration
 
     std::string getServiceId() const;
-    void setServiceId(const std::string& service_id);
+    void setServiceId(std::string_view service_id);
     std::string getFormat() const;
-    void setFormat(const std::string& format);
+    void setFormat(std::string_view format);
     std::string getVerb() const;
-    void setVerb(const std::string& verb);
+    void setVerb(std::string_view verb);
     std::string getNamespace() const;
-    void setNamespace(const std::string& ns);
+    void setNamespace(std::string_view game);
     std::string getCollection() const;
-    void setCollection(const std::string& collection);
+    void setCollection(std::string_view collection);
 
     // Query terms
 
@@ -124,22 +125,22 @@ public:
     bool getIncludeNull() const;
     void setIncludeNull(bool include_null);
     std::string getLang() const;
-    void setLang(const std::string& lang);
+    void setLang(std::string_view lang);
     // c:join functionality inherited from SupportsJoin parent class
     const TreeData* getTree() const;
     void setTree();
     void setTree(const TreeData& tree);
     void setTree(
-        const std::string& field,
+        std::string_view field,
         bool list = false,
-        const std::string& prefix = "",
-        const std::string& start = "");
+        std::string_view prefix = "",
+        std::string_view start = "");
     bool getTiming() const;
     void setTiming(bool timing);
     bool getExactMatchFirst() const;
     void setExactMatchFirst(bool exact_match_first);
     std::string getDistinct() const;
-    void setDistinct(const std::string& distinct);
+    void setDistinct(std::string_view distinct);
     bool getRetry() const;
     void setRetry(bool retry);
 
@@ -147,8 +148,8 @@ public:
 
     std::string getUrl() const;
 
-    std::string getScheme() const;
-    std::string getHost() const;
+    static std::string_view getScheme();
+    static std::string_view getHost();
     std::string getPath() const;
     std::vector<std::pair<std::string, std::string>> getQuery() const;
 

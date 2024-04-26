@@ -7,12 +7,13 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QTimer>
+#include <QJsonObject>
 
 #include <algorithm>
-#include <limits>
 
 #include "arx.hpp"
 #include "discord-game-sdk/discord.h"
+#include <moc_macros.h>
 
 #include "game/character-info.hpp"
 #include "game/state.hpp"
@@ -23,17 +24,15 @@ namespace PresenceApp {
 
 RichPresenceApp::RichPresenceApp(QObject* parent)
     : QObject(parent)
+    , rate_limit_timer_{ std::make_unique<QTimer>(this) }
     , presence_enabled_{ true }
+    , presence_{ std::make_unique<PresenceFactory>(this) }
+    , discord_{ std::make_unique<PresenceHandler>(this) }
     , event_latency_{ -1 }
+    , last_event_payload_{ QDateTime::fromSecsSinceEpoch(0) }
+    , last_game_state_update_{ QDateTime::fromSecsSinceEpoch(0) }
+    , last_presence_update_{ QDateTime::fromSecsSinceEpoch(0) }
 {
-    presence_.reset(new PresenceFactory(this));
-    discord_.reset(new PresenceHandler(this));
-    // Reset timestamps
-    last_event_payload_ = QDateTime::fromSecsSinceEpoch(0);
-    last_game_state_update_ = QDateTime::fromSecsSinceEpoch(0);
-    last_presence_update_ = QDateTime::fromSecsSinceEpoch(0);
-    // Set up rate limiting timer
-    rate_limit_timer_.reset(new QTimer(this));
     rate_limit_timer_->setSingleShot(true);
     rate_limit_timer_->start(0);
     QObject::connect(rate_limit_timer_.get(), &QTimer::timeout,
@@ -60,7 +59,7 @@ void RichPresenceApp::setCharacter(const CharacterData& character) {
     if (character_ != character) {
         character_ = character;
         if (character.id_ != 0) {
-            tracker_.reset(new ActivityTracker(character, this));
+            tracker_ = std::make_unique<ActivityTracker>(character, this);
             QObject::connect(tracker_.get(), &ActivityTracker::payloadReceived,
                 this, &RichPresenceApp::onEventPayloadReceived);
             QObject::connect(tracker_.get(), &ActivityTracker::stateChanged,
@@ -101,31 +100,24 @@ double RichPresenceApp::getEventFrequency() {
     if (recent_events_.empty()) {
         return 0.0;
     }
-    auto oldest_event = recent_events_.front();
-    auto now = QDateTime::currentDateTimeUtc();
-    double timespan = static_cast<double>(oldest_event.secsTo(now));
+    const auto oldest_event = recent_events_.front();
+    const auto now = QDateTime::currentDateTimeUtc();
+    const auto timespan = static_cast<double>(oldest_event.secsTo(now));
     auto freq = static_cast<double>(recent_events_.size()) / timespan;
     return freq;
 }
 
 void RichPresenceApp::onEventPayloadReceived(
     const QString& event_name,
-    const arx::json_t& payload
+    const QJsonObject& payload
 ) {
-    // The app only cares about if there are messages coming in. Handling
-    // the payloads and dealing with error states is the tracker's problem.
-    Q_UNUSED(event_name)
-
-    // Get timestamp of the event
     auto it = payload.find("timestamp");
     if (it == payload.end()) {
         qWarning() << "No timestamp found for" << event_name << "payload";
         return;
     }
-    auto timestamp = QString::fromStdString(
-        it.value().get<arx::json_string_t>());
     auto event_time = QDateTime::fromSecsSinceEpoch(
-        timestamp.toLong(), Qt::TimeSpec::UTC);
+        it->toString().toLong(), Qt::TimeSpec::UTC);
     auto now = QDateTime::currentDateTimeUtc();
     event_latency_ = static_cast<qint32>(event_time.msecsTo(now));
     // Update recent events list; used for event frequency calculation
@@ -146,13 +138,14 @@ void RichPresenceApp::onRateLimitTimerExpired() {
 }
 
 void RichPresenceApp::pruneRecentEvents() {
+    constexpr qint64 recency_threshold = 30000;
     // Remove events older than 30 seconds from the list
     QList<QDateTime> still_fresh;
     auto now = QDateTime::currentDateTimeUtc();
     std::copy_if(recent_events_.begin(), recent_events_.end(),
         std::back_inserter(still_fresh),
         [now](const QDateTime& event_time) {
-            return event_time.msecsTo(now) <= 30000;
+            return event_time.msecsTo(now) <= recency_threshold;
         });
 }
 
@@ -178,7 +171,7 @@ void RichPresenceApp::schedulePresenceUpdate() {
     // presence again.
     auto ms_until_next_update = static_cast<int>(std::clamp(
         rate_limit - last_presence_update_.msecsTo(now),
-        0LL, static_cast<long long>(INT_MAX)));
+        0LL, static_cast<qint64>(INT_MAX)));
     qDebug() << "Scheduling presence update in" << ms_until_next_update << "ms";
     // (Re)start the timer. Presence will be updated when the timer fires.
     rate_limit_timer_->start(ms_until_next_update);
@@ -197,9 +190,10 @@ void RichPresenceApp::updatePresence() {
 }
 
 void RichPresenceApp::updateRecentEventsList() {
+    constexpr qsizetype num_recent_events = 100;
     auto now = QDateTime::currentDateTimeUtc();
     // Only keep the 100 most recent events
-    while (recent_events_.size() > 100) {
+    while (recent_events_.size() > num_recent_events) {
         recent_events_.pop_front();
     }
     // Add the new event to the list
@@ -208,18 +202,6 @@ void RichPresenceApp::updateRecentEventsList() {
 
 } // namespace PresenceApp
 
-#if defined(_MSC_VER) && !defined(__clang__)
-#   pragma warning(push)
-#   pragma warning(disable : 4464)
-#elif defined(__clang__)
-#   pragma clang diagnostic push
-#   pragma clang diagnostic ignored "-Wreserved-identifier"
-#endif
-
+PUSH_MOC_WARNINGS_FILTER;
 #include "moc_core.cpp"
-
-#if defined(_MSC_VER) && !defined(__clang__)
-#   pragma warning(pop)
-#elif defined(__clang__)
-#   pragma clang diagnostic pop
-#endif
+POP_MOC_WARNINGS_FILTER;

@@ -2,15 +2,15 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QDateTime>
 #include <QtCore/QList>
 #include <QtCore/QObject>
-#include <QtCore/QScopedPointer>
 #include <QtCore/QString>
 #include <QtCore/QTimer>
 
 #include "arx.hpp"
-
 #include "game/character-info.hpp"
 #include "presence/factory.hpp"
 #include "presence/handler.hpp"
@@ -18,7 +18,7 @@
 
 namespace PresenceApp {
 
-class RichPresenceApp: public QObject {
+class RichPresenceApp : public QObject {
     Q_OBJECT
 
 public:
@@ -49,7 +49,7 @@ Q_SIGNALS:
 private Q_SLOTS:
     void onEventPayloadReceived(
         const QString& event_name,
-        const arx::json_t& payload);
+        const QJsonObject& payload);
     void onGameStateChanged(const GameState& state);
     void onRateLimitTimerExpired();
 
@@ -59,13 +59,13 @@ private:
     void updatePresence();
     void updateRecentEventsList();
 
-    QScopedPointer<QTimer> rate_limit_timer_;
+    std::unique_ptr<QTimer> rate_limit_timer_;
     CharacterData character_;
     bool presence_enabled_;
-    QScopedPointer<PresenceFactory> presence_;
-    QScopedPointer<PresenceHandler> discord_;
+    std::unique_ptr<PresenceFactory> presence_;
+    std::unique_ptr<PresenceHandler> discord_;
     qint32 event_latency_;
-    QScopedPointer<ActivityTracker> tracker_;
+    std::unique_ptr<ActivityTracker> tracker_;
 
     QDateTime last_event_payload_;
     QDateTime last_game_state_update_;

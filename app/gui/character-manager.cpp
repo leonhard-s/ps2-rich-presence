@@ -2,16 +2,12 @@
 
 #include "gui/character-manager.hpp"
 
-#include <QtCore/QJsonObject>
+#include <QtCore/QJsonDocument>
 #include <QtCore/QRegularExpression>
-#include <QtCore/QScopedPointer>
 #include <QtCore/QString>
 #include <QtCore/QUrl>
 #include <QtCore/QUrlQuery>
 #include <QtGui/QRegularExpressionValidator>
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkReply>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QGridLayout>
@@ -26,7 +22,10 @@
 
 #include "arx.hpp"
 #include "ps2.hpp"
+#include <adopt_pointer.h>
+#include <moc_macros.h>
 
+#include "api/rest_client.h"
 #include "appdata/service-id.hpp"
 #include "game/character-info.hpp"
 #include "utils.hpp"
@@ -36,7 +35,10 @@ namespace PresenceApp {
 CharacterManager::CharacterManager(QWidget* parent
 )
     : QDialog{ parent }
-    , manager_{ new QNetworkAccessManager() }
+    , list_{ nullptr }
+    , button_add_{ nullptr }
+    , button_remove_{ nullptr }
+    , button_close_{ nullptr }
 {
     // Configure the modal dialog
     setWindowTitle(tr("Manage Characters"));
@@ -62,14 +64,14 @@ CharacterManager::CharacterManager(QWidget* parent
 
 void CharacterManager::addCharacter(const CharacterData& character) {
     if (list_ != nullptr) {
-        auto item = new QListWidgetItem(character.name_);
+        auto* item = adopt_pointer(new QListWidgetItem(character.name_));
         item->setData(Qt::UserRole, QVariant::fromValue(character));
         list_->addItem(item);
     }
 }
 
 void CharacterManager::onAddButtonClicked() {
-    QScopedPointer<QDialog> dialog(createCharacterNameInputDialog());
+    auto dialog = std::unique_ptr<QDialog>(createCharacterNameInputDialog());
     if (dialog->exec() == QDialog::DialogCode::Rejected) {
         return;
     }
@@ -90,15 +92,14 @@ void CharacterManager::onAddButtonClicked() {
         }
     }
     // Validate that this character exists
-    auto reply = manager_->get(QNetworkRequest(getCharacterInfoUrl(name)));
-    QObject::connect(reply, &QNetworkReply::finished,
+    auto* const client = adopt_pointer(new PresenceLib::AsyncRestClient(this));
+    QObject::connect(client, &PresenceLib::AsyncRestClient::requestFinished,
         this, &CharacterManager::onCharacterInfoReceived);
-    // Create temp character entry to show while waiting for reply
-    auto item = new QListWidgetItem(tr("Loading '%1'…").arg(name));
-    // Make unselectable
-    item->setFlags(item->flags() & ~Qt::ItemIsSelectable);
-    item->setData(Qt::UserRole, QVariant::fromValue(reply));
-    list_->addItem(item);
+    QObject::connect(client, &PresenceLib::AsyncRestClient::requestFinished,
+        client, &QObject::deleteLater);
+    client->request(getCharacterInfoUrl(name));
+    is_loading_ = true;
+    setEnabled(false);
 }
 
 void CharacterManager::onRemoveButtonClicked() {
@@ -124,22 +125,14 @@ void CharacterManager::onCharacterSelected() {
     button_remove_->setEnabled(list_->currentRow() != -1);
 }
 
-void CharacterManager::onCharacterInfoReceived() {
-    // Get reply (cast to ScopedPointer to ensure it is deleted when this
-    // function returns)
-    QScopedPointer<QNetworkReply> reply {
-        qobject_cast<QNetworkReply*>(QObject::sender())
-    };
-    // Remove temporary list entry
-    for (int i = 0; i < list_->count(); ++i) {
-        auto item_data = list_->item(i)->data(Qt::UserRole);
-        if (item_data.value<QNetworkReply*>() == reply.data()) {
-            list_->takeItem(i);
-            break;
-        }
+void CharacterManager::onCharacterInfoReceived(const QJsonDocument& response) {
+    if (is_loading_) {
+        setEnabled(true);
+        is_loading_ = false;
     }
+
     // Check for errors
-    if (reply->error() != QNetworkReply::NetworkError::NoError) {
+    if (response.isEmpty()) {
         QMessageBox::critical(this,
             tr("Character Manager"),
             tr("Failed to retrieve character info."),
@@ -148,8 +141,8 @@ void CharacterManager::onCharacterInfoReceived() {
     }
     // Validate payload
     const std::string collection = "character";
-    auto payload = getJsonPayload(reply);
-    if (!arx::validatePayload(collection, payload)) {
+    auto payload = qtJsonToArxJson(response);
+    if (arx::validatePayload(collection, payload) != 0) {
         QMessageBox::critical(this,
             tr("Character Manager"),
             tr("Invalid character info payload."),
@@ -166,26 +159,26 @@ void CharacterManager::onCharacterInfoReceived() {
     // HACK: Parse character data
     CharacterInfo temp;
     temp.handleCharacterInfoPayload(payload);
-    CharacterData info{ temp.getId(), temp.getName(), temp.getFaction(),
+    const CharacterData info{ temp.getId(), temp.getName(), temp.getFaction(),
                        temp.getClass(), temp.getServer() };
     // Create character entry
-    auto item = new QListWidgetItem(info.name_);
+    auto* item = adopt_pointer(new QListWidgetItem(info.name_));
     item->setData(Qt::UserRole, QVariant::fromValue(info));
     list_->addItem(item);
 }
 
-QUrl CharacterManager::getCharacterInfoUrl(const QString& character) const {
+QString CharacterManager::getCharacterInfoUrl(const QString& character) {
     auto name = character.toLower().toStdString();
     // Create API query
     arx::Query query("character", SERVICE_ID);
     query.addTerm(arx::SearchTerm("name.first_lower", name));
     auto join = arx::JoinData("characters_world");
-    join.show_.push_back("world_id");
+    join.show_.emplace_back("world_id");
     join.inject_at_ = "world";
     query.addJoin(join);
     query.setShow({ "character_id", "name.first", "faction_id", "profile_id" });
-    // Build QUrl object
-    return qUrlFromArxQuery(query);
+    // Build query string
+    return qStringFromArxQuery(query);
 }
 
 CharacterData CharacterManager::parseCharacterPayload(
@@ -215,7 +208,7 @@ CharacterData CharacterManager::parseCharacterPayload(
         qWarning() << "Invalid type: key \"name\" must be an object";
     }
     // Get character ID
-    auto id_val = payload["character_id"];
+    const auto& id_val = payload["character_id"];
     if (id_val.is_string()) {
         id = std::stoull(id_val.get<std::string>());
     }
@@ -223,7 +216,7 @@ CharacterData CharacterManager::parseCharacterPayload(
         qWarning() << "Invalid type: \"character_id\" must be a string";
     }
     // Get faction
-    auto faction_val = payload["faction_id"];
+    const auto& faction_val = payload["faction_id"];
     if (faction_val.is_number_integer()) {
         faction_id = faction_val.get<arx::faction_id_t>();
     }
@@ -231,7 +224,7 @@ CharacterData CharacterManager::parseCharacterPayload(
         qWarning() << "Invalid type: \"faction_id\" must be a number";
     }
     // Get profile
-    auto profile_val = payload["profile_id"];
+    const auto& profile_val = payload["profile_id"];
     if (profile_val.is_number_integer()) {
         profile_id = profile_val.get<arx::profile_id_t>();
     }
@@ -239,7 +232,7 @@ CharacterData CharacterManager::parseCharacterPayload(
         qWarning() << "Invalid type: \"profile_id\" must be a number";
     }
     // Get world
-    auto world_val = payload["world_id"];
+    const auto& world_val = payload["world_id"];
     if (world_val.is_number_integer()) {
         world_id = world_val.get<arx::world_id_t>();
     }
@@ -247,44 +240,45 @@ CharacterData CharacterManager::parseCharacterPayload(
         qWarning() << "Invalid type: \"world_id\" must be a number";
     }
     // Convert IDs to enum values
-    if (ps2::faction_from_faction_id(faction_id, &faction)) {
+    if (ps2::faction_from_faction_id(faction_id, &faction) != 0) {
         qWarning() << "Unable to convert faction ID:" << faction_id;
     }
-    if (ps2::class_from_profile_id(profile_id, &cls)) {
+    if (ps2::class_from_profile_id(profile_id, &cls) != 0) {
         qWarning() << "Unable to create class from profile ID:"
             << profile_id;
     }
-    if (ps2::server_from_world_id(world_id, &server)) {
+    if (ps2::server_from_world_id(world_id, &server) != 0) {
         qWarning() << "Unable to create server from world ID:" << world_id;
     }
     // Create character info
-    return CharacterData(id, name, faction, cls, server);
+    return { id, name, faction, cls, server };
 }
 
 QDialog* CharacterManager::createCharacterNameInputDialog() {
-    auto dialog = new QDialog(this);
+    auto* dialog = adopt_pointer(new QDialog(this));
     dialog->setWindowTitle(tr("Add Character"));
     dialog->setMinimumSize(120, 80);
-    auto layout = new QVBoxLayout(dialog);
+    auto* layout = adopt_pointer(new QVBoxLayout(dialog));
 
-    auto name_input = new QLineEdit(dialog);
+    auto* name_input = adopt_pointer(new QLineEdit(dialog));
     layout->addWidget(name_input);
     name_input->setPlaceholderText(tr("Enter character name"));
     name_input->setInputMethodHints(Qt::ImhNoPredictiveText);
     name_input->setValidator(
-        new QRegularExpressionValidator(
+        adopt_pointer(new QRegularExpressionValidator(
             // Only accept between 3 and 32 alphanumerical characters
-            QRegularExpression("[a-zA-Z0-9]{3,32}"), name_input));
+            QRegularExpression("[a-zA-Z0-9]{3,32}"), name_input)));
 
-    auto button_layout = new QHBoxLayout();
+    auto* button_layout = adopt_pointer(new QHBoxLayout());
     layout->addLayout(button_layout);
-    button_layout->addSpacerItem(new QSpacerItem(40, 20,
-        QSizePolicy::Expanding,
-        QSizePolicy::Minimum));
-    auto button_ok = new QPushButton(tr("OK"), dialog);
+    button_layout->addSpacerItem(adopt_pointer(
+        new QSpacerItem(40, 20,
+            QSizePolicy::Expanding,
+            QSizePolicy::Minimum)));
+    auto* button_ok = new QPushButton(tr("OK"), dialog);
     button_layout->addWidget(button_ok);
     button_ok->setDefault(true);
-    auto button_cancel = new QPushButton(tr("Cancel"), dialog);
+    auto* button_cancel = new QPushButton(tr("Cancel"), dialog);
     button_layout->addWidget(button_cancel);
 
     QObject::connect(name_input, &QLineEdit::returnPressed,
@@ -297,10 +291,10 @@ QDialog* CharacterManager::createCharacterNameInputDialog() {
 }
 
 void CharacterManager::setupUi() {
-    auto layout = new QVBoxLayout(this);
+    auto* layout = adopt_pointer(new QVBoxLayout(this));
 
     // Instruction text
-    auto instructions = new QLabel(
+    auto* instructions = new QLabel(
         tr("Add characters below using their ingame name.\n"
             "\n"
             "You can drag character names to reorder them. Names higher in "
@@ -311,41 +305,29 @@ void CharacterManager::setupUi() {
     instructions->setWordWrap(true);
 
     // Characters list
-    list_ = new QListWidget(this);
+    list_ = adopt_pointer(new QListWidget(this));
     layout->addWidget(list_);
     list_->setAlternatingRowColors(true);
     list_->setDragEnabled(true);
     list_->setDragDropMode(QAbstractItemView::InternalMove);
 
     // Buttons
-    auto button_layout = new QHBoxLayout();
+    auto* button_layout = adopt_pointer(new QHBoxLayout());
     layout->addLayout(button_layout);
 
-    button_add_ = new QPushButton(tr("Add"), this);
+    button_add_ = adopt_pointer(new QPushButton(tr("Add"), this));
     button_layout->addWidget(button_add_);
     button_add_->setDefault(true);
 
-    button_remove_ = new QPushButton(tr("Remove"), this);
+    button_remove_ = adopt_pointer(new QPushButton(tr("Remove"), this));
     button_layout->addWidget(button_remove_);
 
-    button_close_ = new QPushButton(tr("Confirm"), this);
+    button_close_ = adopt_pointer(new QPushButton(tr("Confirm"), this));
     button_layout->addWidget(button_close_);
 }
 
 } // namespace PresenceApp
 
-#if defined(_MSC_VER) && !defined(__clang__)
-#   pragma warning(push)
-#   pragma warning(disable : 4464)
-#elif defined(__clang__)
-#   pragma clang diagnostic push
-#   pragma clang diagnostic ignored "-Wreserved-identifier"
-#endif
-
+PUSH_MOC_WARNINGS_FILTER;
 #include "moc_character-manager.cpp"
-
-#if defined(_MSC_VER) && !defined(__clang__)
-#   pragma warning(pop)
-#elif defined(__clang__)
-#   pragma clang diagnostic pop
-#endif
+POP_MOC_WARNINGS_FILTER;

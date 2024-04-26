@@ -2,9 +2,10 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QList>
 #include <QtCore/QObject>
-#include <QtCore/QScopedPointer>
 #include <QtCore/QTimer>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
@@ -17,7 +18,7 @@
 
 namespace PresenceApp {
 
-class MainWindow: public QWidget {
+class MainWindow : public QWidget {
     Q_OBJECT
 
 public:
@@ -49,19 +50,19 @@ private:
     void updateEventFrequency();
     void updateLastSeenLabels();
 
-    QString getProjectLink() const;
+    static QString getProjectLink();
     void setEventFrequency(double events_per_second);
     void setEventLatency(qint32 latency_ms);
-    void setLastPayload(QDateTime timestamp);
-    void setLastPresence(QDateTime timestamp);
+    void setLastPayload(const QDateTime& timestamp);
+    void setLastPresence(const QDateTime& timestamp);
     void setStatus(const QString& status);
     void setTrackingEnabled(bool enabled);
 
     void resetCharacterComboBox();
     void setupUi();
 
-    QScopedPointer<RichPresenceApp> app_;
-    QScopedPointer<QTimer> last_seen_timer_;
+    std::unique_ptr<RichPresenceApp> app_;
+    std::unique_ptr<QTimer> last_seen_timer_;
 
     // GUI elements
     QComboBox* characters_combo_box_;

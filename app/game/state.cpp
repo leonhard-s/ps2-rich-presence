@@ -50,12 +50,12 @@ GameStateFactory::GameStateFactory(
     arx::character_id_t character_id,
     ps2::Faction faction,
     ps2::Server server,
-    ps2::Class cls
+    ps2::Class initial_class
 )
     : character_id_{ character_id }
     , faction_{ faction }
     , server_{ server }
-    , class_{ cls }
+    , class_{ initial_class }
     , vehicle_{ ps2::Vehicle::None }
     , team_{ faction }
     , zone_{ ps2::Zone::Sanctuary } {}

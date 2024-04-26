@@ -42,6 +42,10 @@ else()
   )
 endif()
 
+# Dependencies
+# -----------------------------------------------------------------------------
+add_subdirectory(3rdparty)
+
 # Targets
 # -----------------------------------------------------------------------------
 
@@ -54,6 +58,9 @@ add_subdirectory(arx)
 # instead; the API has been updated with the missing data this library was
 # originally created for.
 add_subdirectory(ps2data)
+
+add_subdirectory(qthelpers)
+add_subdirectory(core)
 
 # Main executable
 add_subdirectory(app)

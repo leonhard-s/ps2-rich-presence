@@ -5,19 +5,19 @@
 #include <QtCore/QDebug>
 #include <QtCore/QList>
 #include <QtCore/QObject>
-#include <QtCore/QScopedPointer>
 #include <QtCore/QString>
 #include <QtCore/QUrl>
 #include <QtCore/QUrlQuery>
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkReply>
+
+#include <QJsonDocument>
 
 #include "arx.hpp"
 #include "arx/ess.hpp"
+#include <api/ess_client.h>
+#include <api/subscriptions.h>
+#include <moc_macros.h>
 
 #include "appdata/service-id.hpp"
-#include "ess-client.hpp"
 #include "game/character-info.hpp"
 #include "game/state.hpp"
 #include "utils.hpp"
@@ -25,8 +25,8 @@
 namespace {
 
 template <typename T>
-T integerFromApiString(const arx::json_string_t& value) {
-    return static_cast<T>(std::strtoull(value.c_str(), nullptr, 10));
+T integerFromApiString(const QJsonValue& value) {
+    return static_cast<T>(std::strtoull(value.toString().toStdString().c_str(), nullptr, 10));
 }
 
 } // namespace
@@ -40,27 +40,29 @@ ActivityTracker::ActivityTracker(
     : QObject(parent)
     , character_{ character }
     , state_factory_{ character.id_, character.faction_, character.server_, character.class_ }
-    , current_state_{}
-    , ess_client_{}
 {
     // Set initial state via state factory
     state_factory_.buildState(&current_state_);
     // Create WebSocket client for event streaming endpoint
-    ess_client_.reset(new EssClient(SERVICE_ID, this));
+    ess_client_ = std::make_unique<PresenceLib::EssClient>(SERVICE_ID, this);
     auto subs = generateSubscriptions();
     std::for_each(subs.begin(), subs.end(),
-        [this](const arx::Subscription& sub) { ess_client_->subscribe(sub); });
+        [this](const QJsonObject& sub) { ess_client_->subscribe(sub); });
     ess_client_->connect();
-    QObject::connect(ess_client_.get(), &EssClient::payloadReceived,
+    QObject::connect(ess_client_.get(), &PresenceLib::EssClient::payloadReceived,
         this, &ActivityTracker::onPayloadReceived);
 }
+
+ActivityTracker::~ActivityTracker() = default;
 
 CharacterData ActivityTracker::getCharacter() const {
     return character_;
 }
 
-void ActivityTracker::onPayloadReceived(const QString& event_name,
-    const arx::json_t& payload) {
+void ActivityTracker::onPayloadReceived(
+    const QString& event_name,
+    const QJsonObject& payload
+) {
     emit payloadReceived(event_name, payload);
     // Update state factory based on payload
     if (event_name == "Death") {
@@ -75,7 +77,7 @@ void ActivityTracker::onPayloadReceived(const QString& event_name,
     }
     // Check if the new state is different from the old state
     GameState state;
-    if (state_factory_.buildState(&state)) {
+    if (state_factory_.buildState(&state) != 0) {
         qWarning() << "Unable to build state from factory";
         return;
     }
@@ -85,23 +87,23 @@ void ActivityTracker::onPayloadReceived(const QString& event_name,
     }
 }
 
-void ActivityTracker::handleDeathPayload(const arx::json_t& payload) {
-    bool are_we_the_baddies = integerFromApiString<arx::character_id_t>(payload["attacker_character_id"]) == character_.id_;
+void ActivityTracker::handleDeathPayload(const QJsonObject& payload) {
+    const bool are_we_the_baddies = integerFromApiString<arx::character_id_t>(payload["attacker_character_id"]) == character_.id_;
     // Team
     ps2::Faction team = state_factory_.getFaction();
     // As Team ID is a new addition, we'll check it still exists to be safe
     if (payload.contains("team_id") && payload.contains("attacker_team_id")) {
-        arx::faction_id_t team_id = integerFromApiString<arx::faction_id_t>(
+        const auto team_id = integerFromApiString<arx::faction_id_t>(
             payload[are_we_the_baddies ? "attacker_team_id" : "team_id"]);
         // Return status not checked as it failing is safe as the "team"
         // variable will not be updated
         ps2::faction_from_faction_id(team_id, &team);
     }
     // Class
-    arx::loadout_id_t loadout_id = integerFromApiString<arx::loadout_id_t>(
+    const auto loadout_id = integerFromApiString<arx::loadout_id_t>(
         payload[are_we_the_baddies ? "attacker_loadout_id" : "character_loadout_id"]);
     ps2::Class class_ = state_factory_.getProfileAsClass();
-    if (ps2::class_from_loadout_id(loadout_id, &class_)) {
+    if (ps2::class_from_loadout_id(loadout_id, &class_) != 0) {
         qWarning() << "Unable to get class from loadout ID:" << loadout_id;
         return; // Do not update state if we cannot tell what class we are
     }
@@ -119,9 +121,9 @@ void ActivityTracker::handleDeathPayload(const arx::json_t& payload) {
     ps2::Vehicle vehicle = ps2::Vehicle::None;
     ps2::vehicle_from_vehicle_id(vehicle_id, &vehicle);
     // Zone
-    arx::zone_id_t zone_id = integerFromApiString<arx::zone_id_t>(payload["zone_id"]);
+    const auto zone_id = integerFromApiString<arx::zone_id_t>(payload["zone_id"]);
     ps2::Zone zone = state_factory_.getZone();
-    if (ps2::zone_from_zone_id(zone_id, &zone)) {
+    if (ps2::zone_from_zone_id(zone_id, &zone) != 0) {
         qWarning() << "Unable to get zone from zone ID:" << zone_id;
     }
     // Update state factory
@@ -135,8 +137,8 @@ void ActivityTracker::handleDeathPayload(const arx::json_t& payload) {
     state_factory_.setZone(zone);
 }
 
-void ActivityTracker::handleGainexperiencePayload(const arx::json_t& payload) {
-    bool wonders_of_modern_medicine = integerFromApiString<arx::character_id_t>(payload["character_id"]) == character_.id_;
+void ActivityTracker::handleGainexperiencePayload(const QJsonObject& payload) {
+    const bool wonders_of_modern_medicine = integerFromApiString<arx::character_id_t>(payload["character_id"]) == character_.id_;
     if (!wonders_of_modern_medicine) {
         // The character receiving experience is not the tracked character.
         // Since we do not discriminate between experience types yet, we
@@ -144,9 +146,9 @@ void ActivityTracker::handleGainexperiencePayload(const arx::json_t& payload) {
         return;
     }
     // Class
-    arx::loadout_id_t loadout_id = integerFromApiString<arx::loadout_id_t>(payload["loadout_id"]);
+    const auto loadout_id = integerFromApiString<arx::loadout_id_t>(payload["loadout_id"]);
     ps2::Class class_ = state_factory_.getProfileAsClass();
-    if (ps2::class_from_loadout_id(loadout_id, &class_)) {
+    if (ps2::class_from_loadout_id(loadout_id, &class_) != 0) {
         qWarning() << "Unable to get class from loadout ID:" << loadout_id;
         return; // Do not update state if we cannot tell what class we are
     }
@@ -156,9 +158,9 @@ void ActivityTracker::handleGainexperiencePayload(const arx::json_t& payload) {
     // assists.
 
     // Zone
-    arx::zone_id_t zone_id = integerFromApiString<arx::zone_id_t>(payload["zone_id"]);
+    const auto zone_id = integerFromApiString<arx::zone_id_t>(payload["zone_id"]);
     ps2::Zone zone = state_factory_.getZone();
-    if (ps2::zone_from_zone_id(zone_id, &zone)) {
+    if (ps2::zone_from_zone_id(zone_id, &zone) != 0) {
         qWarning() << "Unable to get zone from zone ID:" << zone_id;
     }
     // Update state factory
@@ -171,34 +173,14 @@ void ActivityTracker::handleGainexperiencePayload(const arx::json_t& payload) {
     state_factory_.setZone(zone);
 }
 
-QList<arx::Subscription> ActivityTracker::generateSubscriptions() const {
-    auto deaths = arx::Subscription(
-        // Event names
-        { "Death" },
-        // Characters
-        { QString::number(character_.id_).toStdString() });
-    auto experience = arx::Subscription(
-        // Event names
-        { "GainExperience" },
-        // Characters
-        { QString::number(character_.id_).toStdString() });
+QList<QJsonObject> ActivityTracker::generateSubscriptions() const {
+    auto deaths = PresenceLib::getDeathSubscription(character_.id_);
+    auto experience = PresenceLib::getExperienceSubscription(character_.id_);
     return QList{ deaths, experience };
 }
 
 } // namespace PresenceApp
 
-#if defined(_MSC_VER) && !defined(__clang__)
-#   pragma warning(push)
-#   pragma warning(disable : 4464)
-#elif defined(__clang__)
-#   pragma clang diagnostic push
-#   pragma clang diagnostic ignored "-Wreserved-identifier"
-#endif
-
+PUSH_MOC_WARNINGS_FILTER;
 #include "moc_tracker.cpp"
-
-#if defined(_MSC_VER) && !defined(__clang__)
-#   pragma warning(pop)
-#elif defined(__clang__)
-#   pragma clang diagnostic pop
-#endif
+POP_MOC_WARNINGS_FILTER;

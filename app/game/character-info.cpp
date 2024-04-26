@@ -3,18 +3,19 @@
 #include "game/character-info.hpp"
 
 #include <string>
+#include <utility>
 
 #include <QtCore/QDebug>
 #include <QtCore/QJsonObject>
 #include <QtCore/QObject>
 #include <QtCore/QScopedPointer>
 #include <QtCore/QString>
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkReply>
 
+#include "api/rest_client.h"
 #include "arx.hpp"
 #include "ps2.hpp"
+#include <adopt_pointer.h>
+#include <moc_macros.h>
 
 #include "appdata/service-id.hpp"
 #include "utils.hpp"
@@ -30,13 +31,13 @@ CharacterData::CharacterData()
 
 CharacterData::CharacterData(
     arx::character_id_t id,
-    const QString& name,
+    QString name,
     ps2::Faction faction,
     ps2::Class cls,
     ps2::Server server
 )
     : id_{ id }
-    , name_{ name }
+    , name_{ std::move(name) }
     , faction_{ faction }
     , class_{ cls }
     , server_{ server } {}
@@ -61,10 +62,7 @@ QDebug operator<<(QDebug dbg, const CharacterData& info) {
 
 CharacterInfo::CharacterInfo(QObject* parent)
     : QObject(parent)
-    , info_{}
-{
-    manager_.reset(new QNetworkAccessManager(this));
-}
+{}
 
 CharacterInfo::CharacterInfo(arx::character_id_t id, QObject* parent)
     : CharacterInfo(parent)
@@ -73,7 +71,7 @@ CharacterInfo::CharacterInfo(arx::character_id_t id, QObject* parent)
 }
 
 CharacterInfo::CharacterInfo(arx::character_id_t id,
-    const QString& name,
+    QString name,
     ps2::Faction faction,
     ps2::Class cls,
     ps2::Server server,
@@ -81,7 +79,7 @@ CharacterInfo::CharacterInfo(arx::character_id_t id,
 )
     : CharacterInfo(id, parent)
 {
-    info_.name_ = name;
+    info_.name_ = std::move(name);
     info_.faction_ = faction;
     info_.class_ = cls;
     info_.server_ = server;
@@ -118,49 +116,34 @@ void CharacterInfo::populate() {
     // Generate request
     auto request = getCharacterInfoRequest();
     // Reply object will be deleted by reply handler
-    auto reply = manager_->get(request);
-    QObject::connect(reply, &QNetworkReply::finished,
+    auto* const client = adopt_pointer(new PresenceLib::AsyncRestClient(this));
+    QObject::connect(client, &PresenceLib::AsyncRestClient::requestFinished,
         this, &CharacterInfo::onCharacterInfoRequestFinished);
+    QObject::connect(client, &PresenceLib::AsyncRestClient::requestFinished,
+        client, &QObject::deleteLater);
+    QObject::connect(client, &PresenceLib::AsyncRestClient::requestFailed,
+        client, &QObject::deleteLater);
 }
 
-void CharacterInfo::onCharacterInfoRequestFinished() {
-    // Get reply object from caller
-    QScopedPointer<QNetworkReply> reply {
-        qobject_cast<QNetworkReply*>(QObject::sender())
-    };
-    if (!reply) {
-        qWarning() << "CharacterInfo::onCharacterInfoRequestFinished()"
-            << "Signal sender is not a QNetworkReply object.";
-    }
-    // Check for network errors
-    if (reply->error() != QNetworkReply::NoError) {
-        qWarning() << "CharacterInfo::onCharacterInfoRequestFinished()"
-            << "Network error:" << reply->errorString();
-        return;
-    }
-    // Get payload from reply
-    auto payload = getJsonPayload(reply);
-    // Handle payload
+void CharacterInfo::onCharacterInfoRequestFinished(const QJsonDocument& response) {
+    auto payload = qtJsonToArxJson(response);
     handleCharacterInfoPayload(payload);
 }
 
-QNetworkRequest CharacterInfo::getCharacterInfoRequest() {
-    // Create Query via ARX
+QString CharacterInfo::getCharacterInfoRequest() const {
     arx::Query query("character", SERVICE_ID);
     query.addTerm(
         arx::SearchTerm("character_id", std::to_string(info_.id_)));
     query.setShow({ "character_id", "name.first", "faction_id", "profile_id" });
     auto join = arx::JoinData("characters_world");
-    join.show_.push_back("world_id");
+    join.show_.emplace_back("world_id");
     query.addJoin(join);
     // Generate URL
-    auto url = qUrlFromArxQuery(query);
-    // Create request
-    return QNetworkRequest(url);
+    return qStringFromArxQuery(query);
 }
 
 void CharacterInfo::handleCharacterInfoPayload(const arx::json_t& payload) {
-    if (!arx::validatePayload("character", payload)) {
+    if (arx::validatePayload("character", payload) != 0) {
         qWarning() << "CharacterInfo::handleCharacterInfoPayload(): "
             "Invalid JSON payload";
         return;
@@ -193,7 +176,7 @@ void CharacterInfo::handleCharacterInfoPayload(const arx::json_t& payload) {
 
 void CharacterInfo::updateFieldsIfChanged(
     arx::character_id_t id,
-    const QString& name,
+    QString name,
     ps2::Faction faction,
     ps2::Class cls,
     ps2::Server server
@@ -204,7 +187,7 @@ void CharacterInfo::updateFieldsIfChanged(
         changed = true;
     }
     if (name != info_.name_) {
-        info_.name_ = name;
+        info_.name_ = std::move(name);
         changed = true;
     }
     if (faction != info_.faction_) {
@@ -227,18 +210,6 @@ void CharacterInfo::updateFieldsIfChanged(
 
 } // namespace PresenceApp
 
-#if defined(_MSC_VER) && !defined(__clang__)
-#   pragma warning(push)
-#   pragma warning(disable : 4464)
-#elif defined(__clang__)
-#   pragma clang diagnostic push
-#   pragma clang diagnostic ignored "-Wreserved-identifier"
-#endif
-
+PUSH_MOC_WARNINGS_FILTER;
 #include "moc_character-info.cpp"
-
-#if defined(_MSC_VER) && !defined(__clang__)
-#   pragma warning(pop)
-#elif defined(__clang__)
-#   pragma clang diagnostic pop
-#endif
+POP_MOC_WARNINGS_FILTER;

@@ -19,7 +19,7 @@ find_package(Discord REQUIRED)
 
 # Qt
 find_package(Qt6 6.4 CONFIG REQUIRED
-  COMPONENTS Core Gui Network Widgets WebSockets
+  COMPONENTS Core Gui Widgets
 )
 
 # Targets
@@ -44,8 +44,6 @@ add_executable(Ps2RichPresence WIN32
   "game/state.cpp"
   "core.hpp"
   "core.cpp"
-  "ess-client.hpp"
-  "ess-client.cpp"
   "persistence.hpp"
   "persistence.cpp"
   "tracker.hpp"
@@ -64,10 +62,10 @@ target_link_libraries(Ps2RichPresence
   PRIVATE
     Qt::Core
     Qt::Gui
-    Qt::Network
     Qt::Widgets
-    Qt::WebSockets
+    QtHelpers
     Discord::GameSDK
+    PresenceLib
     Ps2Data
     Arx
 )

@@ -4,6 +4,10 @@
     "builtin-baseline": "b81bc3a83fdbdffe80325eeabb2ec735a1f3c29d",
     "dependencies": [
         {
+            "name": "ms-gsl",
+            "version>=": "4.0.0"
+        },
+        {
             "name": "nlohmann-json",
             "version>=": "3.11.2"
         },
@@ -18,14 +22,21 @@
             "features": [
                 "brotli",
                 "gui",
-                "network",
                 "widgets"
             ]
         },
         {
-            "name": "qtwebsockets",
-            "version>=": "6.5.0",
+            "name": "openssl",
+            "version>=": "3.1.1",
             "default-features": false
+        },
+        {
+            "name": "nlohmann-json",
+            "version>=": "3.11.2"
+        },
+        {
+            "name": "zlib",
+            "version>=": "1.2.13"
         }
     ]
 }

@@ -11,7 +11,7 @@
 
 namespace PresenceApp {
 
-class PresenceFactory: public QObject {
+class PresenceFactory : public QObject {
     Q_OBJECT
 
 public:
@@ -32,8 +32,8 @@ public Q_SLOTS:
     void setActivityIdle();
 
 private:
-    discord::Activity buildIdleActivity();
-    discord::Activity buildGameActivity(const GameState& state);
+    static discord::Activity buildIdleActivity();
+    static discord::Activity buildGameActivity(const GameState& state);
 
     GameState state_;
     bool is_idle_;

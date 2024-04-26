@@ -2,13 +2,12 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QDebug>
 #include <QtCore/QMetaType>
 #include <QtCore/QObject>
-#include <QtCore/QScopedPointer>
 #include <QtCore/QString>
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkRequest>
 
 #include "arx.hpp"
 #include "ps2.hpp"
@@ -19,7 +18,7 @@ struct CharacterData {
     CharacterData();
     CharacterData(
         arx::character_id_t id,
-        const QString& name,
+        QString name,
         ps2::Faction faction,
         ps2::Class cls,
         ps2::Server server);
@@ -43,7 +42,7 @@ struct CharacterData {
 
 QDebug operator<<(QDebug dbg, const CharacterData& info);
 
-class CharacterInfo: public QObject {
+class CharacterInfo : public QObject {
     Q_OBJECT
 
 public:
@@ -51,7 +50,7 @@ public:
     explicit CharacterInfo(arx::character_id_t id, QObject* parent = nullptr);
     CharacterInfo(
         arx::character_id_t id,
-        const QString& name,
+        QString name,
         ps2::Faction faction,
         ps2::Class cls,
         ps2::Server server,
@@ -77,18 +76,17 @@ public Q_SLOTS:
     void populate();
 
 private Q_SLOTS:
-    void onCharacterInfoRequestFinished();
+    void onCharacterInfoRequestFinished(const QJsonDocument& response);
 
 private:
-    QNetworkRequest getCharacterInfoRequest();
+    QString getCharacterInfoRequest() const;
     void updateFieldsIfChanged(arx::character_id_t id,
-        const QString& name,
+        QString name,
         ps2::Faction faction,
         ps2::Class cls,
         ps2::Server server);
 
     CharacterData info_;
-    QScopedPointer<QNetworkAccessManager> manager_;
 };
 
 } // namespace PresenceApp

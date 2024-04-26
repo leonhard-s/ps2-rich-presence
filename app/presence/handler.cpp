@@ -8,6 +8,8 @@
 #include <QtCore/QTimer>
 
 #include "discord-game-sdk/discord.h"
+#include <adopt_pointer.h>
+#include <moc_macros.h>
 
 #include "appdata/appid.hpp"
 
@@ -17,9 +19,13 @@ PresenceHandler::PresenceHandler(QObject* parent)
     : QObject{ parent }
 {
     // Create discord core
-    auto result = discord::Core::Create(appid, DiscordCreateFlags_Default, &discord_core_);
-    if (!discord_core_) {
+    discord::Core* temp_ = nullptr;
+    auto result = discord::Core::Create(appid, DiscordCreateFlags_Default, &temp_);
+    if (temp_ == nullptr) {
         qCritical() << "Failed to create discord core (error code" << static_cast<int>(result) << ")";
+    }
+    else {
+        discord_core_.reset(temp_);
     }
 
     // Configure logging
@@ -27,7 +33,7 @@ PresenceHandler::PresenceHandler(QObject* parent)
         discord::LogLevel::Debug, [](discord::LogLevel level, const char* message) { qDebug() << "Discord: " << static_cast<int>(level) << ": " << message; });
 
     // Create presence update timer
-    timer_ = new QTimer(this);
+    timer_ = adopt_pointer(new QTimer(this));
     timer_->setInterval(16); // ~60 FPS
     QObject::connect(timer_, &QTimer::timeout, [this]() { discord_core_->RunCallbacks(); });
     timer_->start();
@@ -49,18 +55,6 @@ void PresenceHandler::setActivity(discord::Activity activity) {
 
 } // namespace PresenceApp
 
-#if defined(_MSC_VER) && !defined(__clang__)
-#   pragma warning(push)
-#   pragma warning(disable : 4464)
-#elif defined(__clang__)
-#   pragma clang diagnostic push
-#   pragma clang diagnostic ignored "-Wreserved-identifier"
-#endif
-
+PUSH_MOC_WARNINGS_FILTER;
 #include "moc_handler.cpp"
-
-#if defined(_MSC_VER) && !defined(__clang__)
-#   pragma warning(pop)
-#elif defined(__clang__)
-#   pragma clang diagnostic pop
-#endif
+POP_MOC_WARNINGS_FILTER;

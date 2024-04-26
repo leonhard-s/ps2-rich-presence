@@ -3,7 +3,6 @@
 #include "arx/ess/endpoint.hpp"
 
 #include <sstream>
-#include <string>
 
 #include "arx/types.hpp"
 
