@@ -12,11 +12,11 @@ jobs:
     runs-on: windows-2022
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Restore vcpkg cache
         id: cache-vcpkg-restore
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           path: ${{ env.VCPKG_CACHE }}
           key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
@@ -29,7 +29,7 @@ jobs:
       - name: Save updated vcpkg cache
         id: cache-vcpkg-save
         if: steps.cache-vcpkg-restore.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         with:
           path: ${{ env.VCPKG_CACHE }}
           key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
@@ -48,10 +48,10 @@ jobs:
       DIST_DIR: ${{ github.workspace }}\dist
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Restore vcpkg cache
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           path: ${{ env.VCPKG_CACHE }}
           key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
@@ -65,7 +65,7 @@ jobs:
         run: cmake --build ${{ env.BUILD_DIR }} --config ${{ matrix.build_type }}
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: win64-${{ matrix.toolset }}-${{ matrix.build_type }}
           path: ${{ env.BUILD_DIR }}
@@ -84,11 +84,11 @@ jobs:
       DIST_DIR: ${{ github.workspace }}/dist
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Restore vcpkg cache
         id: cache-vcpkg-restore
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           path: ${{ env.VCPKG_CACHE }}
           key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
@@ -96,7 +96,7 @@ jobs:
           fail-on-cache-miss: true
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v4.1.7
+        uses: actions/download-artifact@v4
         with:
           name: win64-${{ matrix.toolset }}-${{ matrix.build_type }}
           path: ${{ env.BUILD_DIR }}
@@ -105,7 +105,7 @@ jobs:
         run: cmake --install ${{ env.BUILD_DIR }} --config ${{ matrix.build_type }} --prefix ${{ env.DIST_DIR }}-${{ matrix.toolset }}-${{ matrix.build_type }}
 
       - name: Upload archive
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: win64-${{ matrix.toolset }}-${{ matrix.build_type }}
           path: ${{ env.DIST_DIR }}-${{ matrix.toolset }}-${{ matrix.build_type }}
